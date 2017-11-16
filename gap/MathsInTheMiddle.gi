@@ -1,0 +1,10 @@
+#
+# MathsInTheMiddle: Maths-in-the-Middle functionality for GAP
+#
+# Implementations
+#
+InstallGlobalFunction( MathsInTheMiddle_Example,
+function()
+	Print( "This is a placeholder function, replace it with your own code.\n" );
+end );
+
