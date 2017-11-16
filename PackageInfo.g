@@ -69,8 +69,10 @@ PackageDoc := rec(
 ),
 
 Dependencies := rec(
-  GAP := ">= 4.8",
-  NeededOtherPackages := [ [ "GAPDoc", ">= 1.5" ] ],
+  GAP := ">= 4.9",
+  NeededOtherPackages := [ [ "GAPDoc", ">= 1.5" ]
+                         , [ "SCSCP", ">= 2.1.4" ]
+                         , [ "OpenMath", ">= 11.4.2"]],
   SuggestedOtherPackages := [ ],
   ExternalConditions := [ ],
 ),
