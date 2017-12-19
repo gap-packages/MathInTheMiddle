@@ -1,7 +1,7 @@
-# The GAP 4 package `MathsInTheMiddle'
+# The GAP 4 package `MathInTheMiddle'
 
 
-This package provides functionality to run GAP in a Maths-in-the-Middle Virtual
+This package provides functionality to run GAP in a Math-in-the-Middle Virtual
 Research Environment for Discrete Mathematics (otherwise known as OpenDreamKit
 https://www.opendreamkit.org)
 
@@ -11,18 +11,18 @@ Full information and documentation can be found in the manual, available
 as PDF `doc/manual.pdf` or as HTML `htm/chapters.htm`, or on the package
 homepage at
 
-  <http://gap-packages.github.io/MathsInTheMiddle/>
+  <http://gap-packages.github.io/MathInTheMiddle/>
 
 ## Bug reports and feature requests
 
 Please submit bug reports and feature requests via our GitHub issue tracker:
 
-  <https://github.com/gap-packages/MathsInTheMiddle/issues>
+  <https://github.com/gap-packages/MathInTheMiddle/issues>
 
 
 # License
 
-MathsInTheMiddle is free software; you can redistribute it and/or modify it under
+MathInTheMiddle is free software; you can redistribute it and/or modify it under
 the terms of the BSD 3-clause license.
 
 For details see the files COPYRIGHT.md and LICENSE.
