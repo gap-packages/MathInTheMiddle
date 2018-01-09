@@ -4,3 +4,6 @@
 # Declarations
 #
 
+DeclareGlobalFunction("MITM_InstallMitMCDHandlers");
+
+

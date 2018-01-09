@@ -1,5 +1,7 @@
 # The GAP 4 package `MathInTheMiddle'
-
+=======
+[![Build Status](https://travis-ci.org/gap-packages/MathInTheMiddle.svg?branch=master)](https://travis-ci.org/gap-packages/MathInTheMiddle)
+[![Code Coverage](https://codecov.io/github/gap-packages/MathInTheMiddle/coverage.svg?branch=master&token=)](https://codecov.io/gh/gap-packages/MathInTheMiddle)
 
 This package provides functionality to run GAP in a Math-in-the-Middle Virtual
 Research Environment for Discrete Mathematics (otherwise known as OpenDreamKit
