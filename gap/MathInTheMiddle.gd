@@ -1,5 +1,5 @@
 #
-# MathsInTheMiddle: Maths-in-the-Middle functionality for GAP
+# MathInTheMiddle: Math-in-the-Middle functionality for GAP
 #
 # Declarations
 #
