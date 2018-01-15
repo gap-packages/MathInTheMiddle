@@ -1,13 +1,15 @@
 #
-
-
-BindGlobalConstant("MITM_debug", true);
+BindConstant("MITM_Debug", true);
 
 DeclareGlobalFunction("GVarNameForObject");
+DeclareGlobalFunction("GVarNamesForObject");
+
 DeclareGlobalFunction("IdOfOperation");
+DeclareGlobalFunction("FiltersOfOperation");
 DeclareGlobalFunction("GAPAndFilterUnpack");
-DeclareGlobalFunction("GAPFilterToFilterType");
 DeclareGlobalFunction("GAPFilterInfo");
 DeclareGlobalFunction("GAPTypesInfoByGlobalVariables");
 DeclareGlobalFunction("GAPTypesInfo");
+
+
 DeclareGlobalFunction("GAPTypesToJson");
