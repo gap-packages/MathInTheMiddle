@@ -19,4 +19,4 @@ DeclareGlobalFunction("MitM_StartServer_TCP");
 DeclareGlobalFunction("MitM_JsonHandler");
 
 #!
-DeclareGlobalFunction("MitM_InterpretJson");
+DeclareGlobalFunction("MitM_InterpretJsonML");
