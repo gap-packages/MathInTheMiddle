@@ -31,12 +31,13 @@
 ##  </ManSection>
 ##  <#/GAPDoc>
 ##
-BindGlobal( "DateISO8601", function()
-local s, date;
-s := IO_Popen("date", [ "+%y-%m-%d" ],"r");
-date := IO_ReadLine(s);
-IO_Close(s);
-return Concatenation( "20", date{[ 1 .. Length(date)-1 ]} );
+BindGlobal("DateISO8601",
+function()
+    local s, date;
+    s := IO_Popen("date", [ "+%y-%m-%d" ],"r");
+    date := IO_ReadLine(s);
+    IO_Close(s);
+    return Concatenation( "20", date{[ 1 .. Length(date)-1 ]} );
 end);
 
 
@@ -64,12 +65,13 @@ end);
 ##  </ManSection>
 ##  <#/GAPDoc>
 ##
-BindGlobal( "CurrentTimestamp", function() 
-local s, date;
-s := IO_Popen("date", [ ], "r");
-date := IO_ReadLine(s);
-IO_Close(s);
-return date{[ 1 .. Length(date)-1 ]};
+BindGlobal("CurrentTimestamp",
+function()
+    local s, date;
+    s := IO_Popen("date", [ ], "r");
+    date := IO_ReadLine(s);
+    IO_Close(s);
+    return date{[ 1 .. Length(date)-1 ]};
 end);
 
 

@@ -13,6 +13,10 @@ ReadPackage("MathInTheMiddle", "gap/OpenMath/omget.gd");
 ReadPackage("MathInTheMiddle", "gap/OpenMath/omput.gd");
 ReadPackage("MathInTheMIddle", "gap/OpenMath/omputxml.gd");
 
+
+# TCP Streams
+ReadPackage("MathInTheMiddle", "gap/SCSCP/xstream.gd");
+
 ReadPackage("MathInTheMiddle", "gap/SCSCP/scscp.gd");
 
 
