@@ -130,30 +130,18 @@ function( server, port )
                     SCSCP_VERSION := client_scscp_version;
                     Info(InfoSCSCP, 1, "Confirming version ", SCSCP_VERSION, " to the client ...");
                     WriteLine( stream, Concatenation( "<?scscp version=\"", SCSCP_VERSION, "\" ?>" ) );
-
                     # now handshaking is finished and read-evaluate-response loop is started
                     repeat
                         Info(InfoSCSCP, 1, "Waiting for OpenMath object ...");
                         # currently the timeout is 3600 seconds = 1 hour
                         callresult:=CALL_WITH_CATCH( IO_Select,
                                                      [  [ stream![1] ], [ ], [ ], [ ], 60*60, 0 ] );
-                        if CompareVersionNumbers( GAPInfo.Version, "4.5.0") then
-                            if not callresult[1] then
-                                disconnect:=true;
-                                break;
-                            fi;
-                        fi;
 
                         Info(InfoSCSCP, 1, "Retrieving and evaluating ...");
                         rt1 := Runtime();
                         callresult:=CALL_WITH_CATCH( OMGetObjectWithAttributes, [ stream ] );
                         rt2 := Runtime();
                         Info(InfoSCSCP, 1, "Evaluation completed");
-
-                        # FOR COMPATIBILITY WITH 4.4.12 WITH REDUCED FUNCTIONALITY
-                        if not CompareVersionNumbers( GAPInfo.Version, "4.5.0") then
-                            callresult := [ true, callresult ];
-                        fi;
 
                         objrec := callresult[2]; # can be record, fail or list of strings
 
@@ -219,7 +207,6 @@ function( server, port )
 
                         if not callresult[1] or ( IsBound( objrec.is_error) and (objrec.is_error) ) then
                             # preparations to send an error message to the client
-                            IN_SCSCP_BINARY_MODE := false;
                             if InfoLevel( InfoSCSCP ) > 0 then
                                 Print( "#I  Sending error message: ", objrec.object, "\n" );
                             fi;
@@ -253,11 +240,6 @@ function( server, port )
                                                                       attributes:=callinfo ),
                                                                  errormessage[2],
                                                                  errormessage[3] ] );
-
-                            # FOR COMPATIBILITY WITH 4.4.12 WITH REDUCED FUNCTIONALITY
-                            if not CompareVersionNumbers( GAPInfo.Version, "4.5.0") then
-                                responseresult := [ true, responseresult ];
-                            fi;
 
                             if responseresult[1] then
                                 Info(InfoSCSCP, 1, "procedure_terminated message sent, closing connection ...");
@@ -300,25 +282,10 @@ function( server, port )
                             omtext:="";
                             localstream := OutputTextString( omtext, true );
                             CALL_WITH_CATCH( OMPutProcedureCompleted, [ localstream, output ] );
-                            if IN_SCSCP_BINARY_MODE then
-                                localstream:=InputTextString( omtext );
-                                token:=ReadByte( localstream );
-                                while token <> fail do
-                                    Print( EnsureCompleteHexNum( HexStringInt( token ) ) );
-                                    token:=ReadByte( localstream );
-                                od;
-                                Print("\n#I  Total length ", Length(omtext), " bytes \n");
-                            else
-                                Print(omtext, "#I  Total length ", Length(omtext), " characters \n");
-                            fi;
+                            Print(omtext, "#I  Total length ", Length(omtext), " characters \n");
                         fi;
 
                         responseresult := CALL_WITH_CATCH( OMPutProcedureCompleted, [ stream, output ] );
-
-                        # FOR COMPATIBILITY WITH 4.4.12 WITH REDUCED FUNCTIONALITY
-                        if not CompareVersionNumbers( GAPInfo.Version, "4.5.0") then
-                            responseresult := [ true, responseresult ];
-                        fi;
 
                         if not responseresult[1] then
                             Info(InfoSCSCP, 1, "client already disconnected, closing connection on server side ...");
