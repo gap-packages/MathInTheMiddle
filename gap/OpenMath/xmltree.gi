@@ -11,17 +11,18 @@
 ##  (using the function ParseTreeXMLString from package GapDoc) and
 ##  parses it.
 ##
+##
 
-
-InstallGlobalFunction( OMParseXmlObj, function ( node )
+InstallGlobalFunction( OMParseXmlObj,
+function(node)
     local obj;
 
     if not IsBound( OMObjects.(node.name) )  then
         Error( "unknown OpenMath object ", node.name );
     fi;
 
-    if IsBound( node.content ) and 
-       IsList( node.content ) and 
+    if IsBound( node.content ) and
+       IsList( node.content ) and
         not (node.name = "OMSTR" or node.name = "OMI" or node.name = "OMB")  then
         node.content := Filtered( node.content, OMIsNotDummyLeaf );
     fi;
@@ -32,19 +33,21 @@ InstallGlobalFunction( OMParseXmlObj, function ( node )
     fi;
 
     return obj;
-end );
+end);
 
+# Compatibility for now
+InstallGlobalFunction( OMgetObjectXMLTree,
+string -> OMParseXmlObj( OMParseTreeXMLString(string) ) );
 
-
-
-InstallGlobalFunction( OMgetObjectXMLTree, function ( string )
-    local  node;
+InstallGlobalFunction( OMParseTreeXMLString,
+function(string)
+    local node;
 
     # TODO: this maybe be reset in the middle of the session
     # making references invalid. We need either to keep this
-    # for the whole session or to create another record to 
+    # for the whole session or to create another record to
     # store such objects
-    
+
     OMTempVars.OMBIND := rec(  );
     OMTempVars.OMREF := rec(  );
 
@@ -52,10 +55,5 @@ InstallGlobalFunction( OMgetObjectXMLTree, function ( string )
     # DisplayXMLStructure( node );
     node.content := Filtered( node.content, OMIsNotDummyLeaf );
 
-    return OMParseXmlObj( node.content[1] );
-
-end );
-
-
-#############################################################################
-#E
+    return node.content[1];
+end);

@@ -19,7 +19,7 @@ MakeReadWriteGlobal("OMTempVars");
 
 
 BindGlobal( "OMIsNotDummyLeaf", 
-    node -> not node.name = "PCDATA" and not node.name = "XMLCOMMENT");
+   node -> not node.name = "PCDATA" and not node.name = "XMLCOMMENT");
 
 BindGlobal( "OMObjects",
 

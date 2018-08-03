@@ -17,10 +17,12 @@ end);
 # TODO: Optional port/address
 InstallGlobalFunction(StartMitMServer,
 function(args...)
+    local optrec;
+
     if not IsRecord(args[1]) then
         Error("<rec> must be an options record");
     fi;
-    InstallSCSCPprocedure( "EvalMitM", MITM_EvalMitM, "Evaluate MitM OpenMath", 1, 1);
-    RunSCSCPserver(SCSCPserverAddress, SCSCPserverPort);
+#    InstallSCSCPprocedure( "EvalMitM", MITM_EvalMitM, "Evaluate MitM OpenMath", 1, 1);
+#    RunSCSCPserver(optrec.SCSCPserverAddress, optrec.SCSCPserverPort);
 end);
 

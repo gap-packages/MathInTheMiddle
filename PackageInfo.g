@@ -72,9 +72,7 @@ Dependencies := rec(
   GAP := ">= 4.9",
   NeededOtherPackages := [ [ "GAPDoc", ">= 1.5" ]
                          , [ "json", ">= 1.1.0"]
-                         , [ "io", ">= 4.5.0" ]
-                         , [ "SCSCP", ">= 2.1.4" ]
-                         , [ "OpenMath", ">= 11.4.2"]],
+                         , [ "io", ">= 4.5.0" ] ],
   SuggestedOtherPackages := [ ],
   ExternalConditions := [ ],
 ),
