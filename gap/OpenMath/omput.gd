@@ -9,7 +9,7 @@
 #Y    Copyright (C) 2004, 2005, 2006 Marco Costantini
 ##
 ##  Writes a GAP object to an output stream, as an OpenMath object
-## 
+##
 
 
 ###########################################################################
@@ -26,8 +26,8 @@ DeclareGlobalVariable("OpenMathRealRandomSource");
 ##      <Filt Name="IsOpenMathXMLWriter" Type="Category" />
 ##      <Filt Name="IsOpenMathBinaryWriter" Type="Category" />
 ##  <Description>
-##  <Ref Filt="IsOpenMathWriter"/>is a category for &OpenMath; writers. 
-##  It has two subcategories: <Ref Filt="IsOpenMathXMLWriter"/> and  
+##  <Ref Filt="IsOpenMathWriter"/>is a category for &OpenMath; writers.
+##  It has two subcategories: <Ref Filt="IsOpenMathXMLWriter"/> and
 ##  <Ref Filt="IsOpenMathBinaryWriter"/>.
 ##  </Description>
 ##  </ManSection>
@@ -44,7 +44,7 @@ OpenMathWritersFamily := NewFamily( "OpenMathWritersFamily" );
 ##  <ManSection>
 ##      <Func Name="OpenMathBinaryWriter" Arg="s" />
 ##  <Description>
-##  for a stream <A>s</A>, returns an object in the category 
+##  for a stream <A>s</A>, returns an object in the category
 ##  <Ref Filt="OpenMathBinaryWriter"/>.
 ##  </Description>
 ##  </ManSection>
@@ -58,40 +58,39 @@ DeclareGlobalFunction ( "OpenMathBinaryWriter" );
 ##  <ManSection>
 ##      <Func Name="OpenMathXMLWriter" Arg="s" />
 ##  <Description>
-##  for a stream <A>s</A>, returns an object in the category 
-##  <Ref Filt="IsOpenMathXMLWriter"/>. 
+##  for a stream <A>s</A>, returns an object in the category
+##  <Ref Filt="IsOpenMathXMLWriter"/>.
 ##  </Description>
 ##  </ManSection>
 ##  <#/GAPDoc>
 DeclareGlobalFunction ( "OpenMathXMLWriter" );
 
 DeclareRepresentation( "IsOpenMathWriterRep", IsPositionalObjectRep, [ ] );
-OpenMathBinaryWriterType := NewType( OpenMathWritersFamily, 
+OpenMathBinaryWriterType := NewType( OpenMathWritersFamily,
                               IsOpenMathWriterRep and IsOpenMathBinaryWriter );
-OpenMathXMLWriterType    := NewType( OpenMathWritersFamily, 
-                              IsOpenMathWriterRep and IsOpenMathXMLWriter );                                
-                            
-                               
+OpenMathXMLWriterType    := NewType( OpenMathWritersFamily,
+                              IsOpenMathWriterRep and IsOpenMathXMLWriter );
+
 ###########################################################################
 ##
-#F  OMPutObject( <stream>, <obj> )  
-#F  OMPutObjectNoOMOBJtags( <stream>, <obj> )  
-## 
+#F  OMPutObject( <stream>, <obj> )
+#F  OMPutObjectNoOMOBJtags( <stream>, <obj> )
+##
 ##  <#GAPDoc Label="OMPutObject">
-##  
+##
 ##  <ManSection>
 ##      <Func Name="OMPutObject" Arg="stream obj" />
 ##      <Func Name="OMPutObjectNoOMOBJtags" Arg="stream obj" />
 ##  <Description>
-##  <Ref Func="OMPutObject" /> writes (appends) the XML &OpenMath; 
-##  encoding of the &GAP; object <A>obj</A> to output stream <A>stream</A> 
-##  (see <Ref BookName="ref" Oper="InputTextFile" />, 
-##  <Ref BookName="ref" Oper="OutputTextUser" />, 
-##  <Ref BookName="ref" Oper="OutputTextString" />, 
+##  <Ref Func="OMPutObject" /> writes (appends) the XML &OpenMath;
+##  encoding of the &GAP; object <A>obj</A> to output stream <A>stream</A>
+##  (see <Ref BookName="ref" Oper="InputTextFile" />,
+##  <Ref BookName="ref" Oper="OutputTextUser" />,
+##  <Ref BookName="ref" Oper="OutputTextString" />,
 ##  <Ref BookName="scscp" Oper="InputOutputTCPStream" Label="for client" />,
 ##  <Ref BookName="scscp" Oper="InputOutputTCPStream" Label="for server" />).
 ##  <P/>
-##  The second version does the same but without &lt;OMOBJ> 
+##  The second version does the same but without &lt;OMOBJ>
 ##  tags, what may be useful for assembling complex &OpenMath; objects.
 ##  <Example>
 ##  <![CDATA[
@@ -105,27 +104,27 @@ OpenMathXMLWriterType    := NewType( OpenMathWritersFamily,
 ##  gap> CloseStream(s);
 ##  gap> Print(t);
 ##  <OMOBJ xmlns="http://www.openmath.org/OpenMath" version="2.0">
-##  	<OMA>
-##  		<OMS cd="linalg2" name="matrix"/>
-##  		<OMA>
-##  			<OMS cd="linalg2" name="matrixrow"/>
-##  			<OMI>1</OMI>
-##  			<OMI>2</OMI>
-##  		</OMA>
-##  		<OMA>
-##  			<OMS cd="linalg2" name="matrixrow"/>
-##  			<OMI>1</OMI>
-##  			<OMI>0</OMI>
-##  		</OMA>
-##  	</OMA>
+##      <OMA>
+##          <OMS cd="linalg2" name="matrix"/>
+##          <OMA>
+##              <OMS cd="linalg2" name="matrixrow"/>
+##              <OMI>1</OMI>
+##              <OMI>2</OMI>
+##          </OMA>
+##          <OMA>
+##              <OMS cd="linalg2" name="matrixrow"/>
+##              <OMI>1</OMI>
+##              <OMI>0</OMI>
+##          </OMA>
+##      </OMA>
 ##  </OMOBJ>
 ##  ]]>
 ##  </Example>
-##  
+##
 ##  </Description>
 ##  </ManSection>
 ##  <#/GAPDoc>
-## 
+##
 DeclareGlobalFunction("OMPutObject");
 DeclareGlobalFunction("OMPutObjectNoOMOBJtags");
 
@@ -135,40 +134,40 @@ DeclareOperation("OMPutEndOMOBJ", [ IsOpenMathWriter ] );
 
 ###########################################################################
 ##
-#O  OMPut(<stream>,<obj> ) 
-## 
+#O  OMPut(<stream>,<obj> )
+##
 ##
 DeclareOperation("OMPut", [IsOpenMathWriter, IsObject ]);
 
 
 ###########################################################################
 ##
-#F  OMPrint( <obj> ) .................   Print <obj> as OpenMath object 
+#F  OMPrint( <obj> ) .................   Print <obj> as OpenMath object
 ##
 ##  <#GAPDoc Label="OMPrint">
 ##  <ManSection>
 ##      <Func Name="OMPrint" Arg="obj" />
 ##  <Description>
-##  OMPrint writes the default XML &OpenMath; encoding of &GAP; 
+##  OMPrint writes the default XML &OpenMath; encoding of &GAP;
 ##  object <A>obj</A> to the standard output.
 ##  <P/>
 ##  One can try it with different &GAP; objects to see if they
 ##  can be converted to &OpenMath; and learn how their &OpenMath;
-##  representation looks like. Here we show the encoding for lists 
+##  representation looks like. Here we show the encoding for lists
 ##  of integers and rationals:
 ##  <Example>
 ##  <![CDATA[
-##  gap> OMPrint( [ 1, 1/2 ] );     
+##  gap> OMPrint( [ 1, 1/2 ] );
 ##  <OMOBJ xmlns="http://www.openmath.org/OpenMath" version="2.0">
-##  	<OMA>
-##  		<OMS cd="list1" name="list"/>
-##  		<OMI>1</OMI>
-##  		<OMA>
-##  			<OMS cd="nums1" name="rational"/>
-##  			<OMI>1</OMI>
-##  			<OMI>2</OMI>
-##  		</OMA>
-##  	</OMA>
+##      <OMA>
+##          <OMS cd="list1" name="list"/>
+##          <OMI>1</OMI>
+##          <OMA>
+##              <OMS cd="nums1" name="rational"/>
+##              <OMI>1</OMI>
+##              <OMI>2</OMI>
+##          </OMA>
+##      </OMA>
 ##  </OMOBJ>
 ##  ]]>
 ##  </Example>
@@ -177,35 +176,35 @@ DeclareOperation("OMPut", [IsOpenMathWriter, IsObject ]);
 ##  <![CDATA[
 ##  gap> OMPrint( "This is a string" );
 ##  <OMOBJ xmlns="http://www.openmath.org/OpenMath" version="2.0">
-##  	<OMSTR>This is a string</OMSTR>
+##      <OMSTR>This is a string</OMSTR>
 ##  </OMOBJ>
 ##  ]]>
 ##  </Example>
 ##  Cyclotomics may be encoded in different ways dependently on their properties:
 ##  <Example>
 ##  <![CDATA[
-##  gap> OMPrint( 1-2*E(4) );      
+##  gap> OMPrint( 1-2*E(4) );
 ##  <OMOBJ xmlns="http://www.openmath.org/OpenMath" version="2.0">
-##  	<OMA>
-##  		<OMS cd="complex1" name="complex_cartesian"/>
-##  		<OMI>1</OMI>
-##  		<OMI>-2</OMI>
-##  	</OMA>
+##      <OMA>
+##          <OMS cd="complex1" name="complex_cartesian"/>
+##          <OMI>1</OMI>
+##          <OMI>-2</OMI>
+##      </OMA>
 ##  </OMOBJ>
-##  gap> OMPrint(E(3));       
+##  gap> OMPrint(E(3));
 ##  <OMOBJ xmlns="http://www.openmath.org/OpenMath" version="2.0">
-##  	<OMA>
-##  		<OMS cd="arith1" name="plus"/>
-##  		<OMA>
-##  			<OMS cd="arith1" name="times"/>
-##  			<OMI>1</OMI>
-##  			<OMA>
-##  				<OMS cd="algnums" name="NthRootOfUnity"/>
-##  				<OMI>3</OMI>
-##  				<OMI>1</OMI>
-##  			</OMA>
-##  		</OMA>
-##  	</OMA>
+##      <OMA>
+##          <OMS cd="arith1" name="plus"/>
+##          <OMA>
+##              <OMS cd="arith1" name="times"/>
+##              <OMI>1</OMI>
+##              <OMA>
+##                  <OMS cd="algnums" name="NthRootOfUnity"/>
+##                  <OMI>3</OMI>
+##                  <OMI>1</OMI>
+##              </OMA>
+##          </OMA>
+##      </OMA>
 ##  </OMOBJ>
 ##  ]]>
 ##  </Example>
@@ -214,41 +213,41 @@ DeclareOperation("OMPut", [IsOpenMathWriter, IsObject ]);
 ##  <![CDATA[
 ##  gap> OMPrint( Group( (1,2) ) );
 ##  <OMOBJ xmlns="http://www.openmath.org/OpenMath" version="2.0">
-##  	<OMA>
-##  		<OMS cd="permgp1" name="group"/>
-##  		<OMS cd="permutation1" name="right_compose"/>
-##  		<OMA>
-##  			<OMS cd="permut1" name="permutation"/>
-##  			<OMI>2</OMI>
-##  			<OMI>1</OMI>
-##  		</OMA>
-##  	</OMA>
+##      <OMA>
+##          <OMS cd="permgp1" name="group"/>
+##          <OMS cd="permutation1" name="right_compose"/>
+##          <OMA>
+##              <OMS cd="permut1" name="permutation"/>
+##              <OMI>2</OMI>
+##              <OMI>1</OMI>
+##          </OMA>
+##      </OMA>
 ##  </OMOBJ>
 ##  gap> OMPrint( Group( [ [ [ 1, 2 ],[ 0, 1 ] ] ] ) );
 ##  <OMOBJ xmlns="http://www.openmath.org/OpenMath" version="2.0">
-##  	<OMA>
-##  		<OMS cd="group1" name="group_by_generators"/>
-##  		<OMA>
-##  			<OMS cd="linalg2" name="matrix"/>
-##  			<OMA>
-##  				<OMS cd="linalg2" name="matrixrow"/>
-##  				<OMI>1</OMI>
-##  				<OMI>2</OMI>
-##  			</OMA>
-##  			<OMA>
-##  				<OMS cd="linalg2" name="matrixrow"/>
-##  				<OMI>0</OMI>
-##  				<OMI>1</OMI>
-##  			</OMA>
-##  		</OMA>
-##  	</OMA>
+##      <OMA>
+##          <OMS cd="group1" name="group_by_generators"/>
+##          <OMA>
+##              <OMS cd="linalg2" name="matrix"/>
+##              <OMA>
+##                  <OMS cd="linalg2" name="matrixrow"/>
+##                  <OMI>1</OMI>
+##                  <OMI>2</OMI>
+##              </OMA>
+##              <OMA>
+##                  <OMS cd="linalg2" name="matrixrow"/>
+##                  <OMI>0</OMI>
+##                  <OMI>1</OMI>
+##              </OMA>
+##          </OMA>
+##      </OMA>
 ##  </OMOBJ>
-##  gap> OMPrint( FreeGroup( 2 ) );                      
+##  gap> OMPrint( FreeGroup( 2 ) );
 ##  <OMOBJ xmlns="http://www.openmath.org/OpenMath" version="2.0">
-##  	<OMA>
-##  		<OMS cd="fpgroup1" name="free_groupn"/>
-##  		<OMI>2</OMI>
-##  	</OMA>
+##      <OMA>
+##          <OMS cd="fpgroup1" name="free_groupn"/>
+##          <OMI>2</OMI>
+##      </OMA>
 ##  </OMOBJ>
 ##  ]]>
 ##  </Example>
@@ -260,22 +259,22 @@ DeclareGlobalFunction("OMPrint");
 
 
 ###########################################################################
-## 
+##
 ##  OMString( <obj> ) ........ returns string with <obj> as OpenMath object
 ##
 ##  <#GAPDoc Label="OMString">
 ##  <ManSection>
 ##      <Func Name="OMString" Arg="obj" />
 ##  <Description>
-##  OMString returns a string with the default XML &OpenMath; 
+##  OMString returns a string with the default XML &OpenMath;
 ##  encoding of &GAP; object <A>obj</A>.
-##  If used with the <K>noomobj</K> option, then initial and 
+##  If used with the <K>noomobj</K> option, then initial and
 ##  final &lt;OMOBJ> tags will be omitted.
 ##  <Example>
 ##  <![CDATA[
 ##  gap> OMString(42);
 ##  "<OMOBJ xmlns=\"http://www.openmath.org/OpenMath\" version=\"2.0\"> <OMI>42</OMI> </OMOBJ>"
-##  gap> OMString([1,2]:noomobj);    
+##  gap> OMString([1,2]:noomobj);
 ##  "<OMA> <OMS cd=\"list1\" name=\"list\"/> <OMI>1</OMI> <OMI>2</OMI> </OMA>"
 ##  ]]>
 ##  </Example>
@@ -408,8 +407,8 @@ DeclareOperation( "OMPutReference", [ IsOpenMathWriter, IsObject ] );
 
 ###########################################################################
 ##
-#O  OMPutByteArray( <stream>, <bitlist> ) 
-## 
+#O  OMPutByteArray( <stream>, <bitlist> )
+##
 ##  Put bitlists into byte arrays
 ##
 DeclareGlobalFunction("OMPutByteArray");
@@ -417,8 +416,8 @@ DeclareGlobalFunction("OMPutByteArray");
 
 ###########################################################################
 ##
-#O  OMPutList(<stream>,<obj> ) 
-## 
+#O  OMPutList(<stream>,<obj> )
+##
 ##  Tries to render this as an OpenMath list
 ##
 DeclareOperation("OMPutList", [ IsOpenMathWriter, IsObject ]);
@@ -441,7 +440,7 @@ OMIndent := 0;
 ##  represented as a string, but <Ref Func="OMPutObject" /> threat it in a
 ##  different way: instead of converting it into a &lt;OMSTR> object, an
 ##  &OpenMath; plain string will be plainly substituted into the output (this
-##  explains its name) without decorating it with &lt;OMSTR> tags. 
+##  explains its name) without decorating it with &lt;OMSTR> tags.
 ##  <P/>
 ##  It is assumed that &OpenMath; plain string contains valid &OpenMath; code;
 ##  no actual validation is performed during its creation. Such functionality
@@ -452,13 +451,13 @@ OMIndent := 0;
 ##  <![CDATA[
 ##  gap> s:=OMPlainString("<OMS cd=\"nums1\" name=\"pi\"/>");
 ##  <OMS cd="nums1" name="pi"/>
-##  gap> OMPrint(s);                                       
+##  gap> OMPrint(s);
 ##  <OMOBJ xmlns="http://www.openmath.org/OpenMath" version="2.0">
-##  	<OMS cd="nums1" name="pi"/>
+##      <OMS cd="nums1" name="pi"/>
 ##  </OMOBJ>
 ##  ]]>
 ##  </Example>
-##  
+##
 ##  </Description>
 ##  </ManSection>
 ##  <#/GAPDoc>
@@ -467,8 +466,8 @@ DeclareCategory( "IsOMPlainString", IsObject );
 OMPlainStringsFamily := NewFamily( "OMPlainStringsFamily" );
 DeclareGlobalFunction ( "OMPlainString" );
 DeclareRepresentation( "IsOMPlainStringRep", IsPositionalObjectRep, [ ] );
-OMPlainStringDefaultType := NewType( OMPlainStringsFamily, 
-                                IsOMPlainStringRep and IsOMPlainString );                                
+OMPlainStringDefaultType := NewType( OMPlainStringsFamily,
+                                IsOMPlainStringRep and IsOMPlainString );
 
 ###########################################################################
 #E
