@@ -5,85 +5,6 @@
 ##
 #############################################################################
 
-
-###########################################################################
-##
-##  OMGetObjectWithAttributes
-##
-##  <#GAPDoc Label="OMGetObjectWithAttributes">
-##  
-##  <ManSection>
-##  <Func Name="OMGetObjectWithAttributes" Arg="stream" />
-##  <Returns>
-##  record with components <C>object</C> and <C>attributes</C>, or <K>fail</K>
-##  </Returns>	 
-##  <Description>
-##  <!-- TODO: Document option return_tree -->
-##  This function is similar to the function <C>OMGetObject</C> from the
-##  &OpenMath; package, and the main difference is that it is able to
-##  understand &OpenMath; attribution pairs. It retrieves exactly one
-##  &OpenMath; object from the stream <A>stream</A>, and stores it in the
-##  <C>object</C> component of the returned record. If the &OpenMath; object
-##  has no attributes, the <C>attributes</C> component of the returned record
-##  will be an empty list, otherwise it will contain pairs
-##  <C>[attribute&uscore;name,attribute&uscore;value]</C>, where
-##  <C>attribute&uscore;name</C> is a string, and <C>attribute&uscore;value</C>
-##  is a &GAP; object, whose type is determined by the kind of an attribute.
-##  Only attributes, defined by the SCSCP are allowed, otherwise an error
-##  message will be displayed. <P/> If the procedure was not successful, the
-##  function returns <K>fail</K> instead of an error message like the function
-##  <Ref BookName="OpenMath" Func="OMGetObject" /> does. Returning <K>fail</K>
-##  is useful when <C>OMGetObjectWithAttributes</C> is used inside
-##  accept-evaluate-return loop.
-##  <P/>
-##  As an example, the file <File>scscp/tst/omdemo.om</File> contains some 
-##  &OpenMath; objects, including those from the SCSCP Specification 
-##  <Cite Key="SCSCP"/>. We can retrieve them from this file,
-##  preliminary installing some SCSCP procedures
-##  using the function <Ref Func="InstallSCSCPprocedure"/>:
-##  <Example>
-##  <![CDATA[
-##  gap> InstallSCSCPprocedure("WS_Factorial", Factorial );
-##  gap> InstallSCSCPprocedure("GroupIdentificationService", IdGroup );
-##  gap> InstallSCSCPprocedure("GroupByIdNumber", SmallGroup );
-##  gap> InstallSCSCPprocedure( "Length", Length, 1, 1 );
-##  gap> test:=Filename( Directory( Concatenation(
-##  >         GAPInfo.PackagesInfo.("scscp")[1].InstallationPath,"/tst/" ) ), 
-##  >         "omdemo.om" );;
-##  gap> stream:=InputTextFile(test);;
-##  gap> OMGetObjectWithAttributes(stream); 
-##  rec( 
-##    attributes := [ [ "option_return_object", "" ], [ "call_id", "5rc6rtG62" ] ]
-##      , object := 6 )
-##  gap> OMGetObjectWithAttributes(stream);
-##  rec( attributes := [  ], object := 1 )
-##  gap> OMGetObjectWithAttributes(stream);
-##  rec( attributes := [  ], object := 120 )
-##  gap> OMGetObjectWithAttributes(stream);
-##  rec( 
-##    attributes := [ [ "call_id", "alexk_9053" ], [ "option_runtime", 300000 ], 
-##        [ "option_min_memory", 40964 ], [ "option_max_memory", 134217728 ], 
-##        [ "option_debuglevel", 2 ], [ "option_return_object", "" ] ],
-##    object := [ 24, 12 ] )
-##  gap> OMGetObjectWithAttributes(stream);
-##  rec( 
-##    attributes := [ [ "call_id", "alexk_9053" ], [ "option_return_cookie", "" ] 
-##       ], object := <pc group of size 24 with 4 generators> )
-##  gap> OMGetObjectWithAttributes(stream);
-##  rec( attributes := [ [ "call_id", "alexk_9053" ], [ "info_runtime", 1234 ], 
-##        [ "info_memory", 134217728 ] ], object := [ 24, 12 ] )
-##  gap> CloseStream( stream );
-##  ]]>
-##  </Example>
-##  </Description>
-##  </ManSection>
-##  <#/GAPDoc>
-##
-DeclareGlobalFunction( "OMGetObjectWithAttributes" );
-
-DeclareGlobalFunction( "OMgetObjectXMLTreeWithAttributes" );
-
-
 ###########################################################################
 ##
 ##  OMPutProcedureCall( <stream>, <proc_name>, <objrec> )
@@ -239,9 +160,3 @@ DeclareGlobalFunction( "OMPutProcedureCompleted" );
 ##  </ManSection>
 ##  <#/GAPDoc>
 DeclareGlobalFunction( "OMPutProcedureTerminated" );
-
-
-###########################################################################
-##
-#E 
-##
