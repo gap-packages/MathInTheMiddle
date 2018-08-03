@@ -12,8 +12,16 @@
 ##  parses it.
 ##
 
+BindGlobal( "OMTempVars",
+	        rec( OMBIND := rec()
+               , OMREF := rec() ) );
+MakeReadWriteGlobal("OMTempVars"); 
+
+BindGlobal( "OMIsNotDummyLeaf",
+            node -> not (node.name in ["PCDATA", "XMLCOMMENT"] ) );
+
+DeclareGlobalVariable("OMObjects");
+
 DeclareGlobalFunction("OMParseXmlObj");
 DeclareGlobalFunction("OMgetObjectXMLTree");
-
-#############################################################################
-#E
+DeclareGlobalFunction("OMParseTreeXMLString");
