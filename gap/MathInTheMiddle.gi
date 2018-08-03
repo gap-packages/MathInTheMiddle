@@ -17,15 +17,14 @@ end);
 ##
 #F  MitM_SymLookup( [<cdbase>, <cd>, <name>] )
 ##
-BindGlobal("MitM_SymLookup",
+InstallGlobalFunction(MitM_SymLookup,
 function( symbol )
     local cdbase, cd, name;
+
     cdbase := symbol[1];
     cd := symbol[2];
     name := symbol[3];
-    
-    
-    
+
     if IsBound( OMsymRecord.(cd) ) then
         if IsBound( OMsymRecord.(cd).(name) ) then
             if not OMsymRecord.(cd).(name) = fail then

@@ -6,6 +6,9 @@
 
 
 ReadPackage("MathInTheMiddle", "gap/OpenMath/xmltree.gi");
+ReadPackage("MathInTheMiddle", "gap/OpenMath/omget.gi");
+ReadPackage("MathInTheMiddle", "gap/OpenMath/omput.gi");
+
 
 # ReadPackage( "MathInTheMiddle", "gap/Server.gi");
 # ReadPackage( "MathInTheMiddle", "gap/Export.gi");

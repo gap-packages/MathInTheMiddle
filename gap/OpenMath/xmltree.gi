@@ -48,7 +48,7 @@ InstallValue( OMObjects,
          end,
          OMS := function ( node )
              # this is just a nullary symbol
-             return OMsymLookup( [ node.attributes.cd, node.attributes.name ] );
+             return MitM_SymLookup( [ node.attributes.cd, node.attributes.name ] );
          end,
          OMV := function ( node )
              if IsBound( OMTempVars.OMBIND.(node.attributes.name) )  then
@@ -62,7 +62,7 @@ InstallValue( OMObjects,
          OMA := function ( node )
              local  head, headfun;
              if node.content[1].name = "OMS"  then
-                 head := OMsymLookup( [ node.content[1].attributes.cd, node.content[1].attributes.name ] );
+                 head := MitM_SymLookup( [ node.content[1].attributes.cd, node.content[1].attributes.name ] );
              else
                  head := OMParseXmlObj( node.content[1] );
              fi;

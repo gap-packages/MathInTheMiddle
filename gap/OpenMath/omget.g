@@ -35,14 +35,14 @@ InstallGlobalFunction(OMGetObject, function( stream )
     fi;
 
     firstbyte := ReadByte(stream);
-    
-    if firstbyte = 24 then 
-  	    # Binary encoding
- 	    gap_obj := GetNextObject( stream, firstbyte );
-     	gap_obj := OMParseXmlObj( gap_obj.content[1] );
+
+    if firstbyte = 24 then
+        # Binary encoding
+        gap_obj := GetNextObject( stream, firstbyte );
+        gap_obj := OMParseXmlObj( gap_obj.content[1] );
         return gap_obj;
-    else        
-     	# XML encoding
+    else
+        # XML encoding
         fromgap := "";
         # Get one OpenMath object from 'stream' and put into 'fromgap',
         # using PipeOpenMathObject
@@ -50,16 +50,16 @@ InstallGlobalFunction(OMGetObject, function( stream )
         success := PipeOpenMathObject( stream, fromgap, firstbyte );
 
         if success <> true  then
-       		Error( "OpenMath object not retrieved" );
+            Error( "OpenMath object not retrieved" );
         fi;
-		
+
         # convert the OpenMath string into a Gap object using an appropriate
         # function
 
         return OMgetObjectXMLTree( fromgap );
- 
-  	fi;    
-    
+
+    fi;
+
 end);
 
 
@@ -67,7 +67,7 @@ end);
 ##
 #F  EvalOMString( <omstr> )
 ##
-##  This function is an analog of EvalString for a string which contains an 
+##  This function is an analog of EvalString for a string which contains an
 ##  OpenMath object.
 ##
 InstallGlobalFunction( EvalOMString, function( omstr )

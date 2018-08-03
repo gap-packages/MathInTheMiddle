@@ -104,7 +104,7 @@ DeclareGlobalFunction("EvalOMString");
 ##  Maps a pair ["cd", "name"] to the corresponding OMgap... function
 ##  defined above or immediately in the record
 ##
-DeclareGlobalVariable("OMsymRecord");
+# DeclareGlobalVariable("OMsymRecord");
 
 #############################################################################
 #E
