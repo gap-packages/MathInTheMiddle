@@ -27,9 +27,6 @@ function( server, port )
         Append( SCSCPserviceDescription, Concatenation( " on ", CurrentTimestamp() ) );
     fi;
 
-    # forbid opportunity to send plain GAP code to the server
-    Unbind(OMsymRecord.cas);
-
     SCSCPserverMode := true;
     SCSCPserverAddress := server;
     SCSCPserverPort := port;
@@ -98,9 +95,7 @@ function( server, port )
                 Info(InfoSCSCP, 1, "Waiting for new client connection at ",
                      server, ":", port, " ..." );
                 addr := IO_MakeIPAddressPort( "0.0.0.0", 0 );
-                if IN_SCSCP_TRACING_MODE then SCSCPTraceSuspendThread(); fi;
                 socket_descriptor := IO_accept( socket, addr );
-                if IN_SCSCP_TRACING_MODE then SCSCPTraceRunThread(); fi;
                 Info(InfoSCSCP, 1, "Got connection from ", List(addr{[5..8]},INT_CHAR) );
                 stream := InputOutputTCPStream( socket_descriptor );
                 Info(InfoSCSCP, 1, "Stream created ...");
@@ -140,10 +135,8 @@ function( server, port )
                     repeat
                         Info(InfoSCSCP, 1, "Waiting for OpenMath object ...");
                         # currently the timeout is 3600 seconds = 1 hour
-                        if IN_SCSCP_TRACING_MODE then SCSCPTraceSuspendThread(); fi;
                         callresult:=CALL_WITH_CATCH( IO_Select,
                                                      [  [ stream![1] ], [ ], [ ], [ ], 60*60, 0 ] );
-                        if IN_SCSCP_TRACING_MODE then SCSCPTraceRunThread(); fi;
                         if CompareVersionNumbers( GAPInfo.Version, "4.5.0") then
                             if not callresult[1] then
                                 disconnect:=true;
