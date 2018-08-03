@@ -7,6 +7,8 @@
 DeclareGlobalFunction("MITM_InstallMitMCDHandlers");
 DeclareGlobalFunction("MITM_EvalMitM");
 
+DeclareGlobalFunction("MitM_SymLookup");
+
 #! @Description
 #! Start the MitM SCSCP Server
 DeclareGlobalFunction("StartMitMServer");
