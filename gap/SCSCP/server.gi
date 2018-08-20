@@ -14,6 +14,13 @@
 # The 1st argument may also be 'true' to listen to all network interfaces
 # or 'false' to bind the server strictly to "localhost".
 #
+
+# TODO: global variable
+SCSCPserverAddress := "";
+SCSCPserverPort := 0;
+
+SCSCPqueueLength := 5;
+
 InstallGlobalFunction( RunSCSCPserver,
 function( server, port )
     local socket, lookup, bindaddr, addr, res, disconnect, socket_descriptor,
@@ -21,21 +28,13 @@ function( server, port )
           return_cookie, return_nothing, return_deferred, cookie, omtext,
           localstream, callresult, responseresult, errormessage, str, session_id,
           welcome_string, session_cookies, client_scscp_version, pos1, pos2,
-          rt1, rt2, debuglevel, servername, hostname, todo, token;
+          rt1, rt2, debuglevel, servername, hostname, todo, token, SCSCP_VERSION;
 
-    if ARCH_IS_UNIX() then
-        Append( SCSCPserviceDescription, Concatenation( " on ", CurrentTimestamp() ) );
-    fi;
-
-    SCSCPserverMode := true;
     SCSCPserverAddress := server;
     SCSCPserverPort := port;
     socket := IO_socket( IO.PF_INET, IO.SOCK_STREAM, "tcp" );
-    if ARCH_IS_UNIX() then
-        # on Windows, the following line allows to run more than one server
-        # at the same port, and the earlier started server will get the request.
-        IO_setsockopt( socket, IO.SOL_SOCKET,IO.SO_REUSEADDR, "xxxx" );
-    fi;
+    IO_setsockopt( socket, IO.SOL_SOCKET,IO.SO_REUSEADDR, "xxxx" );
+
     if server = true then
         bindaddr := "\000\000\000\000";
         server := "0.0.0.0";
@@ -266,9 +265,6 @@ function( server, port )
                                 Error( "Failed to store result in the global variable ", cookie, "\n" );
                             fi;
                             # should the cookie be destroyed after the session?
-                            if SCSCP_STORE_SESSION_MODE then
-                                Add( session_cookies, cookie );
-                            fi;
                             output := rec( object     := RemoteObject( cookie, hostname, port ),
                                            attributes := callinfo );
                         elif return_nothing then
