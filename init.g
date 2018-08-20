@@ -24,3 +24,5 @@ ReadPackage("MathInTheMiddle", "gap/SCSCP/scscp.gd");
 # ReadPackage("MathInTheMiddle", "gap/Server.gd");
 ReadPackage("MathInTheMiddle", "gap/Export.gd");
 ReadPackage("MathInTheMiddle", "gap/MathInTheMiddle.gd");
+
+ReadPackage("MathInTheMiddle", "gap/ToStream.gd");

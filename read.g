@@ -22,3 +22,5 @@ ReadPackage("MathInTheMiddle", "gap/SCSCP/xstream.gi");
 # ReadPackage( "MathInTheMiddle", "gap/Server.gi");
 # ReadPackage( "MathInTheMiddle", "gap/Export.gi");
 ReadPackage( "MathInTheMiddle", "gap/MathInTheMiddle.gi");
+
+ReadPackage( "MathInTheMiddle", "gap/ToStream.gi");
