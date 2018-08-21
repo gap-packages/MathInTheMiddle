@@ -8,19 +8,9 @@ obj_name -> rec(name := "OMS", attributes := rec(cdbase := MitM_cdbase,
 InstallMethod(MitM_OMRecObj,
 "for a dihedral perm group",
 [IsPermGroup and IsDihedralGroup],
-function(D)
-    local content;
-    content := [rec(name := "OMS",
-                    attributes := rec(cdbase := MitM_cdbase,
-                                      cd := "lib",
-                                      name := "DihedralGroup")),
-                rec(name := "OMS",
-                    attributes := rec(cdbase := MitM_cdbase,
-                                      cd := "lib",
-                                      name := "IsPermGroup")),
-                MitM_OMRecObj(Size(D))];
-    return rec(name := "OMA", content := content);
-end);
+D -> rec(name := "OMA", content := [MitM_SimpleOMS("DihedralGroup"),
+                                    MitM_SimpleOMS("IsPermGroup"),
+                                    MitM_OMRecObj(Size(D))]));
 
 InstallMethod(MitM_OMRecObj,
 "for an integer",
