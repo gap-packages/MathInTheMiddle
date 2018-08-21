@@ -70,3 +70,36 @@ true
 # An integer
 gap> MitM_StringOMRec(MitM_OMRecObj(27));
 "<OMI>27</OMI>"
+
+# Polynomials
+gap> p := PolynomialByExtRep( RationalFunctionsFamily(FamilyObj(1)),          
+>                             [[2,1], 1, [1,1,3,1], 3] );
+3*x1*x3+x2
+gap> MitM_StringOMRec(MitM_OMRecObj(p)) = """<OMA>
+> <OMS cd="lib" cdbase="https://www.gap-system.org/mitm/lib" name="PolynomialByExtRep" />
+> <OMA>
+> <OMS cd="lib" cdbase="https://www.gap-system.org/mitm/lib" name="RationalFunctionsFamily" />
+> <OMA>
+> <OMS cd="lib" cdbase="https://www.gap-system.org/mitm/lib" name="FamilyObj" />
+> <OMI>1</OMI>
+> </OMA>
+> </OMA>
+> <OMA>
+> <OMS cd="prim" cdbase="https://www.gap-system.org/mitm/lib" name="ListConstr" />
+> <OMA>
+> <OMS cd="prim" cdbase="https://www.gap-system.org/mitm/lib" name="ListConstr" />
+> <OMI>2</OMI>
+> <OMI>1</OMI>
+> </OMA>
+> <OMI>1</OMI>
+> <OMA>
+> <OMS cd="prim" cdbase="https://www.gap-system.org/mitm/lib" name="ListConstr" />
+> <OMI>1</OMI>
+> <OMI>1</OMI>
+> <OMI>3</OMI>
+> <OMI>1</OMI>
+> </OMA>
+> <OMI>3</OMI>
+> </OMA>
+> </OMA>""";
+true
