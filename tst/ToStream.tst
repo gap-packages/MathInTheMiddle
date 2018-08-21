@@ -67,6 +67,17 @@ gap> MitM_OMRecObj(D) =
 >       rec( content := [ 10 ], name := "OMI" ) ], name := "OMA" );
 true
 
+# Quaternion groups
+gap> Q := QuaternionGroup(IsPermGroup, 8);;
+gap> IsQuaternionGroup(Q);
+true
+gap> MitM_StringOMRec(MitM_OMRecObj(Q)) = """<OMA>
+> <OMS cd="lib" cdbase="https://www.gap-system.org/mitm/lib" name="QuaternionGroup" />
+> <OMS cd="lib" cdbase="https://www.gap-system.org/mitm/lib" name="IsPermGroup" />
+> <OMI>8</OMI>
+> </OMA>""";
+true
+
 # An integer
 gap> MitM_StringOMRec(MitM_OMRecObj(27));
 "<OMI>27</OMI>"

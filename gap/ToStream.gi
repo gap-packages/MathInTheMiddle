@@ -13,6 +13,13 @@ D -> rec(name := "OMA", content := [MitM_SimpleOMS("DihedralGroup"),
                                     MitM_OMRecObj(Size(D))]));
 
 InstallMethod(MitM_OMRecObj,
+"for a quaternion perm group",
+[IsPermGroup and IsQuaternionGroup],
+Q -> rec(name := "OMA", content := [MitM_SimpleOMS("QuaternionGroup"),
+                                    MitM_SimpleOMS("IsPermGroup"),
+                                    MitM_OMRecObj(Size(Q))]));
+
+InstallMethod(MitM_OMRecObj,
 "for an integer",
 [IsInt],
 function(i)
