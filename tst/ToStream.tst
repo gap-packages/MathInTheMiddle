@@ -114,3 +114,9 @@ gap> MitM_StringOMRec(MitM_OMRecObj(p)) = """<OMA>
 > </OMA>
 > </OMA>""";
 true
+
+# Two non-record objects together in a list
+# (a contrived example, since I'm not sure this will ever come up)
+gap> r := rec(name := "OMTWOSTRINGS", content := ["hello", "world"]);;
+gap> MitM_StringOMRec(r);                                             
+"<OMTWOSTRINGS>\nhello\nworld\n</OMTWOSTRINGS>"
