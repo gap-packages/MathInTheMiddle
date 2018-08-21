@@ -3,6 +3,7 @@ env:
   global:
     - GAPROOT=gaproot
     - COVDIR=coverage
+    - GAP_PKGS_TO_BUILD="json io profiling"
 
 addons:
   apt_packages:
@@ -15,7 +16,7 @@ addons:
 
 matrix:
   include:
-    - env: CFLAGS="-O2" CC=clang CXX=clang++
+    - env: CFLAGS="-O2" CC=clang CXX=clang++ 
       compiler: clang
     - env: CFLAGS="-O2"
       compiler: gcc
