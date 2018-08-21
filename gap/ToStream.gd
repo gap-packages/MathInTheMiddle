@@ -5,7 +5,7 @@ DeclareAttribute("MitM_OMRecObj", IsObject);
 DeclareGlobalFunction("MitM_StringOMRec");
 
 # Shortcut to make a simple OMS from a GAP object
-DeclareGlobalFunction("MitM_SimpleOM");
+DeclareGlobalFunction("MitM_SimpleOMS");
 
 # Do everything and print an object's XML
 DeclareGlobalFunction("MitM_Print");

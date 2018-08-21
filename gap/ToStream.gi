@@ -1,6 +1,6 @@
 MitM_cdbase := "https://www.gap-system.org/mitm/lib";
 
-InstallGlobalFunction(MitM_SimpleOM,
+InstallGlobalFunction(MitM_SimpleOMS,
 obj_name -> rec(name := "OMS", attributes := rec(cdbase := MitM_cdbase,
                                                  cd := "lib",
                                                  name := obj_name)));
@@ -70,7 +70,7 @@ end);
 InstallMethod(MitM_OMRecObj,
 "for the ring of integers",
 [IsIntegers],
-I -> MitM_SimpleOM("Integers"));
+I -> MitM_SimpleOMS("Integers"));
     
 InstallMethod(MitM_OMRecObj,
 "for a list",
