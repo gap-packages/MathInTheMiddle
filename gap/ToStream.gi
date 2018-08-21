@@ -65,6 +65,21 @@ function(R)
 end);
 
 InstallMethod(MitM_OMRecObj,
+"for a polynomial",
+[IsPolynomial],
+function(p)
+    local content;
+    content := [MitM_SimpleOMS("PolynomialByExtRep"),
+                rec(name := "OMA",
+                    content := [MitM_SimpleOMS("RationalFunctionsFamily"),
+                                rec(name := "OMA",
+                                    content := [MitM_SimpleOMS("FamilyObj"),
+                                                MitM_OMRecObj(1)])]),
+                MitM_OMRecObj(ExtRepPolynomialRatFun(p))];
+    return rec(name := "OMA", content := content);
+end);
+
+InstallMethod(MitM_OMRecObj,
 "for the ring of integers",
 [IsIntegers],
 I -> MitM_SimpleOMS("Integers"));
