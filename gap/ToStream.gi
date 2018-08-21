@@ -58,10 +58,7 @@ InstallMethod(MitM_OMRecObj,
 [IsPolynomialRing],
 function(R)
     local content;
-    content := [rec(name := "OMS", 
-                    attributes := rec(cdbase := MitM_cdbase,
-                                      cd := "lib",
-                                      name := "PolynomialRing")),
+    content := [MitM_SimpleOMS("PolynomialRing"),
                 MitM_OMRecObj(LeftActingDomain(R)),
                 MitM_OMRecObj(List(IndeterminatesOfPolynomialRing(R), String))];
     return rec(name := "OMA", content := content);
