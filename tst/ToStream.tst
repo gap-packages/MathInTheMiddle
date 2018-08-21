@@ -68,5 +68,5 @@ gap> MitM_OMRecObj(D) =
 true
 
 # An integer
-gap> MitM_Print(27);
-<OMI>27</OMI>
+gap> MitM_StringOMRec(MitM_OMRecObj(27));
+"<OMI>27</OMI>"
