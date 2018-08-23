@@ -117,6 +117,8 @@ function(r)
                 if IsRecord(item) then
                     Append(str, MitM_StringOMRec(item));
                 else
+                    # This might not be possible with a proper OMRec, since a
+                    # string always appears inside a pair of tags, on its own.
                     Append(str, String(item));
                 fi;
                 Append(str, "\n");

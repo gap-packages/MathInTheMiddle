@@ -115,8 +115,9 @@ gap> MitM_StringOMRec(MitM_OMRecObj(p)) = """<OMA>
 > </OMA>""";
 true
 
-# Two non-record objects together in a list
-# (a contrived example, since I'm not sure this will ever come up)
+# Two strings together in a list
+# Note: I'm not sure this will ever come up in GAP or OpenMath, and perhaps it
+#       should be prohibited.  FromStream.gi will treat it as one string.
 gap> r := rec(name := "OMTWOSTRINGS", content := ["hello", "world"]);;
 gap> MitM_StringOMRec(r);                                             
 "<OMTWOSTRINGS>\nhello\nworld\n</OMTWOSTRINGS>"
