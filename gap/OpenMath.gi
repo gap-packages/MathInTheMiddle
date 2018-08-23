@@ -38,6 +38,11 @@ EvalREC := rec(
             end,
             OMA := function(node)
                 local sym, args;
+
+                sym := MitM_Decode(node.content[1]);
+                args := List(node.content{[2..Length(node.content)]}, MitM_Decode);
+
+                return CallFuncList(sym, args);
             end,
             OMI := function(node)
                 if Length(node.content) <> 1 then
@@ -49,17 +54,23 @@ EvalREC := rec(
                 if Length(node.content) <> 1 then
                     Print("Error: Expecting exactly integer content\n");
                 fi;
-                return Int(node.content[1]);
+                return Float(node.content[1]);
             end,
-            
-            );
 
-           
+            );
 
 # Interprets GAP MathInTheMiddle OpenMath back into GAP objects
 InstallMethod(MitM_Decode, [IsRecord],
 function(r)
-    
+    if IsBound(r.name) then
+        if IsBound(EvalREC.( r.name ) ) then
+            return EvalREC.( r.name )(r);
+        else
+            Print("Error: unsupported OpenMath tag\n");
+        fi;
+    else
+        Print("Error: no tag.\n");
+    fi;
 end);
 
 
