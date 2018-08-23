@@ -16,6 +16,32 @@ BindGlobal("MitM_Evaluators", rec(
         sym := ValueGlobal(node.attributes.name);
         return sym;
      end,
+
+     OMV := function(node)
+         return node.name;
+     end,
+
+     OMI := function(node)
+         if Length(node.content) <> 1 then
+             Print("Error: Expecting exactly integer content\n");
+         fi;
+         return Int(node.content[1]);
+     end,
+
+     OMB := function(node)
+     end,
+
+     OMSTR := function(node)
+         return node.content[1];
+     end,
+
+     OMF := function(node)
+         if Length(node.content) <> 1 then
+             Print("Error: Expecting exactly integer content\n");
+         fi;
+         return Float(node.content[1]);
+     end,
+
      OMA := function(node)
          local sym, args;
 
@@ -24,17 +50,19 @@ BindGlobal("MitM_Evaluators", rec(
 
          return CallFuncList(sym, args);
      end,
-     OMI := function(node)
-         if Length(node.content) <> 1 then
-             Print("Error: Expecting exactly integer content\n");
-         fi;
-         return Int(node.content[1]);
+
+     OMBIND := function(node)
      end,
-     OMF := function(node)
-         if Length(node.content) <> 1 then
-             Print("Error: Expecting exactly integer content\n");
-         fi;
-         return Float(node.content[1]);
+
+     OME := function(node)
+         # TODO: Error handling?
+         Print("Error: ", List(node.content{ [2..Length(node.content)] }, MitM_Decode), "\n");
+     end,
+
+     OMATTR := function(node)
+     end,
+
+     OMR := function(node)
      end,
     ) );
 
@@ -72,6 +100,4 @@ function(r)
         Print("Error\n");
     fi;
 end);
-
-
 
