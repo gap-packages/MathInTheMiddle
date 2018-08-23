@@ -1,5 +1,15 @@
 
 
+# TODO: This is not really appropriate
+BindGlobal("ListEncoding", rec( encoding := 1 ) );
+BindGlobal("PermConstr", function(args...)
+              return PermList(args{[2..Length(args)]});
+          end);
+
+BindGlobal("ListConstr", function(args...)
+              return args;
+          end);
+
 BindGlobal("MitM_Evaluators", rec(
      OMS := function(node)
         local name, sym;
@@ -10,7 +20,7 @@ BindGlobal("MitM_Evaluators", rec(
         fi;
         name := node.attributes.name;
         if not IsBoundGlobal(name) then
-            Print("Error: Symbol not known\n");
+            Print("Error: Symbol \"", name, "\" not known\n");
             return fail;
         fi;
         sym := ValueGlobal(node.attributes.name);
@@ -82,7 +92,7 @@ function(node)
             fi;
         fi;
         if IsBound(node.attributes.cd) then
-            if not (node.attributes.cd in [ "lib" ]) then
+            if not (node.attributes.cd in [ "lib", "prim" ]) then
                 Print("Error: unsupported cd\n");
                 return fail;
             fi;

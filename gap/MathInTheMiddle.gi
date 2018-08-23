@@ -2,7 +2,8 @@
 #
 #
 
-MitM_cdbase := "https://www.gap-system.org/mitm/lib";
+BindGlobal("MitM_cdbase",
+           "https://www.gap-system.org/mitm/");
 
 # TODO: Optional port/address
 InstallGlobalFunction(StartMitMServer,
