@@ -11,3 +11,4 @@ ReadPackage("MathInTheMiddle", "gap/MathInTheMiddle.gd");
 
 ReadPackage("MathInTheMiddle", "gap/ToStream.gd");
 ReadPackage("MathInTheMiddle", "gap/FromStream.gd");
+ReadPackage("MathInTheMiddle", "gap/Validation.gd");
