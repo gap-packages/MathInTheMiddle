@@ -1,15 +1,13 @@
 
-
 BindGlobal("MitM_GAP_Primitives", rec(
      ListConstr := function(args...)
          return args;
      end,
-     ListEncoding := function(args...) return true; end,
+     ListEncoding := function(args...) return "ListEncoding"; end,
      PermConstr := function(args...)
          return PermList(args{[2..Length(args)]});
      end,
 ) );
-
 
 BindGlobal("MitM_Evaluators", rec(
      OMS := function(node)
