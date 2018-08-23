@@ -7,11 +7,11 @@ gap> MitM_OMRecObj(R) =
 >     [
 >       rec(
 >           attributes :=
->             rec( cd := "lib", cdbase := "https://www.gap-system.org/mitm/lib"
+>             rec( cd := "lib", cdbase := "https://www.gap-system.org/mitm/"
 >                 , name := "PolynomialRing" ), name := "OMS" ),
 >       rec(
 >           attributes :=
->             rec( cd := "lib", cdbase := "https://www.gap-system.org/mitm/lib"
+>             rec( cd := "lib", cdbase := "https://www.gap-system.org/mitm/"
 >                 , name := "Integers" ), name := "OMS" ),
 >       rec(
 >           content :=
@@ -19,7 +19,7 @@ gap> MitM_OMRecObj(R) =
 >               rec(
 >                   attributes :=
 >                     rec( cd := "prim",
->                       cdbase := "https://www.gap-system.org/mitm/lib",
+>                       cdbase := "https://www.gap-system.org/mitm/",
 >                       name := "ListConstr" ), name := "OMS" ),
 >               rec( content := [ "x1" ], name := "OMSTR" ),
 >               rec( content := [ "x2" ], name := "OMSTR" ),
@@ -35,11 +35,11 @@ gap> MitM_OMRecObj( (1,5,4) ) =
 >     [ 
 >       rec( 
 >           attributes := 
->             rec( cd := "prim", cdbase := "https://www.gap-system.org/mitm/lib"
+>             rec( cd := "prim", cdbase := "https://www.gap-system.org/mitm/"
 >                 , name := "PermConstr" ), name := "OMS" ), 
 >       rec( 
 >           attributes := 
->             rec( cd := "prim", cdbase := "https://www.gap-system.org/mitm/lib"
+>             rec( cd := "prim", cdbase := "https://www.gap-system.org/mitm/"
 >                 , name := "ListEncoding" ), name := "OMS" ), 
 >       rec( content := [ "5" ], name := "OMI" ), 
 >       rec( content := [ "2" ], name := "OMI" ), 
@@ -58,11 +58,11 @@ gap> MitM_OMRecObj(D) =
 >     [ 
 >       rec( 
 >           attributes := 
->             rec( cd := "lib", cdbase := "https://www.gap-system.org/mitm/lib",
+>             rec( cd := "lib", cdbase := "https://www.gap-system.org/mitm/",
 >               name := "DihedralGroup" ), name := "OMS" ), 
 >       rec( 
 >           attributes := 
->             rec( cd := "lib", cdbase := "https://www.gap-system.org/mitm/lib",
+>             rec( cd := "lib", cdbase := "https://www.gap-system.org/mitm/",
 >               name := "IsPermGroup" ), name := "OMS" ), 
 >       rec( content := [ "10" ], name := "OMI" ) ], name := "OMA" );
 true
@@ -72,8 +72,8 @@ gap> Q := QuaternionGroup(IsPermGroup, 8);;
 gap> IsQuaternionGroup(Q);
 true
 gap> MitM_StringOMRec(MitM_OMRecObj(Q)) = """<OMA>
-> <OMS cd="lib" cdbase="https://www.gap-system.org/mitm/lib" name="QuaternionGroup" />
-> <OMS cd="lib" cdbase="https://www.gap-system.org/mitm/lib" name="IsPermGroup" />
+> <OMS cd="lib" cdbase="https://www.gap-system.org/mitm/" name="QuaternionGroup" />
+> <OMS cd="lib" cdbase="https://www.gap-system.org/mitm/" name="IsPermGroup" />
 > <OMI>8</OMI>
 > </OMA>""";
 true
@@ -87,24 +87,24 @@ gap> p := PolynomialByExtRep( RationalFunctionsFamily(FamilyObj(1)),
 >                             [[2,1], 1, [1,1,3,1], 3] );
 3*x1*x3+x2
 gap> MitM_StringOMRec(MitM_OMRecObj(p)) = """<OMA>
-> <OMS cd="lib" cdbase="https://www.gap-system.org/mitm/lib" name="PolynomialByExtRep" />
+> <OMS cd="lib" cdbase="https://www.gap-system.org/mitm/" name="PolynomialByExtRep" />
 > <OMA>
-> <OMS cd="lib" cdbase="https://www.gap-system.org/mitm/lib" name="RationalFunctionsFamily" />
+> <OMS cd="lib" cdbase="https://www.gap-system.org/mitm/" name="RationalFunctionsFamily" />
 > <OMA>
-> <OMS cd="lib" cdbase="https://www.gap-system.org/mitm/lib" name="FamilyObj" />
+> <OMS cd="lib" cdbase="https://www.gap-system.org/mitm/" name="FamilyObj" />
 > <OMI>1</OMI>
 > </OMA>
 > </OMA>
 > <OMA>
-> <OMS cd="prim" cdbase="https://www.gap-system.org/mitm/lib" name="ListConstr" />
+> <OMS cd="prim" cdbase="https://www.gap-system.org/mitm/" name="ListConstr" />
 > <OMA>
-> <OMS cd="prim" cdbase="https://www.gap-system.org/mitm/lib" name="ListConstr" />
+> <OMS cd="prim" cdbase="https://www.gap-system.org/mitm/" name="ListConstr" />
 > <OMI>2</OMI>
 > <OMI>1</OMI>
 > </OMA>
 > <OMI>1</OMI>
 > <OMA>
-> <OMS cd="prim" cdbase="https://www.gap-system.org/mitm/lib" name="ListConstr" />
+> <OMS cd="prim" cdbase="https://www.gap-system.org/mitm/" name="ListConstr" />
 > <OMI>1</OMI>
 > <OMI>1</OMI>
 > <OMI>3</OMI>
