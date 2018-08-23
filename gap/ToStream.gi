@@ -23,7 +23,7 @@ InstallMethod(MitM_OMRecObj,
 "for an integer",
 [IsInt],
 function(i)
-    return rec(name := "OMI", content := [i]);
+    return rec(name := "OMI", content := [String(i)]);
 end);
 
 InstallMethod(MitM_OMRecObj,

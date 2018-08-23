@@ -41,11 +41,11 @@ gap> MitM_OMRecObj( (1,5,4) ) =
 >           attributes := 
 >             rec( cd := "prim", cdbase := "https://www.gap-system.org/mitm/lib"
 >                 , name := "ListEncoding" ), name := "OMS" ), 
->       rec( content := [ 5 ], name := "OMI" ), 
->       rec( content := [ 2 ], name := "OMI" ), 
->       rec( content := [ 3 ], name := "OMI" ), 
->       rec( content := [ 1 ], name := "OMI" ), 
->       rec( content := [ 4 ], name := "OMI" ) ], name := "OMA" );
+>       rec( content := [ "5" ], name := "OMI" ), 
+>       rec( content := [ "2" ], name := "OMI" ), 
+>       rec( content := [ "3" ], name := "OMI" ), 
+>       rec( content := [ "1" ], name := "OMI" ), 
+>       rec( content := [ "4" ], name := "OMI" ) ], name := "OMA" );
 true
 
 # Dihedral groups
@@ -64,7 +64,7 @@ gap> MitM_OMRecObj(D) =
 >           attributes := 
 >             rec( cd := "lib", cdbase := "https://www.gap-system.org/mitm/lib",
 >               name := "IsPermGroup" ), name := "OMS" ), 
->       rec( content := [ 10 ], name := "OMI" ) ], name := "OMA" );
+>       rec( content := [ "10" ], name := "OMI" ) ], name := "OMA" );
 true
 
 # Quaternion groups
