@@ -26,3 +26,4 @@ ReadPackage("MathInTheMiddle", "gap/Export.gd");
 ReadPackage("MathInTheMiddle", "gap/MathInTheMiddle.gd");
 
 ReadPackage("MathInTheMiddle", "gap/ToStream.gd");
+ReadPackage("MathInTheMiddle", "gap/FromStream.gd");
