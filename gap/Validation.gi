@@ -32,6 +32,16 @@ MitM_ValidXSD.Empty := function(str)
     return true;
 end;
      
+MitM_ValidXSD.Text := function(str)
+    if '<' in str then
+        return "XML strings cannot contain '<'";
+    elif Number(str, c -> c = '&') > Number(str, c -> c = ';') then
+        return "there is a '&' character without a closing ';'";
+    fi;
+    # Perhaps we could check some other simple XML things?
+    return true;
+end;
+     
 BindGlobal("MitM_ValidAttr",
 rec(
      OMS := rec(name := MitM_ValidXSD.NCName,
@@ -115,7 +125,14 @@ rec(
 
      OMB := function(content) return "not implemented"; end,
 
-     OMSTR := function(content) return "not implemented"; end,
+     OMSTR := function(content)
+         if IsEmpty(content) then
+             return true;
+         elif not (Length(content) = 1 and IsString(content[1])) then
+             return "must be only a string";
+         fi;
+         return MitM_ValidXSD.Text(content[1]);
+     end,
 
      OMF := MitM_ValidXSD.Empty,
 

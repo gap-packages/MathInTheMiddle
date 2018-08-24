@@ -59,3 +59,15 @@ gap> MitM_IsValidOMRec(MitM_XMLToOMRec("<OMF hex=\"123456DEADBEEF16\" />"));
 true
 gap> MitM_IsValidOMRec(MitM_XMLToOMRec("<OMF hex=\"123456DEADBEET16\" />"));
 "hex attribute of OMF object: contains non-hex character"
+
+# OMSTR
+gap> MitM_IsValidOMRec(MitM_XMLToOMRec("<OMSTR />"));
+true
+gap> MitM_IsValidOMRec(MitM_XMLToOMRec("<OMSTR></OMSTR>"));
+true
+gap> MitM_IsValidOMRec(MitM_XMLToOMRec("<OMSTR>hello!</OMSTR>"));
+true
+gap> MitM_IsValidOMRec(MitM_XMLToOMRec("<OMSTR><OMI>3</OMI></OMSTR>"));
+"OMSTR contents: must be only a string"
+gap> MitM_IsValidOMRec(MitM_XMLToOMRec("<OMSTR font=\"bold\">hello!</OMSTR>"));
+"font is not a valid attribute of OMSTR objects"
