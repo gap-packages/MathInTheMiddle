@@ -99,3 +99,22 @@ gap> MitM_IsValidOMRec(MitM_XMLToOMRec("<OMB>0Fv=</OMB>"));
 "OMB contents: one of [AEIMQUYcgkosw048=] must come before '='"
 gap> MitM_IsValidOMRec(MitM_XMLToOMRec("<OMB>0Fv*aabC</OMB>"));
 "OMB contents: cannot contain character '*'"
+
+# OMA
+gap> MitM_IsValidOMRec(MitM_XMLToOMRec("<OMA><OMI>4</OMI></OMA>"));
+true
+gap> MitM_IsValidOMRec(MitM_XMLToOMRec("<OMA></OMA>"));
+"OMA contents: must not be empty"
+gap> MitM_IsValidOMRec(MitM_XMLToOMRec("<OMA><OMI Name=\"bad\">4</OMI></OMA>"));
+"OMA contents: Name is not a valid attribute of OMI objects"
+gap> MitM_IsValidOMRec(MitM_XMLToOMRec("<OMA><OMI>hello</OMI></OMA>"));
+"OMA contents: OMI contents: hello is not an integer"
+gap> MitM_IsValidOMRec(MitM_XMLToOMRec("<OMA>hello</OMA>"));
+"OMA contents: must only contain OM elements"
+gap> MitM_IsValidOMRec(MitM_XMLToOMRec("<OMA><Weird /></OMA>"));
+"OMA contents: cannot contain Weird objects"
+gap> MitM_IsValidOMRec(MitM_XMLToOMRec("<OMA><Blahblahblah /></OMA>"));
+"OMA contents: cannot contain Blahblahblah objects"
+gap> MitM_IsValidOMRec(MitM_XMLToOMRec(
+>      "<OMA><OMS cd=\"abc\" name=\"myfunc\" />\n<OMI>4</OMI></OMA>"));
+true

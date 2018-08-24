@@ -3,6 +3,9 @@
 
 BindGlobal("MitM_rnams", ["name", "attributes", "content"]);
 
+BindGlobal("MitM_OMel", [ "OMS", "OMV", "OMI", "OMB", "OMSTR", "OMF",
+                          "OMA", "OMBIND", "OME", "OMATTR", "OMR"]);
+
 BindGlobal("MitM_ValidXSD", rec());
 
 MitM_ValidXSD.NCName := function(str)
@@ -174,7 +177,24 @@ rec(
 
      OMF := MitM_ValidXSD.Empty,
 
-     OMA := function(content) return "not implemented"; end,
+     OMA := function(content)
+         local item, result;
+         if Length(content) = 0 then
+             return "must not be empty";
+         fi;
+         for item in content do
+             if not IsRecord(item) then
+                 return "must only contain OM elements";
+             elif not item.name in MitM_OMel then
+                 return Concatenation("cannot contain ", item.name, " objects");
+             fi;
+             result := MitM_IsValidOMRec(item);
+             if result <> true then
+                 return result;
+             fi;
+         od;
+         return true;
+     end,
 
      OMBIND := function(content) return "not implemented"; end,
 
