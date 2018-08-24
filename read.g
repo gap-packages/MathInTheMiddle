@@ -8,7 +8,7 @@
 ReadPackage( "MathInTheMiddle", "gap/MathInTheMiddle.gi");
 
 ReadPackage( "MathInTheMiddle", "gap/OMRecToGAP.gi");
+ReadPackage( "MathInTheMiddle", "gap/GAPToOMRec.gi");
+ReadPackage( "MathInTheMiddle", "gap/XMLToOMRec.gi");
 
-ReadPackage( "MathInTheMiddle", "gap/ToStream.gi");
-ReadPackage( "MathInTheMiddle", "gap/FromStream.gi");
 ReadPackage( "MathInTheMiddle", "gap/Validation.gi");
