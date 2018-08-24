@@ -81,39 +81,16 @@ BindGlobal("MitM_Evaluators", rec(
      end,
     ) );
 
-# TODO: Remove and use Michael's validator
-BindGlobal("MitM_ValidateNode",
-function(node)
-    if not IsBound(node.name) then
-        Print("Error: no name\n");
-        return fail;
-    elif not IsBound(MitM_Evaluators.(node.name)) then
-        Print("Error: unsupported tag\n");
-        return fail;
-    elif IsBound(node.attributes) then
-        if IsBound(node.attributes.cdbase) then
-            if node.attributes.cdbase <> MitM_cdbase then
-                Print("Error: unsupported cdbase\n");
-                return fail;
-            fi;
-        fi;
-        if IsBound(node.attributes.cd) then
-            if not (node.attributes.cd in [ "lib", "prim" ]) then
-                Print("Error: unsupported cd\n");
-                return fail;
-            fi;
-        fi;
-    fi;
-    return true;
-end);
-
 # Interprets GAP MathInTheMiddle OpenMath back into GAP objects
 InstallMethod(MitM_OMRecToGAP, [IsRecord],
 function(r)
-    if MitM_ValidateNode(r) <> false then
+    local val;
+
+    val := MitM_IsValidOMRec(r);
+    if val = true then
         return MitM_Evaluators.(r.name)(r);
     else
-        Print("Error\n");
+        PrintFormatted("Error: {}\n", val);
     fi;
 end);
 
