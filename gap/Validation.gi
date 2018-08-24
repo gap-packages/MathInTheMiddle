@@ -41,6 +41,37 @@ MitM_ValidXSD.Text := function(str)
     # Perhaps we could check some other simple XML things?
     return true;
 end;
+
+MitM_ValidXSD.Base64Binary := function(str)
+    local len, nreq, i;
+    str := ShallowCopy(str);
+    RemoveCharacters(str, " \n\t\r"); # ignore whitespace
+    len := Length(str);
+    if len mod 4 <> 0 then
+        return "must have length divisible by 4";
+    fi;
+    nreq := 0;
+    if str[len] = '=' then
+        nreq := 1;
+        if str[len - 1] = '=' then
+            nreq := 2;
+            if not str[len - 2] in "AQgw" then
+                return "one of [AQgw] must come before '=='";
+            fi;
+        elif not str[len - 1] in "AEIMQUYcgkosw048" then
+            return "one of [AEIMQUYcgkosw048=] must come before '='";
+        fi;
+    fi;
+    for i in [1 .. len - nreq] do
+        if str[i] = '=' then
+            return "only 1 or 2 '=' characters allowed, and only at the end";
+        elif not (IsAlphaChar(str[i]) or IsDigitChar(str[i]) 
+                  or str[i] = '+' or str[i] = '/') then
+            return Concatenation("cannot contain character '", str{[i]}, "'");
+        fi;
+    od;
+    return true;
+end;
      
 BindGlobal("MitM_ValidAttr",
 rec(
@@ -123,7 +154,14 @@ rec(
          return true;
      end,
 
-     OMB := function(content) return "not implemented"; end,
+     OMB := function(content)
+         if IsEmpty(content) then
+             return true;
+         elif not (Length(content) = 1 and IsString(content[1])) then
+             return "must be only a string";
+         fi;
+         return MitM_ValidXSD.Base64Binary(content[1]);
+     end,
 
      OMSTR := function(content)
          if IsEmpty(content) then

@@ -71,3 +71,31 @@ gap> MitM_IsValidOMRec(MitM_XMLToOMRec("<OMSTR><OMI>3</OMI></OMSTR>"));
 "OMSTR contents: must be only a string"
 gap> MitM_IsValidOMRec(MitM_XMLToOMRec("<OMSTR font=\"bold\">hello!</OMSTR>"));
 "font is not a valid attribute of OMSTR objects"
+
+# OMB
+gap> MitM_IsValidOMRec(MitM_XMLToOMRec("<OMB></OMB>"));
+true
+gap> MitM_IsValidOMRec(MitM_XMLToOMRec("<OMB Length=\"12\">FourFour</OMB>"));
+"Length is not a valid attribute of OMB objects"
+gap> MitM_IsValidOMRec(MitM_XMLToOMRec("<OMB><OMI>3</OMI></OMB>"));
+"OMB contents: must be only a string"
+gap> MitM_IsValidOMRec(MitM_XMLToOMRec("<OMB>0FB8</OMB>"));
+true
+gap> MitM_IsValidOMRec(MitM_XMLToOMRec("<OMB>0fb8</OMB>"));
+true
+gap> MitM_IsValidOMRec(MitM_XMLToOMRec("<OMB>0 FB8 \n0F+9</OMB>"));
+true
+gap> MitM_IsValidOMRec(MitM_XMLToOMRec("<OMB>0F+40A==</OMB>"));
+true
+gap> MitM_IsValidOMRec(MitM_XMLToOMRec("<OMB>FB8</OMB>"));
+"OMB contents: must have length divisible by 4"
+gap> MitM_IsValidOMRec(MitM_XMLToOMRec("<OMB>==0F</OMB>"));
+"OMB contents: only 1 or 2 '=' characters allowed, and only at the end"
+gap> MitM_IsValidOMRec(MitM_XMLToOMRec("<OMB>==0F</OMB>"));
+"OMB contents: only 1 or 2 '=' characters allowed, and only at the end"
+gap> MitM_IsValidOMRec(MitM_XMLToOMRec("<OMB>0F==</OMB>"));
+"OMB contents: one of [AQgw] must come before '=='"
+gap> MitM_IsValidOMRec(MitM_XMLToOMRec("<OMB>0Fv=</OMB>"));
+"OMB contents: one of [AEIMQUYcgkosw048=] must come before '='"
+gap> MitM_IsValidOMRec(MitM_XMLToOMRec("<OMB>0Fv*aabC</OMB>"));
+"OMB contents: cannot contain character '*'"
