@@ -43,3 +43,19 @@ gap> MitM_IsValidOMRec(MitM_XMLToOMRec("<OMV name=\"banana\">some content</OMV>"
 "OMV object must have empty content"
 gap> MitM_IsValidOMRec(MitM_XMLToOMRec("<OMV name=\"banana\" />"));
 true
+
+# OMF
+gap> MitM_IsValidOMRec(MitM_XMLToOMRec("<OMF dec=\"32.02\" />"));
+true
+gap> MitM_IsValidOMRec(MitM_XMLToOMRec("<OMF dec=\"32.02a\" />"));
+"dec attribute of OMF object: 32.02a is not a valid float"
+gap> MitM_IsValidOMRec(MitM_XMLToOMRec("<OMF dec=\".01e17\" />"));
+true
+gap> MitM_IsValidOMRec(MitM_XMLToOMRec("<OMF dec=\"-INF\" />"));
+true
+gap> MitM_IsValidOMRec(MitM_XMLToOMRec("<OMF hex=\"ABC\" />"));
+"hex attribute of OMF object: must be 16 characters long"
+gap> MitM_IsValidOMRec(MitM_XMLToOMRec("<OMF hex=\"123456DEADBEEF16\" />"));
+true
+gap> MitM_IsValidOMRec(MitM_XMLToOMRec("<OMF hex=\"123456DEADBEET16\" />"));
+"hex attribute of OMF object: contains non-hex character"

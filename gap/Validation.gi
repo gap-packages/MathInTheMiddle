@@ -36,7 +36,27 @@ rec(
      OMI := rec(),
      OMB := rec(),
      OMSTR := rec(),
-     OMF := rec(),
+     OMF := rec(dec := function(str)
+                   if str = "INF" or str = "-INF" or str = "NaN" then
+                       return true;
+                   elif Float(str) = fail then
+                       return Concatenation(str, " is not a valid float");
+                   fi;
+                   return true;
+                end,
+                hex := function(str)
+                    local valid_chars, char;
+                    if Length(str) <> 16 then
+                        return "must be 16 characters long";
+                    fi;
+                    valid_chars := "0123456789ABCDEF";
+                    for char in str do
+                        if not char in valid_chars then
+                            return "contains non-hex character";
+                        fi;
+                    od;
+                    return true;
+                end),
      OMA := rec(),
      OMBIND := rec(),
      OME := rec(),
@@ -51,7 +71,7 @@ rec(
      OMI := [],
      OMB := [],
      OMSTR := [],
-     OMF := [],
+     OMF := [], # TODO: dec or hex, but not both
      OMA := [],
      OMBIND := [],
      OME := [],
@@ -102,7 +122,12 @@ rec(
 
      OMSTR := function(content) return "not implemented"; end,
 
-     OMF := function(content) return "not implemented"; end,
+     OMF := function(content)
+         if not IsEmpty(content) then
+             return "OMF object must have empty content";
+         fi;
+         return true;
+     end,
 
      OMA := function(content) return "not implemented"; end,
 
