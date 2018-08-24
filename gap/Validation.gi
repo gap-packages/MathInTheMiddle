@@ -3,9 +3,35 @@
 
 BindGlobal("MitM_rnams", ["name", "attributes", "content"]);
 
+BindGlobal("MitM_ValidXSD", rec());
+
+MitM_ValidXSD.NCName := function(str)
+    local char;
+    if IsEmpty(str) then
+        return "must not be the empty string";
+    elif IsDigitChar(str[1]) or str[1] = '-' or str[1] = '.' then
+        return "must start with a letter or underscore";
+    fi;
+    for char in str do
+        if not (IsAlphaChar(char) or IsDigitChar(char)
+                or char = '_' or char = '-' or char = '.') then
+            return Concatenation("must not contain the character \"",
+                                 String(char), "\"");
+        fi;
+    od;
+    return true;
+end;
+
+MitM_ValidXSD.AnyURI := function(str)
+    # Validating URIs is difficult, but we may want to do it in the future
+    return MitM_ValidXSD.NCName(str);
+end;
+     
 BindGlobal("MitM_ValidAttr",
 rec(
-     OMS := rec(),
+     OMS := rec(name := MitM_ValidXSD.NCName,
+                cd := MitM_ValidXSD.NCName,
+                cdbase := MitM_ValidXSD.AnyURI),
      OMV := rec(),
      OMI := rec(),
      OMB := rec(),
@@ -20,7 +46,7 @@ rec(
 
 BindGlobal("MitM_RequiredAttr",
 rec(
-     OMS := [],
+     OMS := ["cd", "name"],
      OMV := [],
      OMI := [],
      OMB := [],
@@ -35,7 +61,12 @@ rec(
 
 BindGlobal("MitM_ValidCont",
 rec(
-     OMS := function(content) return "not implemented"; end,
+     OMS := function(content)
+         if not IsEmpty(content) then
+             return "OMS object must have empty content";
+         fi;
+         return true;
+     end,
 
      OMV := function(content) return "not implemented"; end,
 
@@ -105,24 +136,29 @@ function(tree)
             fi;
             result := MitM_ValidAttr.(tree.name).(attr)(tree.attributes.(attr));
             if result <> true then
-                return result;
+                return StringFormatted("{} attribute of {} object: {}",
+                                       attr, tree.name, result);
             fi;
         od;
     else
         if not IsEmpty(MitM_RequiredAttr.(tree.name)) then
-            return Concatenation(tree.name, " objects must have the ",
-                                 MitM_RequiredAttr.(tree.name)[1], "attribute");
+            return StringFormatted("{} objects must have the {} attribute",
+                                   tree.name, MitM_RequiredAttr.(tree.name)[1]);
         fi;
     fi;
 
     # Check required attributes
     for attr in MitM_RequiredAttr.(tree.name) do
-        if not attr in tree.attributes.(attr) then
+        if not attr in RecNames(tree.attributes) then
             return Concatenation(tree.name, " objects must have the ",
-                                 attr, "attribute");
+                                 attr, " attribute");
         fi;
     od;
 
     # Validate the content
-    return MitM_ValidCont.(tree.name)(tree.content);
+    if IsBound(tree.content) then
+        return MitM_ValidCont.(tree.name)(tree.content);
+    else
+        return MitM_ValidCont.(tree.name)([]);
+    fi;
 end);
