@@ -1,0 +1,1 @@
+DeclareGlobalFunction("MitM_OMRecToXML");
