@@ -35,3 +35,11 @@ true
 gap> MitM_IsValidOMRec(MitM_XMLToOMRec(
 >      "<OMS cd=\"you\" name=\"ohno\">boo!</OMS>"));
 "OMS object must have empty content"
+
+# OMV
+gap> MitM_IsValidOMRec(MitM_XMLToOMRec("<OMV />"));
+"OMV objects must have the name attribute"
+gap> MitM_IsValidOMRec(MitM_XMLToOMRec("<OMV name=\"banana\">some content</OMV>"));
+"OMV object must have empty content"
+gap> MitM_IsValidOMRec(MitM_XMLToOMRec("<OMV name=\"banana\" />"));
+true

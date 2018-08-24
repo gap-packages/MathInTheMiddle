@@ -32,7 +32,7 @@ rec(
      OMS := rec(name := MitM_ValidXSD.NCName,
                 cd := MitM_ValidXSD.NCName,
                 cdbase := MitM_ValidXSD.AnyURI),
-     OMV := rec(),
+     OMV := rec(name := MitM_ValidXSD.NCName),
      OMI := rec(),
      OMB := rec(),
      OMSTR := rec(),
@@ -47,7 +47,7 @@ rec(
 BindGlobal("MitM_RequiredAttr",
 rec(
      OMS := ["cd", "name"],
-     OMV := [],
+     OMV := ["name"],
      OMI := [],
      OMB := [],
      OMSTR := [],
@@ -68,7 +68,12 @@ rec(
          return true;
      end,
 
-     OMV := function(content) return "not implemented"; end,
+     OMV := function(content)
+         if not IsEmpty(content) then
+             return "OMV object must have empty content";
+         fi;
+         return true;
+     end,
 
      OMI := function(content)
          local str, pos, valid_chars;
