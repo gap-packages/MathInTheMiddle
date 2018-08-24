@@ -110,7 +110,8 @@ rec(
      OMBIND := rec(),
      OME := rec(),
      OMATTR := rec(),
-     OMR := rec()
+     OMR := rec(),
+     OMBVAR := rec()
 ));
 
 BindGlobal("MitM_RequiredAttr",
@@ -125,7 +126,8 @@ rec(
      OMBIND := [],
      OME := [],
      OMATTR := [],
-     OMR := []
+     OMR := [],
+     OMBVAR := []
 ));
 
 BindGlobal("MitM_ValidCont",
@@ -202,7 +204,25 @@ rec(
 
      OMATTR := function(content) return "not implemented"; end,
 
-     OMR := function(content) return "not implemented"; end
+     OMR := function(content) return "not implemented"; end,
+     
+     OMBVAR := function(content)
+         local item, result;
+         if IsEmpty(content) then
+             return "must not be empty";
+         fi;
+         for item in content do
+             if not (IsRecord(item) and item.name = "OMV") then
+                 return "must only contain OMV objects";
+                 # ... or attvar objects in the full spec
+             fi;
+             result := MitM_IsValidOMRec(item);
+             if result <> true then
+                 return result;
+             fi;
+         od;
+         return true;
+     end
 ));
 
 InstallGlobalFunction(MitM_IsValidOMRec,

@@ -118,3 +118,13 @@ gap> MitM_IsValidOMRec(MitM_XMLToOMRec("<OMA><Blahblahblah /></OMA>"));
 gap> MitM_IsValidOMRec(MitM_XMLToOMRec(
 >      "<OMA><OMS cd=\"abc\" name=\"myfunc\" />\n<OMI>4</OMI></OMA>"));
 true
+
+# OMBVAR
+gap> MitM_IsValidOMRec(MitM_XMLToOMRec("<OMBVAR />"));
+"OMBVAR contents: must not be empty"
+gap> MitM_IsValidOMRec(MitM_XMLToOMRec("<OMBVAR><OMI>42</OMI></OMBVAR>"));
+"OMBVAR contents: must only contain OMV objects"
+gap> MitM_IsValidOMRec(MitM_XMLToOMRec("<OMBVAR><OMV Name=\"x\" /></OMBVAR>"));
+"OMBVAR contents: Name is not a valid attribute of OMV objects"
+gap> MitM_IsValidOMRec(MitM_XMLToOMRec("<OMBVAR><OMV name=\"x\" /></OMBVAR>"));
+true
