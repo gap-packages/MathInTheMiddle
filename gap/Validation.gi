@@ -198,7 +198,23 @@ rec(
          return true;
      end,
 
-     OMBIND := function(content) return "not implemented"; end,
+     OMBIND := function(content)
+         local item, result;
+         if not (Length(content) = 3
+                 and ForAll(content, IsRecord)
+                 and content[1].name in MitM_OMel
+                 and content[2].name = "OMBVAR"
+                 and content[3].name in MitM_OMel) then
+             return "must be [OM elm, OMBVAR, OM elm] (in that order)";
+         fi;
+         for item in content do
+             result := MitM_IsValidOMRec(item);
+             if result <> true then
+                 return result;
+             fi;
+         od;
+         return true;
+     end,
 
      OME := function(content) return "not implemented"; end,
 

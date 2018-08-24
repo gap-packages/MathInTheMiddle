@@ -128,3 +128,28 @@ gap> MitM_IsValidOMRec(MitM_XMLToOMRec("<OMBVAR><OMV Name=\"x\" /></OMBVAR>"));
 "OMBVAR contents: Name is not a valid attribute of OMV objects"
 gap> MitM_IsValidOMRec(MitM_XMLToOMRec("<OMBVAR><OMV name=\"x\" /></OMBVAR>"));
 true
+
+# OMBIND
+gap> MitM_IsValidOMRec(MitM_XMLToOMRec("<OMBIND><OMI>12</OMI></OMBIND>"));
+"OMBIND contents: must be [OM elm, OMBVAR, OM elm] (in that order)"
+gap> MitM_IsValidOMRec(MitM_XMLToOMRec(
+>      "<OMBIND kind=\"goodbind\"><OMI>12</OMI></OMBIND>"));
+"kind is not a valid attribute of OMBIND objects"
+gap> MitM_IsValidOMRec(MitM_XMLToOMRec("""<OMBIND>
+>     <OMI>12</OMI>
+>     <OMBVAR>
+>       <OMV name="x" />
+>       <OMV name="y" />
+>     </OMBVAR>
+>     <OMSTR>hello world</OMSTR>
+>   </OMBIND>"""));
+true
+gap> MitM_IsValidOMRec(MitM_XMLToOMRec("""<OMBIND>
+>     <OMI>12</OMI>
+>     <OMBVAR>
+>       <OMV name="x" z="abc" />
+>       <OMV name="y" />
+>     </OMBVAR>
+>     <OMSTR>hello world</OMSTR>
+>   </OMBIND>"""));
+"OMBIND contents: OMBVAR contents: z is not a valid attribute of OMV objects"
