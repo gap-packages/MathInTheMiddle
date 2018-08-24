@@ -1,7 +1,7 @@
 # Polynomial rings
 gap> R := PolynomialRing(Integers, [ "x1", "x2", "x3", "x4"]);
 Integers[x1,x2,x3,x4]
-gap> MitM_OMRecObj(R) =
+gap> MitM_GAPToOMRec(R) =
 > rec(
 >   content :=
 >     [
@@ -29,7 +29,7 @@ gap> MitM_OMRecObj(R) =
 true
 
 # Permutations
-gap> MitM_OMRecObj( (1,5,4) ) =
+gap> MitM_GAPToOMRec( (1,5,4) ) =
 > rec( 
 >   content := 
 >     [ 
@@ -52,7 +52,7 @@ true
 gap> D := DihedralGroup(IsPermGroup, 10);;
 gap> IsDihedralGroup(D);
 true
-gap> MitM_OMRecObj(D) =
+gap> MitM_GAPToOMRec(D) =
 > rec( 
 >   content := 
 >     [ 
@@ -71,7 +71,7 @@ true
 gap> Q := QuaternionGroup(IsPermGroup, 8);;
 gap> IsQuaternionGroup(Q);
 true
-gap> MitM_StringOMRec(MitM_OMRecObj(Q)) = """<OMA>
+gap> MitM_OMRecToXML(MitM_GAPToOMRec(Q)) = """<OMA>
 > <OMS cd="lib" cdbase="https://www.gap-system.org/mitm/" name="QuaternionGroup" />
 > <OMS cd="lib" cdbase="https://www.gap-system.org/mitm/" name="IsPermGroup" />
 > <OMI>8</OMI>
@@ -79,14 +79,14 @@ gap> MitM_StringOMRec(MitM_OMRecObj(Q)) = """<OMA>
 true
 
 # An integer
-gap> MitM_StringOMRec(MitM_OMRecObj(27));
+gap> MitM_OMRecToXML(MitM_GAPToOMRec(27));
 "<OMI>27</OMI>"
 
 # Polynomials
 gap> p := PolynomialByExtRep( RationalFunctionsFamily(FamilyObj(1)),          
 >                             [[2,1], 1, [1,1,3,1], 3] );
 3*x1*x3+x2
-gap> MitM_StringOMRec(MitM_OMRecObj(p)) = """<OMA>
+gap> MitM_OMRecToXML(MitM_GAPToOMRec(p)) = """<OMA>
 > <OMS cd="lib" cdbase="https://www.gap-system.org/mitm/" name="PolynomialByExtRep" />
 > <OMA>
 > <OMS cd="lib" cdbase="https://www.gap-system.org/mitm/" name="RationalFunctionsFamily" />
@@ -119,5 +119,5 @@ true
 # Note: I'm not sure this will ever come up in GAP or OpenMath, and perhaps it
 #       should be prohibited.  FromStream.gi will treat it as one string.
 gap> r := rec(name := "OMTWOSTRINGS", content := ["hello", "world"]);;
-gap> MitM_StringOMRec(r);                                             
+gap> MitM_OMRecToXML(r);                                             
 "<OMTWOSTRINGS>\nhello\nworld\n</OMTWOSTRINGS>"

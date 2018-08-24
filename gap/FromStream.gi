@@ -1,4 +1,4 @@
-InstallGlobalFunction(MitM_OMRecString,
+InstallGlobalFunction(MitM_XMLToOMRec,
 function(str)
     local tree;
     tree := ParseTreeXMLString(str);

@@ -3,35 +3,35 @@ obj_name -> rec(name := "OMS", attributes := rec(cdbase := MitM_cdbase,
                                                  cd := "lib",
                                                  name := obj_name)));
 
-InstallMethod(MitM_OMRecObj,
+InstallMethod(MitM_GAPToOMRec,
 "for a dihedral perm group",
 [IsPermGroup and IsDihedralGroup],
 D -> rec(name := "OMA", content := [MitM_SimpleOMS("DihedralGroup"),
                                     MitM_SimpleOMS("IsPermGroup"),
-                                    MitM_OMRecObj(Size(D))]));
+                                    MitM_GAPToOMRec(Size(D))]));
 
-InstallMethod(MitM_OMRecObj,
+InstallMethod(MitM_GAPToOMRec,
 "for a quaternion perm group",
 [IsPermGroup and IsQuaternionGroup],
 Q -> rec(name := "OMA", content := [MitM_SimpleOMS("QuaternionGroup"),
                                     MitM_SimpleOMS("IsPermGroup"),
-                                    MitM_OMRecObj(Size(Q))]));
+                                    MitM_GAPToOMRec(Size(Q))]));
 
-InstallMethod(MitM_OMRecObj,
+InstallMethod(MitM_GAPToOMRec,
 "for an integer",
 [IsInt],
 function(i)
     return rec(name := "OMI", content := [String(i)]);
 end);
 
-InstallMethod(MitM_OMRecObj,
+InstallMethod(MitM_GAPToOMRec,
 "for a string",
 [IsString],
 function(s)
     return rec(name := "OMSTR", content := [s]);
 end);
 
-InstallMethod(MitM_OMRecObj,
+InstallMethod(MitM_GAPToOMRec,
 "for a permutation",
 [IsPerm],
 function(p)
@@ -44,22 +44,22 @@ function(p)
                     attributes := rec(cdbase := MitM_cdbase,
                                       cd := "prim",
                                       name := "ListEncoding"))];
-    Append(content, List(ListPerm(p), MitM_OMRecObj));
+    Append(content, List(ListPerm(p), MitM_GAPToOMRec));
     return rec(name := "OMA", content := content);
 end);
 
-InstallMethod(MitM_OMRecObj,
+InstallMethod(MitM_GAPToOMRec,
 "for a polynomial ring",
 [IsPolynomialRing],
 function(R)
     local content;
     content := [MitM_SimpleOMS("PolynomialRing"),
-                MitM_OMRecObj(LeftActingDomain(R)),
-                MitM_OMRecObj(List(IndeterminatesOfPolynomialRing(R), String))];
+                MitM_GAPToOMRec(LeftActingDomain(R)),
+                MitM_GAPToOMRec(List(IndeterminatesOfPolynomialRing(R), String))];
     return rec(name := "OMA", content := content);
 end);
 
-InstallMethod(MitM_OMRecObj,
+InstallMethod(MitM_GAPToOMRec,
 "for a polynomial",
 [IsPolynomial],
 function(p)
@@ -69,17 +69,17 @@ function(p)
                     content := [MitM_SimpleOMS("RationalFunctionsFamily"),
                                 rec(name := "OMA",
                                     content := [MitM_SimpleOMS("FamilyObj"),
-                                                MitM_OMRecObj(1)])]),
-                MitM_OMRecObj(ExtRepPolynomialRatFun(p))];
+                                                MitM_GAPToOMRec(1)])]),
+                MitM_GAPToOMRec(ExtRepPolynomialRatFun(p))];
     return rec(name := "OMA", content := content);
 end);
 
-InstallMethod(MitM_OMRecObj,
+InstallMethod(MitM_GAPToOMRec,
 "for the ring of integers",
 [IsIntegers],
 I -> MitM_SimpleOMS("Integers"));
     
-InstallMethod(MitM_OMRecObj,
+InstallMethod(MitM_GAPToOMRec,
 "for a list",
 [IsList],
 function(L)
@@ -89,12 +89,12 @@ function(L)
                                       cd := "prim",
                                       name := "ListConstr"))];
     for item in L do
-        Add(content, MitM_OMRecObj(item));
+        Add(content, MitM_GAPToOMRec(item));
     od;
     return rec(name := "OMA", content := content);
 end);
     
-InstallGlobalFunction(MitM_StringOMRec,
+InstallGlobalFunction(MitM_OMRecToXML,
 function(r)
     local str, rnam, content, item;
     str := StringFormatted("<{}", r.name);
@@ -113,7 +113,7 @@ function(r)
             Append(str, "\n");
             for item in content do
                 if IsRecord(item) then
-                    Append(str, MitM_StringOMRec(item));
+                    Append(str, MitM_OMRecToXML(item));
                 else
                     # This might not be possible with a proper OMRec, since a
                     # string always appears inside a pair of tags, on its own.
@@ -131,5 +131,5 @@ end);
 
 InstallGlobalFunction(MitM_Print,
 function(obj)
-    Print(MitM_StringOMRec(MitM_OMRecObj(obj)), "\n");
+    Print(MitM_OMRecToXML(MitM_GAPToOMRec(obj)), "\n");
 end);
