@@ -22,9 +22,14 @@ MitM_ValidXSD.NCName := function(str)
     return true;
 end;
 
-MitM_ValidXSD.AnyURI := function(str)
-    # Validating URIs is difficult, but we may want to do it in the future
-    return MitM_ValidXSD.NCName(str);
+# Validating URIs is difficult, but we may want to do it in the future
+MitM_ValidXSD.AnyURI := MitM_ValidXSD.NCName;
+
+MitM_ValidXSD.Empty := function(str)
+    if not IsEmpty(str) then
+        return "must be empty";
+    fi;
+    return true;
 end;
      
 BindGlobal("MitM_ValidAttr",
@@ -81,24 +86,14 @@ rec(
 
 BindGlobal("MitM_ValidCont",
 rec(
-     OMS := function(content)
-         if not IsEmpty(content) then
-             return "OMS object must have empty content";
-         fi;
-         return true;
-     end,
-
-     OMV := function(content)
-         if not IsEmpty(content) then
-             return "OMV object must have empty content";
-         fi;
-         return true;
-     end,
+     OMS := MitM_ValidXSD.Empty,
+     
+     OMV := MitM_ValidXSD.Empty,
 
      OMI := function(content)
          local str, pos, valid_chars;
          if not (Length(content) = 1 and IsString(content[1])) then
-             return "OMI object must contain only a string";
+             return "must be only a string";
          fi;
          str := ShallowCopy(content[1]);
          RemoveCharacters(str, " \n\t\r"); # ignore whitespace
@@ -122,12 +117,7 @@ rec(
 
      OMSTR := function(content) return "not implemented"; end,
 
-     OMF := function(content)
-         if not IsEmpty(content) then
-             return "OMF object must have empty content";
-         fi;
-         return true;
-     end,
+     OMF := MitM_ValidXSD.Empty,
 
      OMA := function(content) return "not implemented"; end,
 
@@ -187,8 +177,12 @@ function(tree)
 
     # Validate the content
     if IsBound(tree.content) then
-        return MitM_ValidCont.(tree.name)(tree.content);
+        result := MitM_ValidCont.(tree.name)(tree.content);
     else
-        return MitM_ValidCont.(tree.name)([]);
+        result := MitM_ValidCont.(tree.name)([]);
     fi;
+    if result <> true then
+        return Concatenation(tree.name, " contents: ", result);
+    fi;
+    return true;
 end);
