@@ -4,6 +4,9 @@
 #! We define an abstract syntax representation of openmath objects.
 #!
 
-DeclareOperation("MitM_Decode", [IsObject]);
-
+#!
+#! @Description
+#! Converts an OpenMath Record to a GAP Object. Currently only supports a
+#! limited number of Math in the Middle interface CDs
+DeclareOperation("MitM_OMRecToGAP", [IsObject]);
 

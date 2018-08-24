@@ -1,4 +1,5 @@
 
+# Primitives for GAP
 BindGlobal("MitM_GAP_Primitives", rec(
      ListConstr := function(args...)
          return args;
@@ -9,6 +10,7 @@ BindGlobal("MitM_GAP_Primitives", rec(
      end,
 ) );
 
+# Evaluators for OpenMath objects
 BindGlobal("MitM_Evaluators", rec(
      OMS := function(node)
         local name, sym;
@@ -58,8 +60,8 @@ BindGlobal("MitM_Evaluators", rec(
      OMA := function(node)
          local sym, args;
 
-         sym := MitM_Decode(node.content[1]);
-         args := List(node.content{[2..Length(node.content)]}, MitM_Decode);
+         sym := MitM_OMRecToGAP(node.content[1]);
+         args := List(node.content{[2..Length(node.content)]}, MitM_OMRecToGAP);
 
          return CallFuncList(sym, args);
      end,
@@ -69,7 +71,7 @@ BindGlobal("MitM_Evaluators", rec(
 
      OME := function(node)
          # TODO: Error handling?
-         Print("Error: ", List(node.content{ [2..Length(node.content)] }, MitM_Decode), "\n");
+         Print("Error: ", List(node.content{ [2..Length(node.content)] }, MitM_OMRecToGAP), "\n");
      end,
 
      OMATTR := function(node)
@@ -79,6 +81,7 @@ BindGlobal("MitM_Evaluators", rec(
      end,
     ) );
 
+# TODO: Remove and use Michael's validator
 BindGlobal("MitM_ValidateNode",
 function(node)
     if not IsBound(node.name) then
@@ -105,7 +108,7 @@ function(node)
 end);
 
 # Interprets GAP MathInTheMiddle OpenMath back into GAP objects
-InstallMethod(MitM_Decode, [IsRecord],
+InstallMethod(MitM_OMRecToGAP, [IsRecord],
 function(r)
     if MitM_ValidateNode(r) <> false then
         return MitM_Evaluators.(r.name)(r);
