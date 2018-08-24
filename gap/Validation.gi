@@ -25,9 +25,6 @@ MitM_ValidXSD.NCName := function(str)
     return true;
 end;
 
-# Validating URIs is difficult, but we may want to do it in the future
-MitM_ValidXSD.AnyURI := MitM_ValidXSD.NCName;
-
 MitM_ValidXSD.Empty := function(str)
     if not IsEmpty(str) then
         return "must be empty";
@@ -44,6 +41,9 @@ MitM_ValidXSD.Text := function(str)
     # Perhaps we could check some other simple XML things?
     return true;
 end;
+
+# Validating URIs is difficult, but we may want to do it in the future
+MitM_ValidXSD.AnyURI := MitM_ValidXSD.Text;
 
 MitM_ValidXSD.Base64Binary := function(str)
     local len, nreq, i;
