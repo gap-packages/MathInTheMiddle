@@ -59,6 +59,11 @@ gap> MitM_IsValidOMRec(MitM_XMLToOMRec("<OMF hex=\"123456DEADBEEF16\" />"));
 true
 gap> MitM_IsValidOMRec(MitM_XMLToOMRec("<OMF hex=\"123456DEADBEET16\" />"));
 "hex attribute of OMF object: contains non-hex character"
+gap> MitM_IsValidOMRec(MitM_XMLToOMRec("<OMF />"));
+"OMF objects must have either the dec or the hex attribute"
+gap> MitM_IsValidOMRec(MitM_XMLToOMRec(
+>      "<OMF dec=\"32.02\" hex=\"123456DEADBEEF16\" />"));
+"OMF objects cannot have both the dec and the hex attribute"
 
 # OMSTR
 gap> MitM_IsValidOMRec(MitM_XMLToOMRec("<OMSTR />"));

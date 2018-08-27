@@ -132,7 +132,7 @@ rec(
      OMI := [],
      OMB := [],
      OMSTR := [],
-     OMF := [], # TODO: dec or hex, but not both
+     OMF := [],
      OMA := [],
      OMBIND := [],
      OME := [],
@@ -302,6 +302,17 @@ function(tree)
                                  attr, " attribute");
         fi;
     od;
+
+    # Check antirequisite attributes - just one of these
+    if tree.name = "OMF" then
+        if not IsBound(tree.attributes)
+               or not (IsBound(tree.attributes.dec)
+                       or IsBound(tree.attributes.hex)) then
+            return "OMF objects must have either the dec or the hex attribute";
+        elif IsBound(tree.attributes.dec) and IsBound(tree.attributes.hex) then
+            return "OMF objects cannot have both the dec and the hex attribute";
+        fi;
+    fi;
 
     # Validate the content
     if IsBound(tree.content) then
