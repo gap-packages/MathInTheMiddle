@@ -3,9 +3,13 @@
 
 BindGlobal("MitM_rnams", ["name", "attributes", "content"]);
 
+# OM elements - known as "omel" in the specification
 BindGlobal("MitM_OMel", [ "OMS", "OMV", "OMI", "OMB", "OMSTR", "OMF",
                           "OMA", "OMBIND", "OME", "OMATTR", "OMR"]);
 
+#
+# ValidXSD: a collection of functions to check some XML string types
+#
 BindGlobal("MitM_ValidXSD", rec());
 
 MitM_ValidXSD.NCName := function(str)
@@ -31,7 +35,7 @@ MitM_ValidXSD.Empty := function(str)
     fi;
     return true;
 end;
-     
+
 MitM_ValidXSD.Text := function(str)
     if '<' in str then
         return "XML strings cannot contain '<'";
@@ -68,14 +72,18 @@ MitM_ValidXSD.Base64Binary := function(str)
     for i in [1 .. len - nreq] do
         if str[i] = '=' then
             return "only 1 or 2 '=' characters allowed, and only at the end";
-        elif not (IsAlphaChar(str[i]) or IsDigitChar(str[i]) 
+        elif not (IsAlphaChar(str[i]) or IsDigitChar(str[i])
                   or str[i] = '+' or str[i] = '/') then
             return Concatenation("cannot contain character '", str{[i]}, "'");
         fi;
     od;
     return true;
 end;
-     
+
+#
+# ValidAttr: each object type's valid attributes,
+#            along with functions to check their values
+#
 BindGlobal("MitM_ValidAttr",
 rec(
      OMS := rec(name := MitM_ValidXSD.NCName,
@@ -114,6 +122,9 @@ rec(
      OMBVAR := rec()
 ));
 
+#
+# RequiredAttr: a list of required attributes for each object type
+#
 BindGlobal("MitM_RequiredAttr",
 rec(
      OMS := ["cd", "name"],
@@ -130,10 +141,13 @@ rec(
      OMBVAR := []
 ));
 
+#
+# ValidCont: a function to check content for each object type
+#
 BindGlobal("MitM_ValidCont",
 rec(
      OMS := MitM_ValidXSD.Empty,
-     
+
      OMV := MitM_ValidXSD.Empty,
 
      OMI := function(content)
@@ -221,7 +235,7 @@ rec(
      OMATTR := function(content) return "not implemented"; end,
 
      OMR := function(content) return "not implemented"; end,
-     
+
      OMBVAR := function(content)
          local item, result;
          if IsEmpty(content) then
@@ -241,6 +255,9 @@ rec(
      end
 ));
 
+#
+# IsValidOMRec: the function we call on an object to check its validity
+#
 InstallGlobalFunction(MitM_IsValidOMRec,
 function(tree)
     local rnam, attr, result;
