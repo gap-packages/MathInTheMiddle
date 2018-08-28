@@ -11,4 +11,5 @@ ReadPackage("MathInTheMiddle", "gap/OMRecToXML.gi");
 ReadPackage("MathInTheMiddle", "gap/XMLToOMRec.gi");
 ReadPackage("MathInTheMiddle", "gap/OMRecToGAP.gi");
 
+ReadPackage("MathInTheMiddle", "gap/stream.gi");
 ReadPackage("MathInTheMiddle", "gap/Validation.gi");
