@@ -3,14 +3,15 @@ function(str)
     local tree;
     tree := ParseTreeXMLString(str);
     
+    # Strip out unnecessary contents recursively
+    tree := MitM_SimplifiedTree(tree);
+    
     # Get a single object
     if Length(tree.content) > 1 then
         Error("There are several top-level objects");
     fi;
     tree := tree.content[1];
     
-    # Strip out unnecessary contents recursively
-    tree := MitM_SimplifiedTree(tree);
     return tree;
 end);
 
