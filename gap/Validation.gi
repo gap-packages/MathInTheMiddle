@@ -12,23 +12,6 @@ BindGlobal("MitM_OMel", [ "OMS", "OMV", "OMI", "OMB", "OMSTR", "OMF",
 #
 BindGlobal("MitM_ValidXSD", rec());
 
-MitM_ValidXSD.NCName := function(str)
-    local char;
-    if IsEmpty(str) then
-        return "must not be the empty string";
-    elif IsDigitChar(str[1]) or str[1] = '-' or str[1] = '.' then
-        return "must start with a letter or underscore";
-    fi;
-    for char in str do
-        if not (IsAlphaChar(char) or IsDigitChar(char)
-                or char = '_' or char = '-' or char = '.') then
-            return Concatenation("must not contain the character \"",
-                                 String(char), "\"");
-        fi;
-    od;
-    return true;
-end;
-
 MitM_ValidXSD.Empty := function(str)
     if not IsEmpty(str) then
         return "must be empty";
@@ -45,6 +28,29 @@ MitM_ValidXSD.Text := function(str)
     # Perhaps we could check some other simple XML things?
     return true;
 end;
+
+MitM_ValidXSD.NCName := function(str)
+    local result, char;
+    result := MitM_ValidXSD.Text(str);
+    if result <> true then
+        return result;
+    elif IsEmpty(str) then
+        return "must not be the empty string";
+    elif IsDigitChar(str[1]) or str[1] = '-' or str[1] = '.' then
+        return "must start with a letter or underscore";
+    fi;
+    for char in str do
+        if not (IsAlphaChar(char) or IsDigitChar(char)
+                or char = '_' or char = '-' or char = '.') then
+            return Concatenation("must not contain the character \"",
+                                 String(char), "\"");
+        fi;
+    od;
+    return true;
+end;
+
+# Checking ID uniqueness is difficult, but we may want to do it in the future
+MitM_ValidXSD.ID := MitM_ValidXSD.Text;
 
 # Validating URIs is difficult, but we may want to do it in the future
 MitM_ValidXSD.AnyURI := MitM_ValidXSD.Text;
@@ -114,12 +120,13 @@ rec(
                     od;
                     return true;
                 end),
-     OMA := rec(),
-     OMBIND := rec(),
+     OMA := rec(cdbase := MitM_ValidXSD.AnyURI),
+     OMBIND := rec(cdbase := MitM_ValidXSD.AnyURI),
      OME := rec(),
-     OMATTR := rec(),
+     OMATTR := rec(cdbase := MitM_ValidXSD.AnyURI),
      OMR := rec(),
-     OMBVAR := rec()
+     OMBVAR := rec(),
+     common := rec(id := MitM_ValidXSD.ID)
 ));
 
 #
@@ -278,11 +285,14 @@ function(tree)
     # Validate the attributes
     if IsBound(tree.attributes) then
         for attr in RecNames(tree.attributes) do
-            if not attr in RecNames(MitM_ValidAttr.(tree.name)) then
+            if attr in RecNames(MitM_ValidAttr.(tree.name)) then
+                result := MitM_ValidAttr.(tree.name).(attr)(tree.attributes.(attr));
+            elif attr in RecNames(MitM_ValidAttr.common) then
+                result := MitM_ValidAttr.common.(attr)(tree.attributes.(attr));
+            else
                 return Concatenation(attr, " is not a valid attribute of ",
                                      tree.name, " objects");
             fi;
-            result := MitM_ValidAttr.(tree.name).(attr)(tree.attributes.(attr));
             if result <> true then
                 return StringFormatted("{} attribute of {} object: {}",
                                        attr, tree.name, result);

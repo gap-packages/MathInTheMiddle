@@ -158,3 +158,30 @@ gap> MitM_IsValidOMRec(MitM_XMLToOMRec("""<OMBIND>
 >     <OMSTR>hello world</OMSTR>
 >   </OMBIND>"""));
 "OMBIND contents: OMBVAR contents: z is not a valid attribute of OMV objects"
+
+# id attribute
+gap> MitM_IsValidOMRec(MitM_XMLToOMRec("""<OMBIND id="a binding!">
+>     <OMI id="dozen">12</OMI>
+>     <OMBVAR id="cartesian names">
+>       <OMV name="x" />
+>       <OMV name="y" />
+>     </OMBVAR>
+>     <OMSTR id="traditional dummy text">hello world</OMSTR>
+>   </OMBIND>"""));
+true
+
+# cdbase attribute
+gap> MitM_IsValidOMRec(MitM_XMLToOMRec("""<OMBIND cdbase="a.b.com">
+>     <OMI>12</OMI>
+>     <OMBVAR>
+>       <OMV name="x" />
+>       <OMV name="y" />
+>     </OMBVAR>
+>     <OMSTR>hello world</OMSTR>
+>   </OMBIND>"""));
+true
+gap> MitM_IsValidOMRec(MitM_XMLToOMRec("""
+> <OMA cdbase="a.b.com"><OMI>4</OMI></OMA>"""));
+true
+gap> MitM_IsValidOMRec(MitM_XMLToOMRec("<OMI cdbase=\"a.b.com\">4</OMI>"));
+"cdbase is not a valid attribute of OMI objects"
