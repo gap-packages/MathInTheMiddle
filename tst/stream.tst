@@ -10,6 +10,20 @@ gap> stream := InputTextString("""
 gap> MitM_ReadSCSCP(stream);
 fail
 
+# The same, but in an OMOBJ
+gap> stream := InputTextString("""
+> dog
+> DOG
+> <?scscp start ?>
+> <OMOBJ>
+> <OMI>12</OMI>
+> </OMOBJ>
+> <?scscp end ?>
+> lovely!  All done!
+> """);;
+gap> MitM_ReadSCSCP(stream);
+12
+
 # A whole polynomial
 gap> stream := InputTextString("""
 > ignore these words!!! <?scscp start ?><OMOBJ>
