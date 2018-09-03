@@ -1,6 +1,3 @@
-# TODO: OMOBJ
-# TODO: id attributes of type xsd:ID
-
 BindGlobal("MitM_rnams", ["name", "attributes", "content"]);
 
 # OM elements - known as "omel" in the specification
@@ -92,6 +89,8 @@ end;
 #
 BindGlobal("MitM_ValidAttr",
 rec(
+     OMOBJ := rec(cdbase := MitM_ValidXSD.AnyURI,
+                  version := MitM_ValidXSD.Text),
      OMS := rec(name := MitM_ValidXSD.NCName,
                 cd := MitM_ValidXSD.NCName,
                 cdbase := MitM_ValidXSD.AnyURI),
@@ -134,6 +133,7 @@ rec(
 #
 BindGlobal("MitM_RequiredAttr",
 rec(
+     OMOBJ := [],
      OMS := ["cd", "name"],
      OMV := ["name"],
      OMI := [],
@@ -153,6 +153,15 @@ rec(
 #
 BindGlobal("MitM_ValidCont",
 rec(
+     OMOBJ := function(content)
+       if Length(content) <> 1 then
+         return "must be precisely one object";
+       elif not (IsRecord(content[1]) and content[1].name in MitM_OMel) then
+         return "must be an OM element";
+       fi;
+       return MitM_IsValidOMRec(content[1]);
+     end,
+
      OMS := MitM_ValidXSD.Empty,
 
      OMV := MitM_ValidXSD.Empty,

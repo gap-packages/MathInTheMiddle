@@ -185,3 +185,26 @@ gap> MitM_IsValidOMRec(MitM_XMLToOMRec("""
 true
 gap> MitM_IsValidOMRec(MitM_XMLToOMRec("<OMI cdbase=\"a.b.com\">4</OMI>"));
 "cdbase is not a valid attribute of OMI objects"
+
+# OMOBJ
+gap> MitM_IsValidOMRec(MitM_XMLToOMRec("<OMOBJ><OMI>42</OMI></OMOBJ>"));
+true
+gap> MitM_IsValidOMRec(MitM_XMLToOMRec("<OMOBJ x=\"y\"><OMI>42</OMI></OMOBJ>"));
+"x is not a valid attribute of OMOBJ objects"
+gap> MitM_IsValidOMRec(MitM_XMLToOMRec("""
+> <OMOBJ version="2.1">
+>   <OMSTR>hello</OMSTR>
+> </OMOBJ>
+> """));
+true
+gap> MitM_IsValidOMRec(MitM_XMLToOMRec("""
+> <OMOBJ version="2.1">
+>   <OMSTR>hello</OMSTR>
+>   <OMSTR>world</OMSTR>
+> </OMOBJ>
+> """));
+"OMOBJ contents: must be precisely one object"
+gap> MitM_IsValidOMRec(MitM_XMLToOMRec("<OMOBJ>3.14159</OMOBJ>"));
+"OMOBJ contents: must be an OM element"
+gap> MitM_IsValidOMRec(MitM_XMLToOMRec("<OMOBJ><OMI>3.5</OMI></OMOBJ>"));
+"OMOBJ contents: OMI contents: 3.5 is not an integer"
