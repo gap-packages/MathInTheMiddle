@@ -229,8 +229,8 @@ gap> MitM_IsValidOMRec(rec(name := "OMOBJ", os := "Linux"));
 gap> MitM_IsValidOMRec(rec(name := "OMOBJ",
 >                          attributes := rec(version := "Linux<Ubuntu>")));
 "version attribute of OMOBJ object: XML strings cannot contain '<'"
-gap> MitM_IsValidOMRec(rec(name := "OMOBJ",
->                          attributes := rec(id := "Tom & Jerry")));
-"id attribute of OMOBJ object: there is a '&' character without a closing ';'"
+gap> MitM_IsValidOMRec(rec(name := "OMV",
+>                          attributes := rec(name := "Tom & Jerry")));
+"name attribute of OMV object: there is a '&' character without a closing ';'"
 gap> MitM_IsValidOMRec(rec(name := "OMSTR", content := ["Tom & Jerry"]));
 "OMSTR contents: there is a '&' character without a closing ';'"

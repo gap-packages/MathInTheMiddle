@@ -13,11 +13,6 @@ BindGlobal("MitM_GAP_Primitives", rec(
 BindGlobal("MitM_Evaluators", rec(
      OMS := function(node)
         local name, sym;
-
-        if not IsBound(node.attributes.name) then
-            Print("Error: OMS no name given\n");
-            return fail;
-        fi;
         name := node.attributes.name;
         if node.attributes.cd = "prim" then
             sym := MitM_GAP_Primitives.(name);
@@ -41,9 +36,6 @@ BindGlobal("MitM_Evaluators", rec(
      end,
 
      OMI := function(node)
-         if Length(node.content) <> 1 then
-             Print("Error: Expecting exactly integer content\n");
-         fi;
          return Int(node.content[1]);
      end,
 
@@ -55,9 +47,6 @@ BindGlobal("MitM_Evaluators", rec(
      end,
 
      OMF := function(node)
-         if Length(node.content) <> 1 then
-             Print("Error: Expecting exactly integer content\n");
-         fi;
          return Float(node.content[1]);
      end,
 
@@ -89,7 +78,7 @@ BindGlobal("MitM_Evaluators", rec(
 InstallMethod(MitM_OMRecToGAP, [IsRecord],
 function(r)
     local val;
-
+  
     val := MitM_IsValidOMRec(r);
     if val = true then
         return MitM_Evaluators.(r.name)(r);
