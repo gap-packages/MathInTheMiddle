@@ -25,5 +25,3 @@ true
 # An integer
 gap> MitM_OMRecToGAP(MitM_GAPToOMRec(27)) = 27;
 true
-
-#
