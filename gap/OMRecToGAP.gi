@@ -1,4 +1,3 @@
-
 # Primitives for GAP
 BindGlobal("MitM_GAP_Primitives", rec(
      ListConstr := function(args...)
@@ -32,6 +31,11 @@ BindGlobal("MitM_Evaluators", rec(
         return sym;
      end,
 
+     OMOBJ := function(node)
+         # TODO: this results in multiple validations
+         return MitM_OMRecToGAP(node.content[1]);
+     end,
+     
      OMV := function(node)
          return node.name;
      end,
