@@ -119,3 +119,18 @@ gap> stream := InputTextString("""
 > """);;
 gap> MitM_ReadSCSCP(stream);
 fail
+
+# No instruction
+gap> stream := InputTextString("hello world");;
+gap> MitM_ReadSCSCP(stream);
+fail
+
+# Not an SCSCP instruction
+gap> stream := InputTextString("<?some protocol ?>");;
+gap> MitM_ReadSCSCP(stream);
+fail
+
+# Not an SCSCP instruction
+gap> stream := InputTextString("<?scscp start ?> x <?scscp abc ?>");;
+gap> MitM_ReadSCSCP(stream);
+fail
