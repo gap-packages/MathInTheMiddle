@@ -1,4 +1,4 @@
-# Read an integer
+# Just an integer not in an OMOBJ
 gap> stream := InputTextString("""
 > dog
 > DOG
@@ -8,37 +8,39 @@ gap> stream := InputTextString("""
 > lovely!  All done!
 > """);;
 gap> MitM_ReadSCSCP(stream);
-12
+fail
 
 # A whole polynomial
 gap> stream := InputTextString("""
-> ignore these words!!! <?scscp start ?><OMA>
-> <OMS cd="lib" cdbase="https://www.gap-system.org/mitm/" name="PolynomialByExtRep" />
+> ignore these words!!! <?scscp start ?><OMOBJ>
 > <OMA>
-> <OMS cd="lib" cdbase="https://www.gap-system.org/mitm/" name="RationalFunctionsFamily" />
-> <OMA>
-> <OMS cd="lib" cdbase="https://www.gap-system.org/mitm/" name="FamilyObj" />
-> <OMI>1</OMI>
+>   <OMS cd="lib" cdbase="https://www.gap-system.org/mitm/" name="PolynomialByExtRep" />
+>   <OMA>
+>     <OMS cd="lib" cdbase="https://www.gap-system.org/mitm/" name="RationalFunctionsFamily" />
+>     <OMA>
+>       <OMS cd="lib" cdbase="https://www.gap-system.org/mitm/" name="FamilyObj" />
+>       <OMI>1</OMI>
+>     </OMA>
+>   </OMA>
+>   <OMA>
+>     <OMS cd="prim" cdbase="https://www.gap-system.org/mitm/" name="ListConstr" />
+>     <OMA>
+>       <OMS cd="prim" cdbase="https://www.gap-system.org/mitm/" name="ListConstr" />
+>       <OMI>2</OMI>
+>       <OMI>1</OMI>
+>     </OMA>
+>     <OMI>1</OMI>
+>     <OMA>
+>       <OMS cd="prim" cdbase="https://www.gap-system.org/mitm/" name="ListConstr" />
+>       <OMI>1</OMI>
+>       <OMI>1</OMI>
+>       <OMI>3</OMI>
+>       <OMI>1</OMI>
+>     </OMA>
+>     <OMI>3</OMI>
+>   </OMA>
 > </OMA>
-> </OMA>
-> <OMA>
-> <OMS cd="prim" cdbase="https://www.gap-system.org/mitm/" name="ListConstr" />
-> <OMA>
-> <OMS cd="prim" cdbase="https://www.gap-system.org/mitm/" name="ListConstr" />
-> <OMI>2</OMI>
-> <OMI>1</OMI>
-> </OMA>
-> <OMI>1</OMI>
-> <OMA>
-> <OMS cd="prim" cdbase="https://www.gap-system.org/mitm/" name="ListConstr" />
-> <OMI>1</OMI>
-> <OMI>1</OMI>
-> <OMI>3</OMI>
-> <OMI>1</OMI>
-> </OMA>
-> <OMI>3</OMI>
-> </OMA>
-> </OMA>
+> </OMOBJ>
 > <?scscp end ?>
 > """);;
 gap> p := MitM_ReadSCSCP(stream);;
@@ -83,3 +85,23 @@ gap> r.success;
 false
 gap> r.error;
 "XML PI cannot be longer than 4094 characters"
+
+# Successful OMOBJ
+gap> stream := InputTextString("""
+> <?scscp start ?>
+> <OMOBJ version="2.1">
+>   <OMI>42</OMI>
+> </OMOBJ>
+> <?scscp end ?>
+> """);;
+gap> MitM_ReadSCSCP(stream);
+42
+
+# Unexpected end of stream
+gap> stream := InputTextString("""
+> dog
+> <?scscp start ?>
+> <OM
+> """);;
+gap> MitM_ReadSCSCP(stream);
+fail

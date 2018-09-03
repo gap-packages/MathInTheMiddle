@@ -1,29 +1,34 @@
 InstallGlobalFunction(MitM_ReadSCSCP,
 function(stream)
-    local get, pi;
+    local get, pi, r;
     # Get first processing instruction
     get := MitM_ReadToPI(stream);
-    pi := get.pi;
     # It should be an SCSCP start instruction
-    if pi = fail then
+    if not get.success then
         return fail;
     fi;
+    pi := get.pi;
     pi := SplitString(pi, "", " \n\r\t");
     if pi[1] <> "scscp" or pi[2] <> "start" or Length(pi) > 2 then
         return fail;
     fi;
     # Read to the end instruction
     get := MitM_ReadToPI(stream);
-    pi := get.pi;
-    if pi = fail then
+    if not get.success then
         return fail;
     fi;
+    pi := get.pi;
     pi := SplitString(pi, "", " \n\r\t");
     if pi[1] <> "scscp" or pi[2] <> "end" or Length(pi) > 2 then
         return fail;
     fi;
-    # Turn the in-between stuff into an obj
-    return MitM_OMRecToGAP(MitM_XMLToOMRec(get.pre));
+    # The in-between stuff should be an OMOBJ
+    r := MitM_XMLToOMRec(get.pre);
+    if r.name <> "OMOBJ" then
+        return fail;
+    fi;
+    # Convert to a GAP object
+    return MitM_OMRecToGAP(r);
 end);
 
 InstallGlobalFunction(MitM_ReadToPI,
