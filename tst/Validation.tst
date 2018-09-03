@@ -17,7 +17,7 @@ gap> MitM_IsValidOMRec(MitM_XMLToOMRec("<OMI x=\"4\">24<OMS/> 17</OMI>"));
 "x is not a valid attribute of OMI objects"
 
 # OMS
-gap> MitM_IsValidOMRec(MitM_XMLToOMRec("<OMS />"));
+gap> MitM_IsValidOMRec(MitM_XMLToOMRec("<OMS id=\"somename\" />"));
 "OMS objects must have the cd attribute"
 gap> MitM_IsValidOMRec(MitM_XMLToOMRec("<OMS cd=\"you\" name=\"ohno\"/>"));
 true
@@ -208,3 +208,29 @@ gap> MitM_IsValidOMRec(MitM_XMLToOMRec("<OMOBJ>3.14159</OMOBJ>"));
 "OMOBJ contents: must be an OM element"
 gap> MitM_IsValidOMRec(MitM_XMLToOMRec("<OMOBJ><OMI>3.5</OMI></OMOBJ>"));
 "OMOBJ contents: OMI contents: 3.5 is not an integer"
+
+# Not yet implemented objects
+gap> MitM_IsValidOMRec(MitM_XMLToOMRec("<OME />"));
+"OME contents: not implemented"
+gap> MitM_IsValidOMRec(MitM_XMLToOMRec("<OMATTR />"));
+"OMATTR contents: not implemented"
+gap> MitM_IsValidOMRec(MitM_XMLToOMRec("<OMR />"));
+"OMR contents: not implemented"
+
+# Contrived errors that don't use XML input
+gap> MitM_IsValidOMRec("hello");
+"<tree> must be an OM record"
+gap> MitM_IsValidOMRec(rec());
+"Invalid XML: an object must have a name"
+gap> MitM_IsValidOMRec(rec(name := "Peter Rabbit"));
+"Peter Rabbit is not a valid OM object name"
+gap> MitM_IsValidOMRec(rec(name := "OMOBJ", os := "Linux"));
+"Invalid XML: os should not exist"
+gap> MitM_IsValidOMRec(rec(name := "OMOBJ",
+>                          attributes := rec(version := "Linux<Ubuntu>")));
+"version attribute of OMOBJ object: XML strings cannot contain '<'"
+gap> MitM_IsValidOMRec(rec(name := "OMOBJ",
+>                          attributes := rec(id := "Tom & Jerry")));
+"id attribute of OMOBJ object: there is a '&' character without a closing ';'"
+gap> MitM_IsValidOMRec(rec(name := "OMSTR", content := ["Tom & Jerry"]));
+"OMSTR contents: there is a '&' character without a closing ';'"
