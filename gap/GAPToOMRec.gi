@@ -23,16 +23,12 @@ Q -> rec(name := "OMA", content := [MitM_SimpleOMS("QuaternionGroup"),
 InstallMethod(MitM_GAPToOMRec,
 "for an integer",
 [IsInt],
-function(i)
-    return rec(name := "OMI", content := [String(i)]);
-end);
+i -> rec(name := "OMI", content := [String(i)]));
 
 InstallMethod(MitM_GAPToOMRec,
 "for a string",
 [IsString],
-function(s)
-    return rec(name := "OMSTR", content := [s]);
-end);
+s -> rec(name := "OMSTR", content := [s]));
 
 InstallMethod(MitM_GAPToOMRec,
 "for a permutation",
