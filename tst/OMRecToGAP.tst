@@ -68,4 +68,19 @@ Error, Unsupported encoding for OMF
 gap> MitM_OMRecToGAPFunc(v);
 Error, Unsupported encoding for OMF
 
+# OMB
+gap> v := MitM_XMLToOMRec("<OMB>cheesyworldhello</OMB>");;
+gap> MitM_OMRecToGAP(v);
+"cheesyworldhello"
+gap> MitM_OMRecToGAPFunc(v);
+"cheesyworldhello"
+
+# OMS
+gap> v := MitM_XMLToOMRec("<OMS cd=\"you\" name=\"LadIDaPerMuTAtIOnSuPeRfAiL\" />");;
+gap> MitM_OMRecToGAP(v);
+Error, cdbase must be https://www.gap-system.org/mitm/
+gap> v := MitM_XMLToOMRec("<OMS cdbase=\"banana\" cd=\"you\" name=\"LadIDaPerMuTAtIOnSuPeRfAiL\" />");;
+gap> MitM_OMRecToGAP(v);
+Error, cdbase must be https://www.gap-system.org/mitm/
+
 #
