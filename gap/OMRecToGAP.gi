@@ -35,14 +35,24 @@ InstallValue(MitM_Evaluators, rec(
      OMS := function(node)
         local name, sym;
         name := node.attributes.name;
+
+        if (not IsBound(node.attributes.cdbase)) or
+           (node.attributes.cdbase <> MitM_cdbase) then
+            Error("cdbase must be ", MitM_cdbase);
+            return fail;
+        fi;
+
         if node.attributes.cd = "prim" then
             sym := MitM_GAP_Primitives.(name);
-        else
+        elif node.attributes.cd = "lib" then
             if not IsBoundGlobal(name) then
                 Print("Symbol \"", name, "\" not known\n");
                 return fail;
             fi;
             sym := ValueGlobal(node.attributes.name);
+        else
+            Error("cd ", node.attributes.cd, " not supported");
+            return fail;
         fi;
         return sym;
      end,
@@ -148,11 +158,21 @@ BindGlobal("MitM_GAP_PrimitivesFunc", rec(
 InstallValue(MitM_EvalToFunction, rec(
      OMS := function(node)
          local name, sym;
+
+         if (not IsBound(node.attributes.cdbase)) or
+             (node.attributes.cdbase <> MitM_cdbase) then
+             Error("cdbase must be ", MitM_cdbase);
+             return fail;
+         fi;
+
          name := node.attributes.name;
          if node.attributes.cd = "prim" then
              sym := MitM_GAP_PrimitivesFunc.(name);
-         else
+         elif node.attributes.cd = "lib" then
              sym := node.attributes.name;
+         else
+             Error("cd ", node.attributes.cd, " not supported");
+             return fail;
          fi;
          return sym;
      end,
