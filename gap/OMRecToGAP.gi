@@ -1,4 +1,25 @@
-# Primitives for GAP
+#
+#
+#
+# Interprets GAP MathInTheMiddle OpenMath back into GAP objects
+#
+InstallMethod(MitM_OMRecToGAP, [IsRecord],
+function(r)
+    local val;
+
+    val := MitM_IsValidOMRec(r);
+    if val = true then
+        return MitM_Evaluators.(r.name)(r);
+    else
+        PrintFormatted("Error: {}\n", val);
+    fi;
+end);
+
+InstallGlobalFunction(MitM_OMRecToGAPNC,
+function(r)
+    return MitM_Evaluators.(r.name)(r);
+end);
+
 BindGlobal("MitM_GAP_Primitives", rec(
      ListConstr := function(args...)
          return args;
@@ -10,7 +31,7 @@ BindGlobal("MitM_GAP_Primitives", rec(
 ) );
 
 # Evaluators for OpenMath objects
-BindGlobal("MitM_Evaluators", rec(
+InstallValue(MitM_Evaluators, rec(
      OMS := function(node)
         local name, sym;
         name := node.attributes.name;
@@ -18,7 +39,7 @@ BindGlobal("MitM_Evaluators", rec(
             sym := MitM_GAP_Primitives.(name);
         else
             if not IsBoundGlobal(name) then
-                Print("Error: Symbol \"", name, "\" not known\n");
+                Print("Symbol \"", name, "\" not known\n");
                 return fail;
             fi;
             sym := ValueGlobal(node.attributes.name);
@@ -30,16 +51,25 @@ BindGlobal("MitM_Evaluators", rec(
          # TODO: this results in multiple validations
          return MitM_OMRecToGAP(node.content[1]);
      end,
-     
+
      OMV := function(node)
          return node.name;
      end,
 
      OMI := function(node)
-         return Int(node.content[1]);
+         local v;
+         if Position(node.content[1], 'x') <> fail then
+             v := ShallowCopy(node.content[1]);
+             RemoveCharacters(v, WHITESPACE);
+             RemoveCharacters(v, "x");
+             return IntHexString(v);
+         else
+             return Int(node.content[1]);
+         fi;
      end,
 
      OMB := function(node)
+         return node.content[1];
      end,
 
      OMSTR := function(node)
@@ -47,24 +77,36 @@ BindGlobal("MitM_Evaluators", rec(
      end,
 
      OMF := function(node)
-         return Float(node.content[1]);
+         if not IsBound(node.attributes.dec) then
+             return Float(node.attributes.dec);
+         else
+             Error("Unsupported encoding for OMF");
+         fi;
      end,
 
      OMA := function(node)
          local sym, args;
 
-         sym := MitM_OMRecToGAP(node.content[1]);
-         args := List(node.content{[2..Length(node.content)]}, MitM_OMRecToGAP);
+         sym := MitM_OMRecToGAPNC(node.content[1]);
+         args := List(node.content{[2..Length(node.content)]}, MitM_OMRecToGAPNC);
 
          return CallFuncList(sym, args);
      end,
 
      OMBIND := function(node)
+         local sym, vars, body;
+
+         sym := MitM_OMRecToGAPNC(node.content[1]);
+         vars := List(node.content[2].content, x -> x.attributes.name);
+
+         body := MitM_OMRecToGAPNC(node.content[3]);
+
+         return ;
      end,
 
      OME := function(node)
          # TODO: Error handling?
-         Print("Error: ", List(node.content{ [2..Length(node.content)] }, MitM_OMRecToGAP), "\n");
+         Print("Error: ", List(node.content{ [2..Length(node.content)] }, MitM_OMRecToGAPNC), "\n");
      end,
 
      OMATTR := function(node)
@@ -74,16 +116,99 @@ BindGlobal("MitM_Evaluators", rec(
      end,
     ) );
 
-# Interprets GAP MathInTheMiddle OpenMath back into GAP objects
-InstallMethod(MitM_OMRecToGAP, [IsRecord],
+
+
+#
+# Interprets GAP MathInTheMiddle OpenMath into GAP functions
+#
+InstallMethod(MitM_OMRecToGAPFunc, [IsRecord],
 function(r)
     local val;
-  
     val := MitM_IsValidOMRec(r);
     if val = true then
-        return MitM_Evaluators.(r.name)(r);
+        return MitM_EvalToFunction.(r.name)(r);
     else
         PrintFormatted("Error: {}\n", val);
     fi;
 end);
 
+InstallGlobalFunction(MitM_OMRecToGAPFuncNC,
+function(r)
+    return MitM_EvalToFunction.(r.name)(r);
+end);
+
+# Primitives for GAP
+BindGlobal("MitM_GAP_PrimitivesFunc", rec(
+     ListConstr := "({args...} -> args)",
+     ListEncoding := {} -> "ListEncoding",
+     PermConstr := "({args...} -> PermList(args{[2..Length(args)]}))",
+) );
+
+# Evaluators for OpenMath objects
+InstallValue(MitM_EvalToFunction, rec(
+     OMS := function(node)
+         local name, sym;
+         name := node.attributes.name;
+         if node.attributes.cd = "prim" then
+             sym := MitM_GAP_PrimitivesFunc.(name);
+         else
+             sym := node.attributes.name;
+         fi;
+         return sym;
+     end,
+
+     OMV := node -> node.attributes.name,
+     OMI := function(node)
+         local v;
+         if Position(node.content[1], 'x') <> fail then
+             v := ShallowCopy(node.content[1]);
+             RemoveCharacters(v, WHITESPACE);
+             RemoveCharacters(v, "x");
+             return String(IntHexString(v));
+         else
+             return node.content[1];
+         fi;
+     end,
+
+     OMB := function(node)
+         return node.content[1];
+     end,
+
+     OMSTR := node -> Concatenation("\"", node.content[1], "\""),
+
+     OMF := function(node)
+         if not IsBound(node.attributes.dec) then
+             return String(Float(node.attributes.dec));
+         else
+             Error("Unsupported encoding for OMF");
+         fi;
+     end,
+
+     OMA := function(node)
+         local args;
+
+         args := List(node.content{[2..Length(node.content)]}, MitM_OMRecToGAPFuncNC);
+         return Concatenation( MitM_OMRecToGAPFuncNC(node.content[1]),
+                               "(", JoinStringsWithSeparator(args, ","), ")" );
+     end,
+
+     OMBIND := function(node)
+         local sym, vars, body;
+
+         sym := MitM_OMRecToGAPNC(node.content[1]);
+         return Concatenation( "function(",
+                               JoinStringsWithSeparator(List(node.content[2].content, x -> x.attributes.name), ","),
+                               ") return ", MitM_OMRecToGAPFuncNC(node.content[3]), ";  end" );
+     end,
+
+     OME := function(node)
+         # TODO: Error handling?
+         Print("Error: ", List(node.content{ [2..Length(node.content)] }, MitM_OMRecToGAPNC), "\n");
+     end,
+
+     OMATTR := function(node)
+     end,
+
+     OMR := function(node)
+     end,
+    ) );
