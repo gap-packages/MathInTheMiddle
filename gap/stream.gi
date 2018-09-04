@@ -1,23 +1,31 @@
 InstallGlobalFunction(MitM_SCSCPHandshake,
 function(in_stream, out_stream)
-    local get, pi;
+    local get, pi, start, finish;
     # Get connection initiation message (5.1.1)
     get := MitM_ReadToPI(in_stream);
     if not get.success then
+        Info(InfoMitMSCSCP, 2,
+             "Initiation failed: no processing instruction received");
         return false;
     fi;
     # Use XML parser to get at the information
     pi := Concatenation("<", get.pi, ">");
     pi := GetSTag(pi, 2);
     if pi.name <> "scscp" then
+        Info(InfoMitMSCSCP, 2,
+             "Initiation failed: no SCSCP instruction received");
         return false;
     elif Set(RecNames(pi.attributes)) <> ["scscp_versions", 
                                           "service_id",
                                           "service_name",
                                           "service_version"] then
+        Info(InfoMitMSCSCP, 2,
+             "Initiation failed: bad connection initiation message received");
         return false;
     elif not "1.3" in SplitString(pi.attributes.scscp_versions, "", " ") then
         # TODO: we are required to support SCSCP v1.0
+        Info(InfoMitMSCSCP, 2,
+             "Initiation failed: server offers no SCSCP version we know");
         return false;
     fi;
     
@@ -25,15 +33,28 @@ function(in_stream, out_stream)
     WriteLine(out_stream, "<?scscp version=\"1.3\" ?>");
     get := MitM_ReadToPI(in_stream);
     if not get.success then
+        Info(InfoMitMSCSCP, 2,
+             "Version negotiation failed: no valid response from server");
         return false;
     elif PositionSublist(get.pi, "quit") <> fail then
+        Info(InfoMitMSCSCP, 2,
+             "Version negotiation failed: server quit with following message:");
+        start := Position(get.pi, '\"');
+        finish := Position(get.pi, '\"', start);
+        Info(InfoMitMSCSCP, 2, get.pi{[start..finish]});
         return false;
     fi;
     pi := Concatenation("<", get.pi, ">");
     pi := GetSTag(pi, 2);
     if not IsBound(pi.attributes.version) then
+        Info(InfoMitMSCSCP, 2,
+             "Version negotiation failed: server sent no version number");
         return false;
     elif pi.attributes.version <> "1.3" then
+        Info(InfoMitMSCSCP, 2,
+             Concatenation("Version negotiation failed: server chose version ",
+                           pi.attributes.version,
+                           ", which is not supported"));
         return false;
     fi;
     
