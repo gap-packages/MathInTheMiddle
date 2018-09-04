@@ -53,7 +53,7 @@ InstallValue(MitM_Evaluators, rec(
      end,
 
      OMV := function(node)
-         return node.name;
+         return node.attributes.name;
      end,
 
      OMI := function(node)
