@@ -77,7 +77,7 @@ InstallValue(MitM_Evaluators, rec(
      end,
 
      OMF := function(node)
-         if not IsBound(node.attributes.dec) then
+         if IsBound(node.attributes.dec) then
              return Float(node.attributes.dec);
          else
              Error("Unsupported encoding for OMF");
@@ -177,7 +177,7 @@ InstallValue(MitM_EvalToFunction, rec(
      OMSTR := node -> Concatenation("\"", node.content[1], "\""),
 
      OMF := function(node)
-         if not IsBound(node.attributes.dec) then
+         if IsBound(node.attributes.dec) then
              return String(Float(node.attributes.dec));
          else
              Error("Unsupported encoding for OMF");
