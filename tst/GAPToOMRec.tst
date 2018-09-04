@@ -121,3 +121,15 @@ true
 gap> r := rec(name := "OMTWOSTRINGS", content := ["hello", "world"]);;
 gap> MitM_OMRecToXML(r);                                             
 "<OMTWOSTRINGS>\nhello\nworld\n</OMTWOSTRINGS>"
+
+# OMRecToOMOBJRec
+gap> MitM_OMRecToXML(MitM_OMRecToOMOBJRec(MitM_GAPToOMRec([29..31]))) =
+> """<OMOBJ>
+> <OMA>
+> <OMS cd="prim" cdbase="https://www.gap-system.org/mitm/" name="ListConstr" />
+> <OMI>29</OMI>
+> <OMI>30</OMI>
+> <OMI>31</OMI>
+> </OMA>
+> </OMOBJ>""";
+true

@@ -35,5 +35,5 @@ end);
 
 InstallGlobalFunction(MitM_Print,
 function(obj)
-    Print(MitM_OMRecToXML(MitM_GAPToOMRec(obj)), "\n");
+    Print(MitM_OMRecToXML(MitM_OMRecToOMOBJRec(MitM_GAPToOMRec(obj))), "\n");
 end);

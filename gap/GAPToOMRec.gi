@@ -1,3 +1,6 @@
+InstallGlobalFunction(MitM_OMRecToOMOBJRec,
+r -> rec(name := "OMOBJ", content := [r]));
+
 InstallGlobalFunction(MitM_SimpleOMS,
 obj_name -> rec(name := "OMS", attributes := rec(cdbase := MitM_cdbase,
                                                  cd := "lib",
