@@ -134,3 +134,58 @@ fail
 gap> stream := InputTextString("<?scscp start ?> x <?scscp abc ?>");;
 gap> MitM_ReadSCSCP(stream);
 fail
+
+# Handshaking: successful test
+gap> in_stream := InputTextString("""
+> <?scscp service_name="gap" service_version="4.10dev"
+>         service_id="some_id" scscp_versions="1,0 2.0 1.3" ?>
+> <?scscp version="1.3" ?>
+> """);;
+gap> out_str := "";;
+gap> out_stream := OutputTextString(out_str, true);;
+gap> MitM_SCSCPHandshake(in_stream, out_stream);
+true
+gap> NormalizeWhitespace(out_str);
+gap> out_str;
+"<?scscp version=\"1.3\" ?>"
+
+# Handshaking failures
+gap> str := "abc";;
+gap> MitM_SCSCPHandshake(InputTextString(str), OutputTextNone());
+false
+gap> str := "<?hello ?>";;
+gap> MitM_SCSCPHandshake(InputTextString(str), OutputTextNone());
+false
+gap> str := "<?scscp service_name=\"gap\" ?>";;
+gap> MitM_SCSCPHandshake(InputTextString(str), OutputTextNone());
+false
+gap> str := """<?scscp service_name="gap" service_version="4.10dev"
+>                      service_id="some_id" scscp_versions="1.0 2.0" ?>
+> """;;
+gap> MitM_SCSCPHandshake(InputTextString(str), OutputTextNone());
+false
+gap> str := """<?scscp service_name="gap" service_version="4.10dev"
+>                      service_id="some_id" scscp_versions="1.0 1.3" ?>
+> """;;
+gap> MitM_SCSCPHandshake(InputTextString(str), OutputTextNone());
+false
+gap> str := """<?scscp service_name="gap" service_version="4.10dev"
+>                      service_id="some_id" scscp_versions="1.0 1.3" ?>
+>              <?scscp quit reason="not supported version" ?>""";;
+gap> MitM_SCSCPHandshake(InputTextString(str), OutputTextNone());
+false
+gap> str := """<?scscp service_name="gap" service_version="4.10dev"
+>                      service_id="some_id" scscp_versions="1.0 1.3" ?>
+>              <?scscp ?>""";;
+gap> MitM_SCSCPHandshake(InputTextString(str), OutputTextNone());
+false
+gap> str := """<?scscp service_name="gap" service_version="4.10dev"
+>                      service_id="some_id" scscp_versions="1.0 1.3" ?>
+>              <?scscp version="2.0" ?>""";;
+gap> MitM_SCSCPHandshake(InputTextString(str), OutputTextNone());
+false
+gap> str := """<?scscp service_name="gap" service_version="4.10dev"
+>                      service_id="some_id" scscp_versions="1.0 1.3" ?>
+>              <?scscp version="1.3" ?>""";;
+gap> MitM_SCSCPHandshake(InputTextString(str), OutputTextNone());
+true

@@ -1,3 +1,46 @@
+InstallGlobalFunction(MitM_SCSCPHandshake,
+function(in_stream, out_stream)
+    local get, pi;
+    # Get connection initiation message (5.1.1)
+    get := MitM_ReadToPI(in_stream);
+    if not get.success then
+        return false;
+    fi;
+    # Use XML parser to get at the information
+    pi := Concatenation("<", get.pi, ">");
+    pi := GetSTag(pi, 2);
+    if pi.name <> "scscp" then
+        return false;
+    elif Set(RecNames(pi.attributes)) <> ["scscp_versions", 
+                                          "service_id",
+                                          "service_name",
+                                          "service_version"] then
+        return false;
+    elif not "1.3" in SplitString(pi.attributes.scscp_versions, "", " ") then
+        # TODO: we are required to support SCSCP v1.0
+        return false;
+    fi;
+    
+    # Version negotiation (5.1.2)
+    WriteLine(out_stream, "<?scscp version=\"1.3\" ?>");
+    get := MitM_ReadToPI(in_stream);
+    if not get.success then
+        return false;
+    elif PositionSublist(get.pi, "quit") <> fail then
+        return false;
+    fi;
+    pi := Concatenation("<", get.pi, ">");
+    pi := GetSTag(pi, 2);
+    if not IsBound(pi.attributes.version) then
+        return false;
+    elif pi.attributes.version <> "1.3" then
+        return false;
+    fi;
+    
+    # Successful handshake, now ready for procedure calls
+    return true;
+end);
+
 InstallGlobalFunction(MitM_ReadSCSCP,
 function(stream)
     local get, pi, r;

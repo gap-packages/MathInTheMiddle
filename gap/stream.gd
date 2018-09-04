@@ -18,3 +18,14 @@ DeclareGlobalFunction("MitM_ReadSCSCP");
 #!     * <K>pi</K>, the contents of the PI, excluding "<?" and "?>";
 #!     * <K>error</K>, a string saying what went wrong, if anything.
 DeclareGlobalFunction("MitM_ReadToPI");
+
+#! @Arguments in_stream, out_stream
+#! @Returns
+#!   a boolean
+#! @Description
+#!   Initiates an SCSCP connection with a server, by receiving messages from the
+#!   server using <A>in_stream</A> and sending messages to the server via
+#!   <A>out_stream</A>.  Returns <K>true</K> if the connection was initiated
+#!   successfully, and <K>false</K> otherwise.  This handshaking protocol is
+#!   described in Section 5.1 of the SCSCP specification version 1.3
+DeclareGlobalFunction("MitM_SCSCPHandshake");
