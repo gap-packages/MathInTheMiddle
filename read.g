@@ -13,3 +13,5 @@ ReadPackage("MathInTheMiddle", "gap/OMRecToGAP.gi");
 
 ReadPackage("MathInTheMiddle", "gap/Stream.gi");
 ReadPackage("MathInTheMiddle", "gap/Validation.gi");
+
+ReadPackage("MathInTheMiddle", "gap/TCPStream.gi");
