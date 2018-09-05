@@ -12,6 +12,13 @@ true
 gap> EvalString( MitM_OMRecToGAPFunc( MitM_GAPToOMRec( (1,5,4) ) ) )  = (1,5,4);
 true
 
+# Lists
+gap> v := [1,2,3];; r := MitM_GAPToOMRec([1,2,3]);;
+gap> MitM_OMRecToGAP(r) = v;
+true
+gap> EvalString(MitM_OMRecToGAPFunc(r)) = v;
+true
+
 # Dihedral groups
 gap> D := DihedralGroup(IsPermGroup, 10);;
 gap> IsDihedralGroup(D);
