@@ -101,3 +101,20 @@ gap> MitM_OMRecToGAP(v);
 Error, cd "abc" not supported
 gap> MitM_OMRecToGAPFunc(v);
 Error, cd "abc" not supported
+gap> v := MitM_XMLToOMRec("<OMS cdbase=\"https://www.gap-system.org/mitm/\" cd=\"lib2\" name=\"LadIDaPerMuTAtIOnSuPeRfAiL\" />");;
+gap> MitM_OMRecToGAP(v);
+Error, cd "lib2" not supported
+gap> MitM_OMRecToGAPFunc(v);
+Error, cd "lib2" not supported
+gap> v := MitM_XMLToOMRec("<OMS cdbase=\"https://www.gap-system.org/mitm/\" cd=\"lib\" name=\"LadIDaPerMuTAtIOnSuPeRfAiL\" />");;
+gap> MitM_OMRecToGAP(v);
+Error, symbol "LadIDaPerMuTAtIOnSuPeRfAiL" not known
+gap> EvalString(MitM_OMRecToGAPFunc(v));
+Error, Variable: 'LadIDaPerMuTAtIOnSuPeRfAiL' must have a value
+Error, Could not evaluate string.
+
+gap> v := MitM_XMLToOMRec("<OMS cdbase=\"https://www.gap-system.org/mitm/\" cd=\"lib\" name=\"Group\" />");;
+gap> Group = MitM_OMRecToGAP(v);
+true
+
+#
