@@ -66,11 +66,11 @@ end);
 InstallMethod( ViewObj, "for ioTCPstream",
                [ IsInputOutputTCPStreamRep and IsInputOutputStream ],
 function(stream)
-    Print("< ");
+    Print("<");
     if IsClosedStream(stream) then
         Print("closed ");
     fi;
-    Print("input/output TCP stream to ",stream![2],":", stream![3][1], " >");
+    Print("input/output TCP stream to ",stream![2],":", stream![3][1], ">");
 end);
 
 
@@ -80,14 +80,7 @@ end);
 ##
 InstallMethod( PrintObj, "for ioTCPstream",
 [ IsInputOutputTCPStreamRep and IsInputOutputStream ],
-function(stream)
-    local i;
-    Print("< ");
-    if IsClosedStream(stream) then
-        Print("closed ");
-    fi;
-    Print("input/output TCP stream to ",stream![2],":", stream![3][1], " >");
-end);
+ViewObj);
 
 
 ###########################################################################
@@ -241,7 +234,7 @@ end);
 InstallMethod( IsEndOfStream, "iostream",
                [ IsInputOutputTCPStreamRep and IsInputOutputStream ],
 stream -> not IO_HasData( stream![1] ) );
-
+# TODO: when does this return true? -MT
 
 ###########################################################################
 ##
