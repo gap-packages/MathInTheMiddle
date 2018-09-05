@@ -107,14 +107,20 @@ rec(
                    return true;
                 end,
                 hex := function(str)
-                    local valid_chars, char;
+                    local valid_chars, char, err;
                     if Length(str) <> 16 then
                         return "must be 16 characters long";
                     fi;
                     valid_chars := "0123456789ABCDEF";
                     for char in str do
                         if not char in valid_chars then
-                            return "contains non-hex character";
+                            err := "contains non-hex character '";
+                            Add(err, char);
+                            Add(err, ''');
+                            if char in "abcdef" then
+                                Append(err, " (letters must be capitalised)");
+                            fi;
+                            return err;
                         fi;
                     od;
                     return true;
