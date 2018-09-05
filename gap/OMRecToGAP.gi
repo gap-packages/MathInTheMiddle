@@ -39,7 +39,6 @@ InstallValue(MitM_Evaluators, rec(
         if (not IsBound(node.attributes.cdbase)) or
            (node.attributes.cdbase <> MitM_cdbase) then
             Error("cdbase must be ", MitM_cdbase);
-            return fail;
         fi;
 
         if node.attributes.cd = "prim" then
@@ -47,12 +46,10 @@ InstallValue(MitM_Evaluators, rec(
         elif node.attributes.cd = "lib" then
             if not IsBoundGlobal(name) then
                 Error("symbol \"", name, "\" not known");
-                return fail;
             fi;
             sym := ValueGlobal(node.attributes.name);
         else
             Error("cd \"", node.attributes.cd, "\" not supported");
-            return fail;
         fi;
         return sym;
      end,
@@ -79,7 +76,7 @@ InstallValue(MitM_Evaluators, rec(
      end,
 
      OMB := function(node)
-         return node.content[1];
+         return StringFormatted("{}", node.content[1]);
      end,
 
      OMSTR := function(node)
@@ -104,29 +101,20 @@ InstallValue(MitM_Evaluators, rec(
      end,
 
      OMBIND := function(node)
-         local sym, vars, body;
-
-         sym := MitM_OMRecToGAPNC(node.content[1]);
-         vars := List(node.content[2].content, x -> x.attributes.name);
-
-         body := MitM_OMRecToGAPNC(node.content[3]);
-
-         return ;
+         return EvalString(MitM_OMRecToGAPFuncNC(node));
      end,
 
      OME := function(node)
          # TODO: Error handling?
          Print("Error: ", List(node.content{ [2..Length(node.content)] }, MitM_OMRecToGAPNC), "\n");
      end,
-
-     OMATTR := function(node)
-     end,
-
-     OMR := function(node)
-     end,
+# These are currently not used and not implemented
+#     OMATTR := function(node)
+#     end,
+#
+#     OMR := function(node)
+#     end,
     ) );
-
-
 
 #
 # Interprets GAP MathInTheMiddle OpenMath into GAP functions
@@ -136,7 +124,7 @@ function(r)
     local val;
     val := MitM_IsValidOMRec(r);
     if val = true then
-        return MitM_EvalToFunction.(r.name)(r);
+        return EvalString(MitM_EvalToFunction.(r.name)(r));
     else
         PrintFormatted("Error: {}\n", val);
     fi;
@@ -162,7 +150,6 @@ InstallValue(MitM_EvalToFunction, rec(
          if (not IsBound(node.attributes.cdbase)) or
              (node.attributes.cdbase <> MitM_cdbase) then
              Error("cdbase must be ", MitM_cdbase);
-             return fail;
          fi;
 
          name := node.attributes.name;
@@ -172,7 +159,6 @@ InstallValue(MitM_EvalToFunction, rec(
              sym := node.attributes.name;
          else
              Error("cd \"", node.attributes.cd, "\" not supported");
-             return fail;
          fi;
          return sym;
      end,
@@ -190,9 +176,7 @@ InstallValue(MitM_EvalToFunction, rec(
          fi;
      end,
 
-     OMB := function(node)
-         return node.content[1];
-     end,
+     OMB := node -> StringFormatted("\"{}\"", node.content[1]),
 
      OMSTR := node -> Concatenation("\"", node.content[1], "\""),
 
@@ -215,7 +199,10 @@ InstallValue(MitM_EvalToFunction, rec(
      OMBIND := function(node)
          local sym, vars, body;
 
-         sym := MitM_OMRecToGAPNC(node.content[1]);
+         if not (node.content[1].attributes.cd = "prim" and
+                 node.content[1].attributes.name = "lambda") then
+             Error("Only the lambda binding is implemented");
+         fi;
          return Concatenation( "function(",
                                JoinStringsWithSeparator(List(node.content[2].content, x -> x.attributes.name), ","),
                                ") return ", MitM_OMRecToGAPFuncNC(node.content[3]), ";  end" );
@@ -226,9 +213,10 @@ InstallValue(MitM_EvalToFunction, rec(
          Print("Error: ", List(node.content{ [2..Length(node.content)] }, MitM_OMRecToGAPNC), "\n");
      end,
 
-     OMATTR := function(node)
-     end,
+# These are currently unused and not implemented
+#     OMATTR := function(node)
+#     end,
 
-     OMR := function(node)
-     end,
+#     OMR := function(node)
+#     end,
     ) );
