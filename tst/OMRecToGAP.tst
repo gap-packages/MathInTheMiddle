@@ -82,5 +82,15 @@ Error, cdbase must be https://www.gap-system.org/mitm/
 gap> v := MitM_XMLToOMRec("<OMS cdbase=\"banana\" cd=\"you\" name=\"LadIDaPerMuTAtIOnSuPeRfAiL\" />");;
 gap> MitM_OMRecToGAP(v);
 Error, cdbase must be https://www.gap-system.org/mitm/
-
-#
+gap> MitM_OMRecToGAPFunc(v);
+Error, cdbase must be https://www.gap-system.org/mitm/
+gap> v := MitM_XMLToOMRec("""<OMS cdbase="https://www.gap-system.org/mitm/"
+>                                 cd="lib" name="GroXYZup" />""");;
+gap> MitM_OMRecToGAP(v);
+Error, symbol "GroXYZup" not known
+gap> v := MitM_XMLToOMRec("""<OMS cdbase="https://www.gap-system.org/mitm/"
+>                                 cd="abc" name="GroXYZup" />""");;
+gap> MitM_OMRecToGAP(v);
+Error, cd "abc" not supported
+gap> MitM_OMRecToGAPFunc(v);
+Error, cd "abc" not supported

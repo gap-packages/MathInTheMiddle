@@ -46,12 +46,12 @@ InstallValue(MitM_Evaluators, rec(
             sym := MitM_GAP_Primitives.(name);
         elif node.attributes.cd = "lib" then
             if not IsBoundGlobal(name) then
-                Print("Symbol \"", name, "\" not known\n");
+                Error("symbol \"", name, "\" not known");
                 return fail;
             fi;
             sym := ValueGlobal(node.attributes.name);
         else
-            Error("cd ", node.attributes.cd, " not supported");
+            Error("cd \"", node.attributes.cd, "\" not supported");
             return fail;
         fi;
         return sym;
@@ -171,7 +171,7 @@ InstallValue(MitM_EvalToFunction, rec(
          elif node.attributes.cd = "lib" then
              sym := node.attributes.name;
          else
-             Error("cd ", node.attributes.cd, " not supported");
+             Error("cd \"", node.attributes.cd, "\" not supported");
              return fail;
          fi;
          return sym;
