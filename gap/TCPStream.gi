@@ -17,45 +17,45 @@ function( arg )
 # 2) basename --> hostname
 # 3) argts --> ??? arguments to be communicated to the hostname?
 # 4) false --> false # what'is the meaning of this?
-local hostname, port, lookup, sock, res, fio, socket_descriptor;
-if Length( arg ) = 2 then # client case
-  hostname := arg[1];
-  port := arg[2];
-  if not IsString( hostname ) then
-    Error( "InputOutputTCPStream: <hostname> must be a string! \n");
-  fi;
-  if not ( IsInt(port) and port >= 0 ) then
-    Error( "InputOutputTCPStream: <port> must be a non-negative integer! \n");
-  fi;
-  lookup := IO_gethostbyname( hostname );
-  if lookup = fail then
-    Print( "InputOutputTCPStream: cannot find hostname ", hostname, "\n");
-    return fail;
-  fi;
-  sock := IO_socket( IO.PF_INET, IO.SOCK_STREAM, "tcp" );
-  res := IO_connect( sock, IO_make_sockaddr_in( lookup.addr[1], port ) );
-  if res = fail then
-    Print( "Error: ", LastSystemError(), "\n" );
-    IO_close( sock );
-    return fail;
-  else
-    fio := IO_WrapFD( sock, IO.DefaultBufSize, IO.DefaultBufSize );
-    return Objectify( InputOutputTCPStreamDefaultType,
-                      [ fio, hostname, [ port ], false ] );
-  fi;
-elif Length( arg ) = 1 then # server case
-  socket_descriptor := arg[1];
-  if not ( IsInt(socket_descriptor) and socket_descriptor >= 0 ) then
-    Error( "InputOutputTCPStream: <socket_descriptor> must be a non-negative integer! \n");
-  fi;
-  fio := IO_WrapFD( socket_descriptor, IO.DefaultBufSize, IO.DefaultBufSize );
-  return Objectify( InputOutputTCPStreamDefaultType,
-                    [ fio, "socket descriptor", [ socket_descriptor ], false ] );
-else
-  Error( "InputOutputTCPStream: usage \n",
-         "InputOutputTCPStream(<hostname>, <port>) for client, \n",
-         "InputOutputTCPStream(<socket_descriptor>) for server! \n");
-fi;
+    local hostname, port, lookup, sock, res, fio, socket_descriptor;
+    if Length( arg ) = 2 then # client case
+        hostname := arg[1];
+        port := arg[2];
+        if not IsString( hostname ) then
+            Error( "InputOutputTCPStream: <hostname> must be a string! \n");
+        fi;
+        if not ( IsInt(port) and port >= 0 ) then
+            Error( "InputOutputTCPStream: <port> must be a non-negative integer! \n");
+        fi;
+        lookup := IO_gethostbyname( hostname );
+        if lookup = fail then
+            Print( "InputOutputTCPStream: cannot find hostname ", hostname, "\n");
+            return fail;
+        fi;
+        sock := IO_socket( IO.PF_INET, IO.SOCK_STREAM, "tcp" );
+        res := IO_connect( sock, IO_make_sockaddr_in( lookup.addr[1], port ) );
+        if res = fail then
+            Print( "Error: ", LastSystemError(), "\n" );
+            IO_close( sock );
+            return fail;
+        else
+            fio := IO_WrapFD( sock, IO.DefaultBufSize, IO.DefaultBufSize );
+            return Objectify( InputOutputTCPStreamDefaultType,
+                              [ fio, hostname, [ port ], false ] );
+        fi;
+    elif Length( arg ) = 1 then # server case
+        socket_descriptor := arg[1];
+        if not ( IsInt(socket_descriptor) and socket_descriptor >= 0 ) then
+            Error( "InputOutputTCPStream: <socket_descriptor> must be a non-negative integer! \n");
+        fi;
+        fio := IO_WrapFD( socket_descriptor, IO.DefaultBufSize, IO.DefaultBufSize );
+        return Objectify( InputOutputTCPStreamDefaultType,
+                          [ fio, "socket descriptor", [ socket_descriptor ], false ] );
+    else
+        Error( "InputOutputTCPStream: usage \n",
+               "InputOutputTCPStream(<hostname>, <port>) for client, \n",
+               "InputOutputTCPStream(<socket_descriptor>) for server! \n");
+    fi;
 end);
 
 
@@ -64,7 +64,7 @@ end);
 #M  ViewObj( <ioTCPstream> )
 ##
 InstallMethod( ViewObj, "for ioTCPstream",
-[ IsInputOutputTCPStreamRep and IsInputOutputStream ],
+               [ IsInputOutputTCPStreamRep and IsInputOutputStream ],
 function(stream)
     Print("< ");
     if IsClosedStream(stream) then
@@ -97,7 +97,7 @@ end);
 InstallMethod( ReadByte, "for ioTCPstream",
 [ IsInputOutputTCPStreamRep and IsInputOutputStream ],
 function(stream)
-local buf;
+    local buf;
     buf := IO_Read( stream![1], 1 );
     if buf = fail or Length(buf) = 0 then
         stream![4] := true;
@@ -213,15 +213,8 @@ end);
 InstallMethod( WriteLine, "for ioTCPstream",
 [ IsInputOutputTCPStreamRep and IsInputOutputStream, IsString ],
 function( stream, string )
-#    local res;
-#    res := WriteAll( stream, string );
-#    if res <> true  then
-#      return res;
-#    fi;
-#    WriteByte( stream, INT_CHAR('\n') );
-#    return IO_Flush( stream![1] );
-return IO_WriteLine( stream![1], string );
-end );
+    return IO_WriteLine( stream![1], string );
+end);
 
 
 ###########################################################################
@@ -231,14 +224,14 @@ end );
 InstallMethod( WriteAll, "for ioTCPstream",
 [ IsInputOutputTCPStreamRep and IsInputOutputStream, IsString ],
 function( stream, string )
-    local   byte;
+    local byte;
     for byte in string  do
         if WriteByte( stream, INT_CHAR(byte) ) <> true  then
             return fail;
         fi;
     od;
     return true;
-end );
+end);
 
 
 ###########################################################################
@@ -246,9 +239,8 @@ end );
 #M IsEndOfStream( <ioTCPstream> )
 ##
 InstallMethod( IsEndOfStream, "iostream",
-    [ IsInputOutputTCPStreamRep and IsInputOutputStream ],
-    stream -> not IO_HasData( stream![1] ) );
-    # or IS_BLOCKED_IOSTREAM(stream![1]) );
+               [ IsInputOutputTCPStreamRep and IsInputOutputStream ],
+stream -> not IO_HasData( stream![1] ) );
 
 
 ###########################################################################
@@ -256,7 +248,7 @@ InstallMethod( IsEndOfStream, "iostream",
 #M  CloseStream( <ioTCPstream> )
 ##
 InstallMethod( CloseStream, "for ioTCPstream",
-[ IsInputOutputTCPStreamRep and IsInputOutputStream ],
+               [ IsInputOutputTCPStreamRep and IsInputOutputStream ],
 function(stream)
     IO_Close( stream![1] );
     SetFilterObj( stream, IsClosedStream );
