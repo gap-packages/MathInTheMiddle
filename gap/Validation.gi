@@ -118,7 +118,7 @@ rec(
                             Add(err, char);
                             Add(err, ''');
                             if char in "abcdef" then
-                                Append(err, " (letters must be capitalised)");
+                                Append(err, " (not capital)");
                             fi;
                             return err;
                         fi;
