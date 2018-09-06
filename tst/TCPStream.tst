@@ -57,12 +57,12 @@ gap> Length(string) <= 21000;
 true
 
 # Serve a local client
-gap> sock := IO_socket( IO.PF_INET, IO.SOCK_STREAM, "tcp" );;
-gap> lookup := IO_gethostbyname( "localhost" );;
+gap> sock := IO_socket(IO.PF_INET, IO.SOCK_STREAM, "tcp");;
+gap> lookup := IO_gethostbyname("localhost");;
 gap> port := 26133;;
-gap> res := IO_bind( sock, IO_make_sockaddr_in( lookup.addr[1], port ) );
+gap> res := IO_bind( sock, IO_make_sockaddr_in(lookup.addr[1], port));
 true
-gap> IO_listen( sock, 5 );
+gap> IO_listen(sock, 5);
 true
 gap> out := "";;
 gap> child := IO_fork();;
