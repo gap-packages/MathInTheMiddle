@@ -22,4 +22,6 @@ BindGlobal("MitM_DefaultServerOptions", rec(
 );
 
 DeclareInfoClass("InfoMitMServer");
+# TODO: During Development we want this to be verbose
+SetInfoLevel(InfoMitMServer, 15);
 

@@ -8,14 +8,14 @@ function(addr, stream)
     done := false;
 
     Info(InfoMitMServer, 5, "Accepted MitM Connection on ", TCP_AddrToString(addr));
-    version := MitM_SCSCPServerHandshake(stream);
+    version := MitM_SCSCPServerHandshake(stream, stream);
     Info(InfoMitMServer, 5, " SCSCP Protocol Version ", version);
     while not done do
         obj := MitM_ReadSCSCP(stream);
         Info(InfoMitMServer, 15, " Evaluated to \n ", obj);
-        WriteAll(stream, "<?scscp start>");
-        WriteAll(stream, MitM_OMRecToXML(MitM_OMRecToOMOBJRec(MitM_GAPToOMRec(obj))));
-        WriteAll(stream, "<?scscp end>");
+        WriteLine(stream, "<?scscp start ?>");
+        WriteLine(stream, MitM_OMRecToXML(MitM_OMRecToOMOBJRec(MitM_GAPToOMRec(obj))));
+        WriteLine(stream, "<?scscp end ?>");
     od;
     Info(InfoMitMServer, 5, "Leaving handler for ", TCP_AddrToString(addr));
 end);
@@ -29,7 +29,7 @@ function(args...)
         opt.hostname := args[1];
     fi;
     if IsBound(args[2]) and IsPosInt(args[2]) then
-        opt.port := args[1];
+        opt.port := args[2];
     fi;
 
     Info(InfoMitMServer, 5, "Starting MitM TCP Server on ", opt.hostname, ":", opt.port);
