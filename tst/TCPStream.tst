@@ -31,6 +31,8 @@ gap> Length(all) > 500;
 true
 gap> ReadByte(stream);
 fail
+gap> ReadLine(stream);
+fail
 gap> ReadAllIoTCPStream(stream, 40);
 fail
 gap> CloseStream(stream);
@@ -47,8 +49,10 @@ gap> WriteByte(stream, IntChar('T'));
 true
 gap> WriteLine(stream, "");
 1
+gap> ReadByte(stream) = IntChar('H');
+true
 gap> ReadLine(stream);
-"HTTP/1.0 200 OK\r\n"
+"TTP/1.0 200 OK\r\n"
 gap> string := ReadAllIoTCPStream(stream, 21000);;
 gap> Length(string) <= 21000;
 true
@@ -70,7 +74,7 @@ gap> if child = 0 then
 >   clientstream := InputOutputTCPStream("localhost",26133);;
 >   WriteLine(clientstream, "12345");;
 >   if ReadLine(clientstream){[1..5]} = "54321" then 
->     WriteLine(clientstream, "Read successfully!");;
+>     WriteAll(clientstream, "Read successfully!");;
 >   fi;
 >   CloseStream(clientstream);
 >   QUIT_GAP(0);
@@ -84,10 +88,19 @@ gap> ReadLine(serverstream);
 gap> WriteLine(serverstream, "54321");
 6
 gap> ReadLine(serverstream);
-"Read successfully!\n"
-gap> CloseStream(serverstream);
+"Read successfully!"
 gap> wait := IO_WaitPid(child, true);;
 gap> wait.pid = child;
 true
 gap> wait.status;
 0
+gap> CloseStream(serverstream);
+
+# Errors
+gap> stream := InputOutputTCPStream("www.google.com", 80);;
+gap> ReadAll(stream, -1);
+Error, ReadAll: negative limit not allowed
+gap> WriteByte(stream, -1);
+Error, <byte> must an integer between 0 and 255
+gap> WriteByte(stream, 256);
+Error, <byte> must an integer between 0 and 255
