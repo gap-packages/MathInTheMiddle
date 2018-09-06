@@ -64,20 +64,30 @@ gap> res := IO_bind( sock, IO_make_sockaddr_in( lookup.addr[1], port ) );
 true
 gap> IO_listen( sock, 5 );
 true
-gap> cmd := "echo \'";;
-gap> Append(cmd, "LoadPackage(\"MathInTheMiddle\");;");
-gap> Append(cmd, "clientstream := InputOutputTCPStream(\"localhost\",26133);;");
-gap> Append(cmd, "WriteLine(clientstream, \"12345\");;");
-gap> Append(cmd, "CloseStream(clientstream);");
-gap> Append(cmd, "quit; quit;");
-gap> Append(cmd, "\' | ");
-gap> Append(cmd, GAPInfo.SystemEnvironment._);
-gap> Append(cmd, " --quitonbreak -q -a 500M -m 500M -A &");
-gap> Exec(cmd);
-gap> socket_descriptor := IO_accept( sock, IO_MakeIPAddressPort("0.0.0.0",0) );;
+gap> out := "";;
+gap> child := IO_fork();;
+gap> if child = 0 then
+>   clientstream := InputOutputTCPStream("localhost",26133);;
+>   WriteLine(clientstream, "12345");;
+>   if ReadLine(clientstream){[1..5]} = "54321" then 
+>     WriteLine(clientstream, "Read successfully!");;
+>   fi;
+>   CloseStream(clientstream);
+>   QUIT_GAP(0);
+> fi;
+gap> socket_descriptor := IO_accept(sock, IO_MakeIPAddressPort("0.0.0.0",0));;
 gap> serverstream := InputOutputTCPStream(socket_descriptor);;
 gap> FileDescriptorOfStream(serverstream) = socket_descriptor;
 true
 gap> ReadLine(serverstream);
 "12345\n"
+gap> WriteLine(serverstream, "54321");
+6
+gap> ReadLine(serverstream);
+"Read successfully!\n"
 gap> CloseStream(serverstream);
+gap> wait := IO_WaitPid(child, true);;
+gap> wait.pid = child;
+true
+gap> wait.status;
+0
