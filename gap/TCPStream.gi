@@ -21,9 +21,6 @@ function(hostname, port, handlerCallback)
 
         # Handle connection
         handlerCallback(addr, stream);
-
-        CloseStream(stream);
-        IO_close(client);
     od;
 end);
 
@@ -96,7 +93,7 @@ InstallGlobalFunction( AcceptInputOutputTCPStream,
 function(socket_descriptor)
     local fio;
     if not (IsInt(socket_descriptor) and socket_descriptor >= 0) then
-        Error("InputOutputTCPStream: <socket_descriptor> must be a non-negative integer! \n");
+        Error("AcceptInputOutputTCPStream: <socket_descriptor> must be a non-negative integer! \n");
     fi;
     fio := IO_WrapFD(socket_descriptor, IO.DefaultBufSize, IO.DefaultBufSize);
     return Objectify( InputOutputTCPStreamDefaultType,
