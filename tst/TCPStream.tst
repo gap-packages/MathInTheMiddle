@@ -59,6 +59,7 @@ true
 gap> string := ReadAll(stream, 21000);;
 gap> Length(string) <= 21000;
 true
+gap> CloseStream(stream);
 
 # Serve a local client
 gap> sock := IO_socket(IO.PF_INET, IO.SOCK_STREAM, "tcp");;
@@ -68,16 +69,15 @@ gap> res := IO_bind( sock, IO_make_sockaddr_in(lookup.addr[1], port));
 true
 gap> IO_listen(sock, 5);
 true
-gap> out := "";;
 gap> child := IO_fork();;
 gap> if child = 0 then
->   clientstream := ConnectInputOutputTCPStream("localhost", 26133);;
+>   clientstream := ConnectInputOutputTCPStream("localhost", port);;
 >   WriteLine(clientstream, "12345");;
 >   if ReadLine(clientstream){[1..5]} = "54321" then
 >     WriteAll(clientstream, "Read successfully!");;
 >   fi;
 >   CloseStream(clientstream);
->   QUIT_GAP(0);
+>   FORCE_QUIT_GAP(0);
 > fi;
 gap> socket_descriptor := IO_accept(sock, IO_MakeIPAddressPort("0.0.0.0", 0));;
 gap> serverstream := AcceptInputOutputTCPStream(socket_descriptor);;
@@ -104,6 +104,7 @@ gap> WriteByte(stream, -1);
 Error, <byte> must an integer between 0 and 255
 gap> WriteByte(stream, 256);
 Error, <byte> must an integer between 0 and 255
+gap> CloseStream(stream);
 
 # Vandalise a stream to cause IO to fail
 gap> stream := ConnectInputOutputTCPStream("www.google.com", 80);;
@@ -115,6 +116,7 @@ gap> WriteAll(stream, "GET");
 fail
 gap> WriteByte(stream, IntChar('G'));
 fail
+gap> CloseStream(stream);
 
 # InputOutputTCPStream errors
 gap> ConnectInputOutputTCPStream(80, "www.google.com");
