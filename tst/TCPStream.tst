@@ -79,7 +79,7 @@ gap> if child = 0 then
 >   CloseStream(clientstream);
 >   QUIT_GAP(0);
 > fi;
-gap> socket_descriptor := IO_accept(sock, IO_MakeIPAddressPort("0.0.0.0",0));;
+gap> socket_descriptor := IO_accept(sock, IO_MakeIPAddressPort("0.0.0.0", 0));;
 gap> serverstream := InputOutputTCPStream(socket_descriptor);;
 gap> FileDescriptorOfStream(serverstream) = socket_descriptor;
 true
@@ -104,3 +104,14 @@ gap> WriteByte(stream, -1);
 Error, <byte> must an integer between 0 and 255
 gap> WriteByte(stream, 256);
 Error, <byte> must an integer between 0 and 255
+
+# Vandalise a stream to cause IO to fail
+gap> stream := InputOutputTCPStream("www.google.com", 80);;
+gap> stream![1]!.wbufsize := 0;;
+gap> stream![1]!.fd := "terrible input!";;
+gap> WriteLine(stream, "GET");
+fail
+gap> WriteAll(stream, "GET");
+fail
+gap> WriteByte(stream, IntChar('G'));
+fail
