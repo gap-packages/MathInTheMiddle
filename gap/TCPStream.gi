@@ -1,68 +1,108 @@
 
-###########################################################################
-##
-##  InputOutputTCPStream( <hostname>, <port> )
-##  InputOutputTCPStream( <socket_descriptor> )
-##
-##  The first usage is to be used by client and specifies hostname and port.
-##  The second usage is to be used by server and specifies socket descriptor
-##  which will be used to accept incoming connections.
-##
-InstallGlobalFunction( InputOutputTCPStream,
-function( arg )
-# InputOutputLocalProcess has 3 arguments: cdir, exec, argts
-# at least for now, we want to preserve four components of the internal
-# representation of input/output streams, with the following correspondence
-# 1) ptynum --> object in the category IsFile
-# 2) basename --> hostname
-# 3) argts --> ??? arguments to be communicated to the hostname?
-# 4) false --> false # what'is the meaning of this?
-    local hostname, port, lookup, sock, res, fio, socket_descriptor;
-    if Length( arg ) = 2 then # client case
-        hostname := arg[1];
-        port := arg[2];
-        if not IsString( hostname ) then
-            Error( "InputOutputTCPStream: <hostname> must be a string! \n");
-        fi;
-        if not ( IsInt(port) and port >= 0 ) then
-            Error( "InputOutputTCPStream: <port> must be a non-negative integer! \n");
-        fi;
-        lookup := IO_gethostbyname( hostname );
-        if lookup = fail then
-            Print( "InputOutputTCPStream: cannot find hostname ", hostname, "\n");
-            return fail;
-        fi;
-        sock := IO_socket( IO.PF_INET, IO.SOCK_STREAM, "tcp" );
-        res := IO_connect( sock, IO_make_sockaddr_in( lookup.addr[1], port ) );
-        if res = fail then
-            Print( "Error: ", LastSystemError(), "\n" );
-            IO_close( sock );
-            return fail;
-        else
-            fio := IO_WrapFD( sock, IO.DefaultBufSize, IO.DefaultBufSize );
-            return Objectify( InputOutputTCPStreamDefaultType,
-                              [ fio, hostname, [ port ], false ] );
-        fi;
-    elif Length( arg ) = 1 then # server case
-        socket_descriptor := arg[1];
-        if not ( IsInt(socket_descriptor) and socket_descriptor >= 0 ) then
-            Error( "InputOutputTCPStream: <socket_descriptor> must be a non-negative integer! \n");
-        fi;
-        fio := IO_WrapFD( socket_descriptor, IO.DefaultBufSize, IO.DefaultBufSize );
-        return Objectify( InputOutputTCPStreamDefaultType,
-                          [ fio, "socket descriptor", [ socket_descriptor ], false ] );
+TCP_AddrToString := function(addr)
+    return JoinStringsWithSeparator(List(addr{[5..8]}, x -> String(INT_CHAR(x))), ".");
+end;
+
+InstallGlobalFunction( StartTCPServer,
+function(hostname, port, handlerCallback)
+    local socket, addr, client, stream;
+    socket := ListeningTCPSocket(hostname, port);
+    while true do
+        # Currently we accept connections from anyone.
+        addr := IO_MakeIPAddressPort( "0.0.0.0", 0 );
+
+        # Accept connection, and open stream.
+        client := IO_accept(socket, addr);
+
+        # TODO: prettier
+        Info(InfoTCPSockets, 5, "Accepted connection from: ",
+             TCP_AddrToString(addr));
+        stream := AcceptInputOutputTCPStream(client);
+
+        # Handle connection
+        handlerCallback(addr, stream);
+
+        CloseStream(stream);
+        IO_close(client);
+    od;
+end);
+
+InstallGlobalFunction( ListeningTCPSocket,
+function(hostname, port)
+    local socket, client, desc, stream, res, bindaddr, listenname;
+
+    res := IO_gethostbyname(hostname);
+    if res = fail then
+        ErrorNoReturn("Failed to lookup address: ", LastSystemError());
+        return fail;
+    fi;
+    bindaddr := res.addr[1];
+    listenname := res.name;
+
+    if not IsPosInt(port) or (port > 65536) then
+        ErrorNoReturn("Usage: port has to be a positive integer less than 65536");
+        return fail;
+    fi;
+
+    # Create TCP socket
+    Info(InfoTCPSockets, 5, "MitM server listening for connections...");
+    socket := IO_socket( IO.PF_INET, IO.SOCK_STREAM, "tcp" );
+    if socket = fail then
+        ErrorNoReturn("Failed to open socket: ", LastSystemError());
+        return fail;
+    fi;
+
+    res := IO_bind(socket, IO_make_sockaddr_in(bindaddr, port));
+    if res = fail then
+        ErrorNoReturn("Failed to bind: ", LastSystemError());
+        return fail;
+    fi;
+
+    Info(InfoTCPSockets, 5, "MitM server listening on ", listenname, " ", port);
+    # TODO: make the queue length a parameter
+    IO_listen(socket, 5);
+    return socket;
+end);
+
+InstallGlobalFunction( ConnectInputOutputTCPStream,
+function( hostname, port )
+    local lookup, sock, res, fio, socket_descriptor;
+
+    if not IsString( hostname ) then
+        Error( "ConnectInputOutputTCPStream: <hostname> must be a string!");
+    fi;
+    if not ( IsInt(port) and port >= 0 ) then
+        Error( "ConnectInputOutputTCPStream: <port> must be a non-negative integer!");
+    fi;
+    lookup := IO_gethostbyname( hostname );
+    if lookup = fail then
+        Error( "ConnectInputOutputTCPStream: cannot find hostname ", hostname, "\n");
+        return fail;
+    fi;
+    sock := IO_socket( IO.PF_INET, IO.SOCK_STREAM, "tcp" );
+    res := IO_connect( sock, IO_make_sockaddr_in( lookup.addr[1], port ) );
+    if res = fail then
+        Print( "Error: ", LastSystemError(), "\n" );
+        IO_close( sock );
+        return fail;
     else
-        Error( "InputOutputTCPStream: usage \n",
-               "InputOutputTCPStream(<hostname>, <port>) for client, \n",
-               "InputOutputTCPStream(<socket_descriptor>) for server! \n");
+        fio := IO_WrapFD( sock, IO.DefaultBufSize, IO.DefaultBufSize );
+        return Objectify( InputOutputTCPStreamDefaultType,
+                          [ fio, hostname, [ port ], false ] );
     fi;
 end);
 
+InstallGlobalFunction( AcceptInputOutputTCPStream,
+function(socket_descriptor)
+    local fio;
+    if not (IsInt(socket_descriptor) and socket_descriptor >= 0) then
+        Error("InputOutputTCPStream: <socket_descriptor> must be a non-negative integer! \n");
+    fi;
+    fio := IO_WrapFD(socket_descriptor, IO.DefaultBufSize, IO.DefaultBufSize);
+    return Objectify( InputOutputTCPStreamDefaultType,
+                      [ fio, "socket descriptor", [ socket_descriptor ], false ] );
+end);
 
-###########################################################################
-##
-#M  ViewObj( <ioTCPstream> )
-##
 InstallMethod( ViewObj, "for ioTCPstream",
                [ IsInputOutputTCPStreamRep and IsInputOutputStream ],
 function(stream)
@@ -73,22 +113,12 @@ function(stream)
     Print("input/output TCP stream to ",stream![2],":", stream![3][1], ">");
 end);
 
-
-###########################################################################
-##
-#M  PrintObj( <ioTCPstream> )
-##
 InstallMethod( PrintObj, "for ioTCPstream",
-[ IsInputOutputTCPStreamRep and IsInputOutputStream ],
-ViewObj);
+               [ IsInputOutputTCPStreamRep and IsInputOutputStream ],
+               ViewObj);
 
-
-###########################################################################
-##
-#M  ReadByte( <ioTCPstream> )
-##
 InstallMethod( ReadByte, "for ioTCPstream",
-[ IsInputOutputTCPStreamRep and IsInputOutputStream ],
+               [ IsInputOutputTCPStreamRep and IsInputOutputStream ],
 function(stream)
     local buf;
     buf := IO_Read( stream![1], 1 );
@@ -101,13 +131,8 @@ function(stream)
     fi;
 end);
 
-
-###########################################################################
-##
-#M  ReadLine( <ioTCPstream> )
-##
 InstallMethod( ReadLine, "for ioTCPstream",
-[ IsInputOutputTCPStreamRep and IsInputOutputStream ],
+               [ IsInputOutputTCPStreamRep and IsInputOutputStream ],
 function( stream )
     local sofar, chunk;
     sofar := IO_Read( stream![1], 1 );
@@ -126,12 +151,8 @@ function( stream )
     return sofar;
 end);
 
-
-###########################################################################
-##
-#M  ReadAllIoTCPStream( <ioTCPstream> )
-##
-BindGlobal( "ReadAllIoTCPStream", function(stream, limit)
+BindGlobal( "ReadAllIoTCPStream",
+function(stream, limit)
     local sofar, chunk, csize;
     if limit = -1 then
         csize := 20000;
@@ -163,12 +184,11 @@ end);
 
 
 InstallMethod( ReadAll, "for ioTCPstream",
-    [ IsInputOutputTCPStreamRep and IsInputOutputStream ],
-    stream ->  ReadAllIoTCPStream(stream, -1) );
-
+               [ IsInputOutputTCPStreamRep and IsInputOutputStream ],
+               stream ->  ReadAllIoTCPStream(stream, -1) );
 
 InstallMethod( ReadAll, "for ioTCPstream",
-[ IsInputOutputTCPStreamRep and IsInputOutputStream, IsInt ],
+               [ IsInputOutputTCPStreamRep and IsInputOutputStream, IsInt ],
 function( stream, limit )
     if limit < 0 then
         Error("ReadAll: negative limit not allowed");
@@ -176,13 +196,8 @@ function( stream, limit )
     return  ReadAllIoTCPStream(stream, limit);
 end);
 
-
-###########################################################################
-##
-#M  WriteByte( <ioTCPstream> )
-##
 InstallMethod( WriteByte, "for ioTCPstream",
-[ IsInputOutputTCPStreamRep and IsInputOutputStream, IsInt ],
+               [ IsInputOutputTCPStreamRep and IsInputOutputStream, IsInt ],
 function(stream, byte)
     local ret,s;
     if byte < 0 or 255 < byte  then
@@ -198,24 +213,14 @@ function(stream, byte)
     fi;
 end);
 
-
-###########################################################################
-##
-#M  WriteLine( <ioTCPstream>, <string> ) . . . write plus newline and flush
-##
 InstallMethod( WriteLine, "for ioTCPstream",
-[ IsInputOutputTCPStreamRep and IsInputOutputStream, IsString ],
+               [ IsInputOutputTCPStreamRep and IsInputOutputStream, IsString ],
 function( stream, string )
     return IO_WriteLine( stream![1], string );
 end);
 
-
-###########################################################################
-##
-#M  WriteAll( <ioTCPstream>, <string> )  . . . . . . . . .  write all bytes
-##
 InstallMethod( WriteAll, "for ioTCPstream",
-[ IsInputOutputTCPStreamRep and IsInputOutputStream, IsString ],
+               [ IsInputOutputTCPStreamRep and IsInputOutputStream, IsString ],
 function( stream, string )
     local byte;
     for byte in string  do
@@ -226,20 +231,11 @@ function( stream, string )
     return true;
 end);
 
-
-###########################################################################
-##
-#M IsEndOfStream( <ioTCPstream> )
-##
 InstallMethod( IsEndOfStream, "iostream",
                [ IsInputOutputTCPStreamRep and IsInputOutputStream ],
 stream -> not IO_HasData( stream![1] ) );
 # TODO: when does this return true? -MT
 
-###########################################################################
-##
-#M  CloseStream( <ioTCPstream> )
-##
 InstallMethod( CloseStream, "for ioTCPstream",
                [ IsInputOutputTCPStreamRep and IsInputOutputStream ],
 function(stream)
@@ -247,11 +243,6 @@ function(stream)
     SetFilterObj( stream, IsClosedStream );
 end);
 
-
-###########################################################################
-##
-#M  FileDescriptorOfStream( <ioTCPstream> )
-##
 InstallMethod( FileDescriptorOfStream, "for ioTCPstream",
-[ IsInputOutputTCPStreamRep and IsInputOutputStream ],
-stream -> IO_GetFD( stream![1] ) );
+               [ IsInputOutputTCPStreamRep and IsInputOutputStream ],
+               stream -> IO_GetFD( stream![1] ) );
