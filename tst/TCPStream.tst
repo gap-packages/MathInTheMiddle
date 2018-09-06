@@ -73,7 +73,7 @@ gap> child := IO_fork();;
 gap> if child = 0 then
 >   clientstream := ConnectInputOutputTCPStream("localhost", 26133);;
 >   WriteLine(clientstream, "12345");;
->   if ReadLine(clientstream){[1..5]} = "54321" then 
+>   if ReadLine(clientstream){[1..5]} = "54321" then
 >     WriteAll(clientstream, "Read successfully!");;
 >   fi;
 >   CloseStream(clientstream);
@@ -115,3 +115,17 @@ gap> WriteAll(stream, "GET");
 fail
 gap> WriteByte(stream, IntChar('G'));
 fail
+
+# InputOutputTCPStream errors
+gap> ConnectInputOutputTCPStream(80, "www.google.com");
+Error, ConnectInputOutputTCPStream: <hostname> must be a string
+gap> ConnectInputOutputTCPStream("www.google.com", "80");
+Error, ConnectInputOutputTCPStream: <port> must be a non-negative integer
+gap> ConnectInputOutputTCPStream("www.google.com", -80);
+Error, ConnectInputOutputTCPStream: <port> must be a non-negative integer
+gap> ConnectInputOutputTCPStream("www.g.michael", 80);
+Error, ConnectInputOutputTCPStream: cannot find hostname www.g.michael
+gap> AcceptInputOutputTCPStream(-1);
+Error, AcceptInputOutputTCPStream: argument must be a non-negative integer
+gap> AcceptInputOutputTCPStream("seventeen");
+Error, AcceptInputOutputTCPStream: argument must be a non-negative integer

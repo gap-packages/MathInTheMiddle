@@ -63,25 +63,24 @@ end);
 
 InstallGlobalFunction( ConnectInputOutputTCPStream,
 function( hostname, port )
-    local lookup, sock, res, fio, socket_descriptor;
+    local lookup, sock, res, err, fio;
 
     if not IsString( hostname ) then
-        Error( "ConnectInputOutputTCPStream: <hostname> must be a string!");
+        Error("ConnectInputOutputTCPStream: <hostname> must be a string");
     fi;
-    if not ( IsInt(port) and port >= 0 ) then
-        Error( "ConnectInputOutputTCPStream: <port> must be a non-negative integer!");
+    if not (IsInt(port) and port >= 0) then
+        Error("ConnectInputOutputTCPStream: <port> must be a non-negative integer");
     fi;
     lookup := IO_gethostbyname( hostname );
     if lookup = fail then
-        Error( "ConnectInputOutputTCPStream: cannot find hostname ", hostname, "\n");
-        return fail;
+        Error("ConnectInputOutputTCPStream: cannot find hostname ", hostname);
     fi;
     sock := IO_socket( IO.PF_INET, IO.SOCK_STREAM, "tcp" );
     res := IO_connect( sock, IO_make_sockaddr_in( lookup.addr[1], port ) );
     if res = fail then
-        Print( "Error: ", LastSystemError(), "\n" );
-        IO_close( sock );
-        return fail;
+        err := LastSystemError();
+        IO_close(sock);
+        Error(err, "\n");
     else
         fio := IO_WrapFD( sock, IO.DefaultBufSize, IO.DefaultBufSize );
         return Objectify( InputOutputTCPStreamDefaultType,
@@ -93,7 +92,7 @@ InstallGlobalFunction( AcceptInputOutputTCPStream,
 function(socket_descriptor)
     local fio;
     if not (IsInt(socket_descriptor) and socket_descriptor >= 0) then
-        Error("AcceptInputOutputTCPStream: <socket_descriptor> must be a non-negative integer! \n");
+        Error("AcceptInputOutputTCPStream: argument must be a non-negative integer");
     fi;
     fio := IO_WrapFD(socket_descriptor, IO.DefaultBufSize, IO.DefaultBufSize);
     return Objectify( InputOutputTCPStreamDefaultType,
