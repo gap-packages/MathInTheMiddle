@@ -135,67 +135,100 @@ gap> stream := InputTextString("<?scscp start ?> x <?scscp abc ?>");;
 gap> MitM_ReadSCSCP(stream);
 fail
 
-# Handshaking: successful test
+# Client handshaking: successful test
 gap> in_stream := InputTextString("""
 > <?scscp service_name="gap" service_version="4.10dev"
->         service_id="some_id" scscp_versions="1,0 2.0 1.3" ?>
+>         service_id="some_id" scscp_versions="1.0 2.0 1.3" ?>
 > <?scscp version="1.3" ?>
 > """);;
 gap> out_str := "";;
 gap> out_stream := OutputTextString(out_str, true);;
-gap> MitM_SCSCPHandshake(in_stream, out_stream);
+gap> MitM_SCSCPClientHandshake(in_stream, out_stream);
 true
 gap> NormalizeWhitespace(out_str);
 gap> out_str;
 "<?scscp version=\"1.3\" ?>"
 
-# Handshaking failures
+# Server handshaking: successful test
+gap> in_stream := InputTextString("<?scscp version=\"1.3\" ?>");;
+gap> out_str := "";;
+gap> out_stream := OutputTextString(out_str, true);;
+gap> MitM_SCSCPServerHandshake(in_stream, out_stream);
+"1.3"
+gap> expected_output := StringFormatted("""
+> <?scscp service_name="gap" service_version="4.10dev"
+>         service_id="{}" scscp_versions="1.3" ?>
+> <?scscp version="1.3" ?>
+> """, String(IO_getpid()));;
+gap> NormalizeWhitespace(out_str);
+gap> NormalizeWhitespace(expected_output);
+gap> out_str = expected_output;
+true
+
+# Client handshaking failures
 gap> info := InfoLevel(InfoMitMSCSCP);;
 gap> SetInfoLevel(InfoMitMSCSCP, 2);
 gap> str := "abc";;
-gap> MitM_SCSCPHandshake(InputTextString(str), OutputTextNone());
+gap> MitM_SCSCPClientHandshake(InputTextString(str), OutputTextNone());
 #I  Initiation failed: no processing instruction received
 false
 gap> str := "<?hello ?>";;
-gap> MitM_SCSCPHandshake(InputTextString(str), OutputTextNone());
+gap> MitM_SCSCPClientHandshake(InputTextString(str), OutputTextNone());
 #I  Initiation failed: no SCSCP instruction received
 false
 gap> str := "<?scscp service_name=\"gap\" ?>";;
-gap> MitM_SCSCPHandshake(InputTextString(str), OutputTextNone());
+gap> MitM_SCSCPClientHandshake(InputTextString(str), OutputTextNone());
 #I  Initiation failed: bad connection initiation message received
 false
 gap> str := """<?scscp service_name="gap" service_version="4.10dev"
 >                      service_id="some_id" scscp_versions="1.0 2.0" ?>""";;
-gap> MitM_SCSCPHandshake(InputTextString(str), OutputTextNone());
+gap> MitM_SCSCPClientHandshake(InputTextString(str), OutputTextNone());
 #I  Initiation failed: server offers no SCSCP version we know
 false
 gap> str := """<?scscp service_name="gap" service_version="4.10dev"
 >                      service_id="some_id" scscp_versions="1.0 1.3" ?>""";;
-gap> MitM_SCSCPHandshake(InputTextString(str), OutputTextNone());
+gap> MitM_SCSCPClientHandshake(InputTextString(str), OutputTextNone());
 #I  Version negotiation failed: no valid response from server
 false
 gap> str := """<?scscp service_name="gap" service_version="4.10dev"
 >                      service_id="some_id" scscp_versions="1.0 1.3" ?>
 >              <?scscp quit reason="not supported version" ?>""";;
-gap> MitM_SCSCPHandshake(InputTextString(str), OutputTextNone());
+gap> MitM_SCSCPClientHandshake(InputTextString(str), OutputTextNone());
 #I  Version negotiation failed: server quit with following message:
 #I  "not supported version"
 false
 gap> str := """<?scscp service_name="gap" service_version="4.10dev"
 >                      service_id="some_id" scscp_versions="1.0 1.3" ?>
 >              <?scscp ?>""";;
-gap> MitM_SCSCPHandshake(InputTextString(str), OutputTextNone());
+gap> MitM_SCSCPClientHandshake(InputTextString(str), OutputTextNone());
 #I  Version negotiation failed: server sent no version number
 false
 gap> str := """<?scscp service_name="gap" service_version="4.10dev"
 >                      service_id="some_id" scscp_versions="1.0 1.3" ?>
 >              <?scscp version="2.0" ?>""";;
-gap> MitM_SCSCPHandshake(InputTextString(str), OutputTextNone());
+gap> MitM_SCSCPClientHandshake(InputTextString(str), OutputTextNone());
 #I  Version negotiation failed: server chose version 2.0, which is not supported
 false
 gap> str := """<?scscp service_name="gap" service_version="4.10dev"
 >                      service_id="some_id" scscp_versions="1.0 1.3" ?>
 >              <?scscp version="1.3" ?>""";;
-gap> MitM_SCSCPHandshake(InputTextString(str), OutputTextNone());
+gap> MitM_SCSCPClientHandshake(InputTextString(str), OutputTextNone());
 true
+gap> SetInfoLevel(InfoMitMSCSCP, info);;
+
+# Server handshaking failures
+gap> info := InfoLevel(InfoMitMSCSCP);;
+gap> SetInfoLevel(InfoMitMSCSCP, 2);
+gap> str := "abc";;
+gap> MitM_SCSCPServerHandshake(InputTextString(str), OutputTextNone());
+#I  Version negotiation failed: no version request from client
+fail
+gap> str := "<?scscp verararsion=\"1.3\" ?>";;
+gap> MitM_SCSCPServerHandshake(InputTextString(str), OutputTextNone());
+#I  Version negotiation failed: no version request from client
+fail
+gap> str := """<?scscp version="1.99dev" ?>""";;
+gap> MitM_SCSCPServerHandshake(InputTextString(str), OutputTextNone());
+#I  Version negotiation failed: client requested 1.99dev, none of which is supported
+fail
 gap> SetInfoLevel(InfoMitMSCSCP, info);;

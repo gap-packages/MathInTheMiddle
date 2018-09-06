@@ -1,4 +1,48 @@
-InstallGlobalFunction(MitM_SCSCPHandshake,
+InstallGlobalFunction(MitM_SCSCPServerHandshake,
+function(in_stream, out_stream)
+    local msg, get, pi, client_versions, versions, version;
+    # Send connection initiation message (5.1.1)
+    msg := Concatenation("<?scscp service_name=\"{}\" service_version=\"{}\" ",
+                         "service_id=\"{}\" scscp_versions=\"{}\" ?>");
+    msg := StringFormatted(msg,
+                           "gap", "4.10dev", String(IO_getpid()),
+                           JoinStringsWithSeparator(MitM_SCSCPVersions, " "));
+    WriteLine(out_stream, msg);
+    # TODO: we are required to support SCSCP v1.0
+
+    # Version negotiation (5.1.2)
+    get := MitM_ReadToPI(in_stream);
+    if get.success = false then
+        Info(InfoMitMSCSCP, 2,
+             "Version negotiation failed: no version request from client");
+        return fail;
+    fi;
+    pi := Concatenation("<", get.pi, ">");
+    pi := GetSTag(pi, 2);
+    if not IsBound(pi.attributes.version) then
+        Info(InfoMitMSCSCP, 2,
+             "Version negotiation failed: no version request from client");
+        return fail;
+    fi;
+    client_versions := SplitString(pi.attributes.version, "", " \n\r\t");
+    versions := Filtered(client_versions, v -> v in MitM_SCSCPVersions);
+    if IsEmpty(versions) then
+        Info(InfoMitMSCSCP, 2,
+             Concatenation("Version negotiation failed: client requested ",
+                           Concatenation(client_versions),
+                           ", none of which is supported"));
+        WriteLine(out_stream,
+                  "<?scscp quit reason=\"not supported version\" ?>");
+        return fail;
+    fi;
+    version := Maximum(versions); # choose the highest lexicographically
+    WriteLine(out_stream, Concatenation("<?scscp version=\"",
+                                        version, "\" ?>"));
+    # Successful handshake, now ready for procedure calls
+    return version;
+end);
+
+InstallGlobalFunction(MitM_SCSCPClientHandshake,
 function(in_stream, out_stream)
     local get, pi, start, finish;
     # Get connection initiation message (5.1.1)

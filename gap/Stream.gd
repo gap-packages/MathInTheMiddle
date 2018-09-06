@@ -21,6 +21,18 @@ DeclareGlobalFunction("MitM_ReadToPI");
 
 #! @Arguments in_stream, out_stream
 #! @Returns
+#!   a string or <K>fail</K>
+#! @Description
+#!   Accepts an SCSCP connection from a client, by receiving messages from the
+#!   client using <A>in_stream</A> and sending messages to the client via
+#!   <A>out_stream</A>.  Returns a string containing the version number if the
+#!   connection was initiated successfully, and <K>fail</K> otherwise.  This
+#!   handshaking protocol is described in Section 5.1 of the SCSCP specification
+#!   version 1.3
+DeclareGlobalFunction("MitM_SCSCPServerHandshake");
+
+#! @Arguments in_stream, out_stream
+#! @Returns
 #!   a boolean
 #! @Description
 #!   Initiates an SCSCP connection with a server, by receiving messages from the
@@ -28,4 +40,6 @@ DeclareGlobalFunction("MitM_ReadToPI");
 #!   <A>out_stream</A>.  Returns <K>true</K> if the connection was initiated
 #!   successfully, and <K>false</K> otherwise.  This handshaking protocol is
 #!   described in Section 5.1 of the SCSCP specification version 1.3
-DeclareGlobalFunction("MitM_SCSCPHandshake");
+DeclareGlobalFunction("MitM_SCSCPClientHandshake");
+
+BindGlobal("MitM_SCSCPVersions", ["1.3"]);
