@@ -11,6 +11,10 @@ BindGlobal("MitM_cdbase",
 #! Start the MitM SCSCP Server
 DeclareGlobalFunction("StartMitMServer");
 
+#! @Description
+#! Handle an SCSCP connection
+DeclareGlobalFunction("MitM_SCSCPHandler");
+
 BindGlobal("MitM_DefaultServerOptions", rec(
     hostname := "localhost",
     port := 26133,
