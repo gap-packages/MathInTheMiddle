@@ -1,5 +1,5 @@
 # Contact a server (1)
-gap> stream := InputOutputTCPStream("www.google.com", 80);
+gap> stream := ConnectInputOutputTCPStream("www.google.com", 80);
 <input/output TCP stream to www.google.com:80>
 gap> IsInputOutputTCPStream(stream);
 true
@@ -14,7 +14,7 @@ gap> Print(stream, "\n");
 <closed input/output TCP stream to www.google.com:80>
 
 # Contact a server (2)
-gap> stream := InputOutputTCPStream("www.google.com", 80);
+gap> stream := ConnectInputOutputTCPStream("www.google.com", 80);
 <input/output TCP stream to www.google.com:80>
 gap> WriteAll(stream, "DELE");
 true
@@ -42,7 +42,7 @@ gap> ReadAllIoTCPStream(stream, 40);
 Error, Tried to read from closed file.
 
 # Contact a server (3)
-gap> stream := InputOutputTCPStream("www.google.com", 80);;
+gap> stream := ConnectInputOutputTCPStream("www.google.com", 80);;
 gap> WriteByte(stream, IntChar('G'));;
 gap> WriteByte(stream, IntChar('E'));;
 gap> WriteByte(stream, IntChar('T'));
@@ -71,7 +71,7 @@ true
 gap> out := "";;
 gap> child := IO_fork();;
 gap> if child = 0 then
->   clientstream := InputOutputTCPStream("localhost",26133);;
+>   clientstream := ConnectInputOutputTCPStream("localhost", 26133);;
 >   WriteLine(clientstream, "12345");;
 >   if ReadLine(clientstream){[1..5]} = "54321" then 
 >     WriteAll(clientstream, "Read successfully!");;
@@ -80,7 +80,7 @@ gap> if child = 0 then
 >   QUIT_GAP(0);
 > fi;
 gap> socket_descriptor := IO_accept(sock, IO_MakeIPAddressPort("0.0.0.0", 0));;
-gap> serverstream := InputOutputTCPStream(socket_descriptor);;
+gap> serverstream := AcceptInputOutputTCPStream(socket_descriptor);;
 gap> FileDescriptorOfStream(serverstream) = socket_descriptor;
 true
 gap> ReadLine(serverstream);
@@ -97,7 +97,7 @@ gap> wait.status;
 gap> CloseStream(serverstream);
 
 # Errors
-gap> stream := InputOutputTCPStream("www.google.com", 80);;
+gap> stream := ConnectInputOutputTCPStream("www.google.com", 80);;
 gap> ReadAll(stream, -1);
 Error, ReadAll: negative limit not allowed
 gap> WriteByte(stream, -1);
@@ -106,7 +106,7 @@ gap> WriteByte(stream, 256);
 Error, <byte> must an integer between 0 and 255
 
 # Vandalise a stream to cause IO to fail
-gap> stream := InputOutputTCPStream("www.google.com", 80);;
+gap> stream := ConnectInputOutputTCPStream("www.google.com", 80);;
 gap> stream![1]!.wbufsize := 0;;
 gap> stream![1]!.fd := "terrible input!";;
 gap> WriteLine(stream, "GET");
