@@ -2,6 +2,12 @@
 
 DeclareInfoClass("InfoTCPSockets");
 
+
+#! @Description
+#! Printable version of an IP address
+# TODO: Move to IO package
+DeclareGlobalFunction("TCP_AddrToString");
+
 #! @Decription
 #!  <Ref Filt="IsInputOutputTCPStream"/> is a subcategory of
 #!  <Ref BookName="ref" Filt="IsInputOutputStream"/>.

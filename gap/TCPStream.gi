@@ -1,5 +1,6 @@
 
-TCP_AddrToString := function(addr)
+InstallGlobalFunction(TCP_AddrToString,
+function(addr)
     return JoinStringsWithSeparator(List(addr{[5..8]}, x -> String(INT_CHAR(x))), ".");
 end;
 
