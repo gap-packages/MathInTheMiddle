@@ -15,7 +15,7 @@ function(in_stream, out_stream)
         Info(InfoMitMSCSCP, 2,
              "Initiation failed: no SCSCP instruction received");
         return false;
-    elif Set(RecNames(pi.attributes)) <> ["scscp_versions", 
+    elif Set(RecNames(pi.attributes)) <> ["scscp_versions",
                                           "service_id",
                                           "service_name",
                                           "service_version"] then
@@ -28,7 +28,7 @@ function(in_stream, out_stream)
              "Initiation failed: server offers no SCSCP version we know");
         return false;
     fi;
-    
+
     # Version negotiation (5.1.2)
     WriteLine(out_stream, "<?scscp version=\"1.3\" ?>");
     get := MitM_ReadToPI(in_stream);
@@ -57,7 +57,7 @@ function(in_stream, out_stream)
                            ", which is not supported"));
         return false;
     fi;
-    
+
     # Successful handshake, now ready for procedure calls
     return true;
 end);
