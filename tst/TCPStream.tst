@@ -96,6 +96,45 @@ gap> wait.status;
 0
 gap> CloseStream(serverstream);
 
+# Serve a local client with ListeningTCPSocket
+gap> host := "localhost";;
+gap> port := 26134;;
+gap> sock := ListeningTCPSocket(host, port);;
+gap> child := IO_fork();;
+gap> if child = 0 then
+>   clientstream := ConnectInputOutputTCPStream(host, port);;
+>   WriteLine(clientstream, "12345");;
+>   if ReadLine(clientstream){[1..5]} = "54321" then
+>     WriteAll(clientstream, "Read successfully!");;
+>   fi;
+>   CloseStream(clientstream);
+>   FORCE_QUIT_GAP(0);
+> fi;
+gap> socket_descriptor := IO_accept(sock, IO_MakeIPAddressPort("0.0.0.0", 0));;
+gap> serverstream := AcceptInputOutputTCPStream(socket_descriptor);;
+gap> FileDescriptorOfStream(serverstream) = socket_descriptor;
+true
+gap> ReadLine(serverstream);
+"12345\n"
+gap> WriteLine(serverstream, "54321");
+6
+gap> ReadLine(serverstream);
+"Read successfully!"
+gap> wait := IO_WaitPid(child, true);;
+gap> wait.pid = child;
+true
+gap> wait.status;
+0
+gap> CloseStream(serverstream);
+
+# TCP_AddrToString
+gap> addr := IO_MakeIPAddressPort("123.234.87.6", 0);;
+gap> TCP_AddrToString(addr);
+"123.234.87.6"
+gap> addr := IO_MakeIPAddressPort("0.0.0.0", 0);;
+gap> TCP_AddrToString(addr);
+"0.0.0.0"
+
 # Errors
 gap> stream := ConnectInputOutputTCPStream("www.google.com", 80);;
 gap> ReadAll(stream, -1);
@@ -105,6 +144,14 @@ Error, <byte> must an integer between 0 and 255
 gap> WriteByte(stream, 256);
 Error, <byte> must an integer between 0 and 255
 gap> CloseStream(stream);
+gap> ListeningTCPSocket("www.rubbish.rubbish", 12345);
+Error, ListeningTCPSocket: lookup failed on address www.rubbish.rubbish
+gap> ListeningTCPSocket("localhost", "a hundred");
+Error, ListeningTCPSocket:
+<port> must be a positive integer no greater than 65535
+gap> ListeningTCPSocket("www.google.com", 123);
+Error, ListeningTCPSocket: failed to bind:
+Cannot assign requested address
 
 # Vandalise a stream to cause IO to fail
 gap> stream := ConnectInputOutputTCPStream("www.google.com", 80);;
@@ -117,6 +164,14 @@ fail
 gap> WriteByte(stream, IntChar('G'));
 fail
 gap> CloseStream(stream);
+
+# Vandalise IO variables to cause IO_socket to fail
+gap> inet := IO.PF_INET;;
+gap> IO.PF_INET := 0;;
+gap> ListeningTCPSocket("www.google.com", 80);
+Error, ListeningTCPSocket: failed to open socket:
+Address family not supported by protocol
+gap> IO.PF_INET := inet;;
 
 # InputOutputTCPStream errors
 gap> ConnectInputOutputTCPStream(80, "www.google.com");

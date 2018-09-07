@@ -1,8 +1,6 @@
-
 InstallGlobalFunction(TCP_AddrToString,
-function(addr)
-    return JoinStringsWithSeparator(List(addr{[5..8]}, x -> String(INT_CHAR(x))), ".");
-end);
+addr -> JoinStringsWithSeparator(List(addr{[5..8]},
+                                      x -> String(INT_CHAR(x))), "."));
 
 InstallGlobalFunction( StartTCPServer,
 function(hostname, port, handlerCallback)
@@ -31,29 +29,29 @@ function(hostname, port)
 
     res := IO_gethostbyname(hostname);
     if res = fail then
-        ErrorNoReturn("Failed to lookup address: ", LastSystemError());
-        return fail;
+        ErrorNoReturn("ListeningTCPSocket: lookup failed on address ",
+                      hostname);
     fi;
     bindaddr := res.addr[1];
     listenname := res.name;
 
-    if not IsPosInt(port) or (port > 65536) then
-        ErrorNoReturn("Usage: port has to be a positive integer less than 65536");
-        return fail;
+    if not IsPosInt(port) or (port > 65535) then
+        ErrorNoReturn("ListeningTCPSocket:\n<port> must be ",
+                      "a positive integer no greater than 65535");
     fi;
 
     # Create TCP socket
     Info(InfoTCPSockets, 5, "MitM server listening for connections...");
     socket := IO_socket( IO.PF_INET, IO.SOCK_STREAM, "tcp" );
     if socket = fail then
-        ErrorNoReturn("Failed to open socket: ", LastSystemError());
-        return fail;
+        ErrorNoReturn("ListeningTCPSocket: failed to open socket:\n", 
+                      LastSystemError().message);
     fi;
 
     res := IO_bind(socket, IO_make_sockaddr_in(bindaddr, port));
     if res = fail then
-        ErrorNoReturn("Failed to bind: ", LastSystemError());
-        return fail;
+        ErrorNoReturn("ListeningTCPSocket: failed to bind:\n", 
+                      LastSystemError().message);
     fi;
 
     Info(InfoTCPSockets, 5, "MitM server listening on ", listenname, " ", port);
