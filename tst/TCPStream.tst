@@ -152,6 +152,8 @@ Error, ListeningTCPSocket:
 gap> ListeningTCPSocket("www.google.com", 123);
 Error, ListeningTCPSocket: failed to bind:
 Cannot assign requested address
+gap> ConnectInputOutputTCPStream("localhost", 12345);
+Error, ConnectInputOutputTCPStream: Connection refused
 
 # Vandalise a stream to cause IO to fail
 gap> stream := ConnectInputOutputTCPStream("www.google.com", 80);;

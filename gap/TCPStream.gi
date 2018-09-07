@@ -79,7 +79,7 @@ function( hostname, port )
     if res = fail then
         err := LastSystemError();
         IO_close(sock);
-        Error(err, "\n");
+        Error("ConnectInputOutputTCPStream: ", err.message);
     else
         fio := IO_WrapFD( sock, IO.DefaultBufSize, IO.DefaultBufSize );
         return Objectify( InputOutputTCPStreamDefaultType,
