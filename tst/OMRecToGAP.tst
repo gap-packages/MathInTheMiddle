@@ -45,9 +45,9 @@ true
 
 # An invalid record
 gap> MitM_OMRecToGAP(rec());
-Error: Invalid XML: an object must have a name
+Error: invalid XML: an object must have a name
 gap> MitM_OMRecToGAPFunc(rec());
-Error: Invalid XML: an object must have a name
+Error: invalid XML: an object must have a name
 
 #
 gap> v := MitM_XMLToOMRec("<OMV name=\"banana\" />");;

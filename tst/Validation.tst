@@ -223,11 +223,11 @@ gap> MitM_IsValidOMRec(MitM_XMLToOMRec("<OMR />"));
 gap> MitM_IsValidOMRec("hello");
 "<tree> must be an OM record"
 gap> MitM_IsValidOMRec(rec());
-"Invalid XML: an object must have a name"
+"invalid XML: an object must have a name"
 gap> MitM_IsValidOMRec(rec(name := "Peter Rabbit"));
 "Peter Rabbit is not a valid OM object name"
 gap> MitM_IsValidOMRec(rec(name := "OMOBJ", os := "Linux"));
-"Invalid XML: os should not exist"
+"invalid XML: os should not exist"
 gap> MitM_IsValidOMRec(rec(name := "OMOBJ",
 >                          attributes := rec(version := "Linux<Ubuntu>")));
 "version attribute of OMOBJ object: XML strings cannot contain '<'"

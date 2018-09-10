@@ -287,13 +287,13 @@ function(tree)
     if not IsRecord(tree) then
         return "<tree> must be an OM record";
     elif not IsBound(tree.name) then
-        return "Invalid XML: an object must have a name";
+        return "invalid XML: an object must have a name";
     elif not tree.name in RecNames(MitM_ValidAttr) then
         return Concatenation(tree.name, " is not a valid OM object name");
     fi;
     for rnam in RecNames(tree) do
         if not rnam in MitM_rnams then
-            return Concatenation("Invalid XML: ", rnam, " should not exist");
+            return Concatenation("invalid XML: ", rnam, " should not exist");
         fi;
     od;
 
