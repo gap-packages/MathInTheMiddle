@@ -38,11 +38,7 @@ function(p)
     content := [rec(name := "OMS",
                     attributes := rec(cdbase := MitM_cdbase,
                                       cd := "prim",
-                                      name := "PermConstr")),
-                rec(name := "OMS",
-                    attributes := rec(cdbase := MitM_cdbase,
-                                      cd := "prim",
-                                      name := "ListEncoding"))];
+                                      name := "PermConstr"))];
     Append(content, List(ListPerm(p), MitM_GAPToOMRec));
     return rec(name := "OMA", content := content);
 end);

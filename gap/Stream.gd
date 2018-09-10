@@ -1,10 +1,17 @@
 #! @Arguments stream
 #! @Returns
-#!   an object or <K>fail</K>
+#!   a record
 #! @Description
 #!   Attempts to read a single OpenMath object from an input stream.  The object
-#!   should be enclosed in <?scscp start ?> and <?scscp end ?> tags.  Returns
-#!   the object that was read, or <K>fail</K> if the stream was invalid.
+#!   should be enclosed in <?scscp start ?> and <?scscp end ?> tags.
+#!   As output, this function returns a record containing some of the following
+#!   components, which describe the outcome of the conversion attempt:
+#!     * <C>success</C>: a boolean describing whether the request was
+#!       successfully received by the server;
+#!     * <C>result</C>: body of the information sent by the server (only if
+#!       <C>success = true</C>);
+#!     * <C>error</C>: human-readable string saying what went wrong (only if
+#!       <C>success = false</C>).
 DeclareGlobalFunction("MitM_ReadSCSCP");
 
 #! @Arguments stream

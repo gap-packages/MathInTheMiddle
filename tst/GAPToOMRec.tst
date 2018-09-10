@@ -37,10 +37,6 @@ gap> MitM_GAPToOMRec( (1,5,4) ) =
 >           attributes := 
 >             rec( cd := "prim", cdbase := "https://www.gap-system.org/mitm/"
 >                 , name := "PermConstr" ), name := "OMS" ), 
->       rec( 
->           attributes := 
->             rec( cd := "prim", cdbase := "https://www.gap-system.org/mitm/"
->                 , name := "ListEncoding" ), name := "OMS" ), 
 >       rec( content := [ "5" ], name := "OMI" ), 
 >       rec( content := [ "2" ], name := "OMI" ), 
 >       rec( content := [ "3" ], name := "OMI" ), 

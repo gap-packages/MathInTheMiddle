@@ -113,27 +113,27 @@ function(stream)
     get := MitM_ReadToPI(stream);
     # It should be an SCSCP start instruction
     if not get.success then
-        return fail;
+        return MitM_Error("no processing instruction found");
     fi;
     pi := get.pi;
     pi := SplitString(pi, "", " \n\r\t");
     if pi[1] <> "scscp" or pi[2] <> "start" or Length(pi) > 2 then
-        return fail;
+        return MitM_Error("no SCSCP start instruction found");
     fi;
     # Read to the end instruction
     get := MitM_ReadToPI(stream);
     if not get.success then
-        return fail;
+        return MitM_Error("only one processing instruction found");
     fi;
     pi := get.pi;
     pi := SplitString(pi, "", " \n\r\t");
     if pi[1] <> "scscp" or pi[2] <> "end" or Length(pi) > 2 then
-        return fail;
+        return MitM_Error("no SCSCP end instruction found");
     fi;
     # The in-between stuff should be an OMOBJ
     r := MitM_XMLToOMRec(get.pre);
     if r.name <> "OMOBJ" then
-        return fail;
+        return MitM_Error("no OMOBJ object found");
     fi;
     # Convert to a GAP object
     return MitM_OMRecToGAP(r);

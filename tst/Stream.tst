@@ -7,8 +7,8 @@ gap> stream := InputTextString("""
 > <?scscp end ?>
 > lovely!  All done!
 > """);;
-gap> MitM_ReadSCSCP(stream);
-fail
+gap> MitM_ReadSCSCP(stream).error;
+"no OMOBJ object found"
 
 # The same, but in an OMOBJ
 gap> stream := InputTextString("""
@@ -22,7 +22,7 @@ gap> stream := InputTextString("""
 > lovely!  All done!
 > """);;
 gap> MitM_ReadSCSCP(stream);
-12
+rec( result := 12, success := true )
 
 # A whole polynomial
 gap> stream := InputTextString("""
@@ -58,7 +58,7 @@ gap> stream := InputTextString("""
 > <?scscp end ?>
 > """);;
 gap> p := MitM_ReadSCSCP(stream);;
-gap> ExtRepPolynomialRatFun(p);
+gap> ExtRepPolynomialRatFun(p.result);
 [ [ 2, 1 ], 1, [ 1, 1, 3, 1 ], 3 ]
 
 # ReadToPI errors
@@ -108,7 +108,7 @@ gap> stream := InputTextString("""
 > </OMOBJ>
 > <?scscp end ?>
 > """);;
-gap> MitM_ReadSCSCP(stream);
+gap> MitM_ReadSCSCP(stream).result;
 42
 
 # Unexpected end of stream
@@ -117,23 +117,23 @@ gap> stream := InputTextString("""
 > <?scscp start ?>
 > <OM
 > """);;
-gap> MitM_ReadSCSCP(stream);
-fail
+gap> MitM_ReadSCSCP(stream).error;
+"only one processing instruction found"
 
 # No instruction
 gap> stream := InputTextString("hello world");;
-gap> MitM_ReadSCSCP(stream);
-fail
+gap> MitM_ReadSCSCP(stream).error;
+"no processing instruction found"
 
 # Not an SCSCP instruction
 gap> stream := InputTextString("<?some protocol ?>");;
-gap> MitM_ReadSCSCP(stream);
-fail
+gap> MitM_ReadSCSCP(stream).error;
+"no SCSCP start instruction found"
 
-# Not an SCSCP instruction
+# Not an SCSCP end instruction
 gap> stream := InputTextString("<?scscp start ?> x <?scscp abc ?>");;
-gap> MitM_ReadSCSCP(stream);
-fail
+gap> MitM_ReadSCSCP(stream).error;
+"no SCSCP end instruction found"
 
 # Client handshaking: successful test
 gap> in_stream := InputTextString("""
