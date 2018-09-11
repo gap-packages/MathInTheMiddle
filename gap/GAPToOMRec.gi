@@ -111,7 +111,7 @@ end);
 #       As a first test we wrap these functions in a constructor-memoiser
 MitM_C___Wrapper := function(n, callee)
     return function(args...)
-        local obj, omacont;
+        local obj, omacont, a, m;
         obj := CallFuncList(callee, args);
 
         omacont := [ rec( name := "OMS"
@@ -119,7 +119,15 @@ MitM_C___Wrapper := function(n, callee)
                                            , cdbase := MitM_cdbase
                                            , name := n ) ) ];
 
-        Append(omacont, List(args, MitM_GAPToOMRec));
+        for a in args do
+            m := ApplicableMethod(MitM_GAPToOMRec, [ a ]);
+            if m <> fail then
+                Add(omacont, m(a));
+            else
+                # CANT DO
+                return obj;
+            fi;
+        od;
         # This will of course only work with attribute storing objects
         SetMitM_GAPToOMRec(obj, rec( name := "OMA"
                                    , content := omacont ) );
