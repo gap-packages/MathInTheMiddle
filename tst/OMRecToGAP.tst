@@ -18,6 +18,20 @@ true
 gap> MitM_OMRecToGAPFunc(MitM_GAPToOMRec((1,5,4))).result = (1,5,4);
 true
 
+# Booleans
+gap> MitM_OMRecToGAP(MitM_GAPToOMRec(true)).result = true;
+true
+gap> MitM_OMRecToGAP(MitM_GAPToOMRec(false)).result = false;
+true
+gap> MitM_OMRecToGAP(MitM_GAPToOMRec(fail)).result = fail;
+true
+gap> MitM_OMRecToGAPFunc(MitM_GAPToOMRec(true)).result = true;
+true
+gap> MitM_OMRecToGAPFunc(MitM_GAPToOMRec(false)).result = false;
+true
+gap> MitM_OMRecToGAPFunc(MitM_GAPToOMRec(fail)).result = fail;
+true
+
 # Lists
 gap> v := [1,2,3];; r := MitM_GAPToOMRec([1,2,3]);;
 gap> MitM_OMRecToGAP(r).result = v;

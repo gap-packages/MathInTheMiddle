@@ -31,6 +31,20 @@ InstallMethod(MitM_GAPToOMRec,
 s -> rec(name := "OMSTR", content := [s]));
 
 InstallMethod(MitM_GAPToOMRec,
+"for a boolean",
+[IsBool],
+function(b)
+    local content;
+    content := [rec(name := "OMS",
+                    attributes := rec(cdbase := MitM_cdbase,
+                                      cd := "prim",
+                                      name := "BoolConstr")),
+                rec(name := "OMSTR",
+                    content := [ String(b) ])];
+    return rec(name := "OMA", content := content);
+end);
+
+InstallMethod(MitM_GAPToOMRec,
 "for a permutation",
 [IsPerm],
 function(p)
@@ -73,13 +87,13 @@ InstallMethod(MitM_GAPToOMRec,
 "for the ring of integers",
 [IsIntegers],
 I -> MitM_SimpleOMS("Integers"));
-    
+
 InstallMethod(MitM_GAPToOMRec,
 "for a list",
 [IsList],
 function(L)
     local content, item;
-    content := [rec(name := "OMS", 
+    content := [rec(name := "OMS",
                     attributes := rec(cdbase := MitM_cdbase,
                                       cd := "prim",
                                       name := "ListConstr"))];
@@ -88,3 +102,60 @@ function(L)
     od;
     return rec(name := "OMA", content := content);
 end);
+
+# TODO: This is a hack. We look for functions that create objects using
+#       `Objectify` by essentially grepping through their source (so this
+#       only works for GAP-level functions) and designating any function
+#       a constructor that calls Objectify.
+#
+#       As a first test we wrap these functions in a constructor-memoiser
+MitM_C___Wrapper := function(n, callee)
+    return function(args...)
+        local obj, omacont;
+        obj := CallFuncList(callee, args);
+
+        omacont := [ rec( name := "OMS"
+                        , attributes := rec( cd := "lib"
+                                           , cdbase := MitM_cdbase
+                                           , name := n ) ) ];
+
+        Append(omacont, List(args, MitM_GAPToOMRec));
+        # This will of course only work with attribute storing objects
+        SetMitM_GAPToOMRec(obj, rec( name := "OMA"
+                                   , content := omacont ) );
+        return obj;
+    end;
+end;
+InstallGlobalFunction(MitM_FindConstructors,
+function()
+    local n, v, j, fun, res, a, meths, mpos, mres;
+
+    res := [];
+    for n in NamesGVars() do
+        if IsBoundGlobal(n) then
+            v := ValueGlobal(n);
+            if IsOperation(v) then
+                for a in [1..6] do
+                    meths := METHODS_OPERATION(v, a);
+                    j := 0;
+                    while j + a + 2 < Length(meths) do
+                        fun := meths[j + a + 2];
+                        if PositionSublist(String(fun), "Objectify") <> fail then
+                            meths[j + a + 2] := MitM_C___Wrapper(n, fun);
+                            CHANGED_METHODS_OPERATION(v, a);
+                            Add(res, rec( type := "oper", name := n, value := fun, operation := v ));
+                        fi;
+                        j := j + (BASE_SIZE_METHODS_OPER_ENTRY + a);
+                    od;
+                od;
+            fi;
+            if IsFunction(v) then
+                if PositionSublist(String(v), "Objectify") <> fail then
+                    Add(res, rec( type := "gvar", name := n, value := v ));
+                fi;
+            fi;
+        fi;
+    od;
+    return res;
+end);
+

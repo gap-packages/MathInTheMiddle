@@ -21,7 +21,9 @@ BindGlobal("MitM_DefaultServerOptions", rec(
     queue := 5 )
 );
 
+DeclareInfoClass("InfoMitMObjectify");
 DeclareInfoClass("InfoMitMServer");
 # TODO: During Development we want this to be verbose
+SetInfoLevel(InfoMitMObjectify, 15);
 SetInfoLevel(InfoMitMServer, 15);
 
