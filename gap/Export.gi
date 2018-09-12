@@ -58,7 +58,8 @@ InstallGlobalFunction(MitM_TypesInfo, function()
             meths := MethodsOperation(op, a);
 
             for j in meths do
-                mres := rec( filters := j.argFilt
+                mres := rec( filters := List(j.argFilt, x -> List(TRUES_FLAGS(x)
+                                                                 ,y -> NameFunction(FILTERS[y])))
                            , rank := j.rank
                            , comment := j.info );
                 # Methods are not bound to global variables directly (usually...)
