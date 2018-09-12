@@ -15,6 +15,14 @@ DeclareGlobalFunction("StartMitMServer");
 #! Handle an SCSCP connection
 DeclareGlobalFunction("MitM_SCSCPHandler");
 
+#! @Description
+#! Connect to an MitM server, and return a stream
+DeclareGlobalFunction("StreamToMitMServer");
+
+#! @Description
+#! Send a GAP object to an MitM server, via a stream
+DeclareGlobalFunction("SendObjToMitMServer");
+
 BindGlobal("MitM_DefaultServerOptions", rec(
     hostname := "localhost",
     port := 26133,
