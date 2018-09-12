@@ -5,6 +5,7 @@
 #
 
 ReadPackage("MathInTheMiddle", "gap/MathInTheMiddle.gi");
+ReadPackage("MathInTheMiddle", "gap/Export.gi");
 
 ReadPackage("MathInTheMiddle", "gap/GAPToOMRec.gi");
 ReadPackage("MathInTheMiddle", "gap/OMRecToXML.gi");
