@@ -159,6 +159,9 @@ function()
             fi;
             if IsFunction(v) then
                 if PositionSublist(String(v), "Objectify") <> fail then
+                    MakeReadWriteGlobal(n);
+                    UnbindGlobal(n);
+                    BindGlobal(n, MitM_C___Wrapper(n, v));
                     Add(res, rec( type := "gvar", name := n, value := v ));
                 fi;
             fi;
