@@ -264,3 +264,40 @@ gap> MitM_OMRecToGAP(a).error;
 "OMA contents: OMF: hex encoding not supported"
 gap> MitM_OMRecToGAPFunc(a).error;
 "OMA contents: OMF: hex encoding not supported"
+
+# Finite field elements: internal rep
+gap> xml := """<OMA>
+> <OMS cd="prim" cdbase="https://www.gap-system.org/mitm/" name="FFEConstr" />
+> <OMI>13</OMI>
+> <OMI>3</OMI>
+> <OMI>6</OMI>
+> <OMI>1</OMI>
+> <OMI>2</OMI>
+> </OMA>""";;
+gap> z := MitM_OMRecToGAP(MitM_XMLToOMRec(xml)).result = Z(13, 3) ^ 1452;
+true
+gap> z := MitM_OMRecToGAPFunc(MitM_XMLToOMRec(xml)).result = Z(13, 3) ^ 1452;
+true
+
+# Finite field elements: Conway rep
+gap> xml := """<OMA>
+> <OMS cd="prim" cdbase="https://www.gap-system.org/mitm/" name="FFEConstr" />
+> <OMI>3</OMI>
+> <OMI>12</OMI>
+> <OMI>1</OMI>
+> <OMI>0</OMI>
+> <OMI>0</OMI>
+> <OMI>0</OMI>
+> <OMI>0</OMI>
+> <OMI>1</OMI>
+> <OMI>1</OMI>
+> <OMI>0</OMI>
+> <OMI>2</OMI>
+> <OMI>0</OMI>
+> <OMI>1</OMI>
+> <OMI>1</OMI>
+> </OMA>""";;
+gap> MitM_OMRecToGAP(MitM_XMLToOMRec(xml)).result = Z(3,12) ^ 100;
+true
+gap> MitM_OMRecToGAPFunc(MitM_XMLToOMRec(xml)).result = Z(3,12) ^ 100;
+true

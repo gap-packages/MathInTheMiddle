@@ -129,3 +129,52 @@ gap> MitM_OMRecToXML(MitM_OMRecToOMOBJRec(MitM_GAPToOMRec([29..31]))) =
 > </OMA>
 > </OMOBJ>""";
 true
+
+# Finite field elements: internal rep
+gap> z := Z(13, 3) ^ 1452;
+Z(13^3)^1452
+gap> IsInternalRep(z);
+true
+gap> IsCoeffsModConwayPolRep(z);
+false
+gap> xml := MitM_OMRecToXML(MitM_GAPToOMRec(z));;
+gap> xml = """<OMA>
+> <OMS cd="prim" cdbase="https://www.gap-system.org/mitm/" name="FFEConstr" />
+> <OMI>13</OMI>
+> <OMI>3</OMI>
+> <OMI>6</OMI>
+> <OMI>1</OMI>
+> <OMI>2</OMI>
+> </OMA>""";
+true
+gap> MitM_OMRecToGAP(MitM_XMLToOMRec(xml)).result = z;
+true
+
+# Finite field elements: Conway rep
+gap> z := Z(3,12) ^ 100;
+1+z5+z6+2z8+z10+z11
+gap> IsInternalRep(z);
+false
+gap> IsCoeffsModConwayPolRep(z);
+true
+gap> xml := MitM_OMRecToXML(MitM_GAPToOMRec(z));;
+gap> xml = """<OMA>
+> <OMS cd="prim" cdbase="https://www.gap-system.org/mitm/" name="FFEConstr" />
+> <OMI>3</OMI>
+> <OMI>12</OMI>
+> <OMI>1</OMI>
+> <OMI>0</OMI>
+> <OMI>0</OMI>
+> <OMI>0</OMI>
+> <OMI>0</OMI>
+> <OMI>1</OMI>
+> <OMI>1</OMI>
+> <OMI>0</OMI>
+> <OMI>2</OMI>
+> <OMI>0</OMI>
+> <OMI>1</OMI>
+> <OMI>1</OMI>
+> </OMA>""";
+true
+gap> MitM_OMRecToGAP(MitM_XMLToOMRec(xml)).result = z;
+true

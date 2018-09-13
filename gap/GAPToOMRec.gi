@@ -103,6 +103,30 @@ function(L)
     return rec(name := "OMA", content := content);
 end);
 
+InstallMethod(MitM_GAPToOMRec,
+"for a finite field element",
+[IsFFE],
+function(elm)
+    local content, char, deg, log, coef;
+    content := [];
+    Add(content, rec(name := "OMS",
+                     attributes := rec(cdbase := MitM_cdbase,
+                                       cd := "prim",
+                                       name := "FFEConstr")));
+    char := Characteristic(elm);
+    deg := DegreeFFE(elm);
+    Add(content, MitM_GAPToOMRec(char));
+    Add(content, MitM_GAPToOMRec(deg));
+    if IsInternalRep(elm) then
+        log := LogFFE(elm, Z(char, deg));
+        elm := FFECONWAY.ZNC(char, deg) ^ log;
+    fi;
+    for coef in elm![1] do
+        Add(content, MitM_GAPToOMRec(IntFFE(coef)));
+    od;
+    return rec(name := "OMA", content := content);
+end);
+
 # TODO: This is a hack. We look for functions that create objects using
 #       `Objectify` by essentially grepping through their source (so this
 #       only works for GAP-level functions) and designating any function
@@ -169,4 +193,3 @@ function()
     od;
     return res;
 end);
-

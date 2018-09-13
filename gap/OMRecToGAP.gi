@@ -36,6 +36,13 @@ BindGlobal("MitM_GAP_Primitives", rec(
      end,
      # TODO: PermBytesConstr
      BoolConstr := function(args...) return EvalString(args[1]); end,
+     FFEConstr := function(args...)
+         local char, deg, gen;
+         char := args[1];
+         deg := args[2];
+         gen := Z(char, deg);
+         return Sum([0..deg-1], i -> args[i+3] * gen ^ i);
+     end,
 ) );
 
 # Evaluators for OpenMath objects
@@ -172,6 +179,7 @@ BindGlobal("MitM_GAP_PrimitivesFunc", rec(
      PermConstr := "({args...} -> PermList(args))",
      # TODO: PermBytesConstr
      BoolConstr := "({args...} -> EvalString(args[1]))",
+     FFEConstr := "({args...} -> Sum([0..args[2]-1], i -> args[i+3] * Z(args[1], args[2]) ^ i))",
 ) );
 
 # Evaluators for OpenMath objects
