@@ -30,17 +30,17 @@ true
 
 # Permutations
 gap> MitM_GAPToOMRec( (1,5,4) ) =
-> rec( 
->   content := 
->     [ 
->       rec( 
->           attributes := 
+> rec(
+>   content :=
+>     [
+>       rec(
+>           attributes :=
 >             rec( cd := "prim", cdbase := "https://www.gap-system.org/mitm/"
->                 , name := "PermConstr" ), name := "OMS" ), 
->       rec( content := [ "5" ], name := "OMI" ), 
->       rec( content := [ "2" ], name := "OMI" ), 
->       rec( content := [ "3" ], name := "OMI" ), 
->       rec( content := [ "1" ], name := "OMI" ), 
+>                 , name := "PermConstr" ), name := "OMS" ),
+>       rec( content := [ "5" ], name := "OMI" ),
+>       rec( content := [ "2" ], name := "OMI" ),
+>       rec( content := [ "3" ], name := "OMI" ),
+>       rec( content := [ "1" ], name := "OMI" ),
 >       rec( content := [ "4" ], name := "OMI" ) ], name := "OMA" );
 true
 
@@ -49,17 +49,17 @@ gap> D := DihedralGroup(IsPermGroup, 10);;
 gap> IsDihedralGroup(D);
 true
 gap> MitM_GAPToOMRec(D) =
-> rec( 
->   content := 
->     [ 
->       rec( 
->           attributes := 
+> rec(
+>   content :=
+>     [
+>       rec(
+>           attributes :=
 >             rec( cd := "lib", cdbase := "https://www.gap-system.org/mitm/",
->               name := "DihedralGroup" ), name := "OMS" ), 
->       rec( 
->           attributes := 
+>               name := "DihedralGroup" ), name := "OMS" ),
+>       rec(
+>           attributes :=
 >             rec( cd := "lib", cdbase := "https://www.gap-system.org/mitm/",
->               name := "IsPermGroup" ), name := "OMS" ), 
+>               name := "IsPermGroup" ), name := "OMS" ),
 >       rec( content := [ "10" ], name := "OMI" ) ], name := "OMA" );
 true
 
@@ -79,7 +79,7 @@ gap> MitM_OMRecToXML(MitM_GAPToOMRec(27));
 "<OMI>27</OMI>"
 
 # Polynomials
-gap> p := PolynomialByExtRep( RationalFunctionsFamily(FamilyObj(1)),          
+gap> p := PolynomialByExtRep( RationalFunctionsFamily(FamilyObj(1)),
 >                             [[2,1], 1, [1,1,3,1], 3] );
 3*x1*x3+x2
 gap> MitM_OMRecToXML(MitM_GAPToOMRec(p)) = """<OMA>
@@ -115,7 +115,7 @@ true
 # Note: I'm not sure this will ever come up in GAP or OpenMath, and perhaps it
 #       should be prohibited.  FromStream.gi will treat it as one string.
 gap> r := rec(name := "OMTWOSTRINGS", content := ["hello", "world"]);;
-gap> MitM_OMRecToXML(r);                                             
+gap> MitM_OMRecToXML(r);
 "<OMTWOSTRINGS>\nhello\nworld\n</OMTWOSTRINGS>"
 
 # OMRecToOMOBJRec
