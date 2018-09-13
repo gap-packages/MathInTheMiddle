@@ -47,3 +47,5 @@ src/*.lo
 
 /tmp/
 /gh-pages/
+
+/types.json
