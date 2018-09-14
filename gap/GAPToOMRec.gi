@@ -26,8 +26,8 @@ InstallMethod(MitM_GAPToOMRec,
 i -> rec(name := "OMI", content := [String(i)]));
 
 InstallMethod(MitM_GAPToOMRec,
-"for a string",
-[IsString],
+"for a string in string representation",
+[IsString and IsStringRep],
 s -> rec(name := "OMSTR", content := [s]));
 
 InstallMethod(MitM_GAPToOMRec,

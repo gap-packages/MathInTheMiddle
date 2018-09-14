@@ -13,7 +13,7 @@ function(r)
         content := r.content;
         if Length(content) = 1 and not IsRecord(content[1]) then
             Append(str, String(content[1]));
-        else
+        elif Length(content) > 0 then
             Append(str, "\n");
             for item in content do
                 if IsRecord(item) then
