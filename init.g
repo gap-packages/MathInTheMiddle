@@ -14,7 +14,8 @@ ReadPackage("MathInTheMiddle", "gap/OMRecToGAP.gd");
 
 ReadPackage("MathInTheMiddle", "gap/Stream.gd");
 ReadPackage("MathInTheMiddle", "gap/Validation.gd");
-
 ReadPackage("MathInTheMiddle", "gap/TCPStream.gd");
+
+ReadPackage("MathInTheMiddle", "gap/Misc.gd");
 
 DeclareInfoClass("InfoMitMSCSCP");
