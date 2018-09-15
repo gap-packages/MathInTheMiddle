@@ -120,8 +120,8 @@ gap> v := MitM_XMLToOMRec("""
 >         cd="prim"
 >         name="lambda" />
 >    <OMBVAR>
->    <OMV name="v"/>
->    </OMBVAR>
+>      <OMV name="v"/>
+>    </OMBVAR> <!--Random comment-->
 >    <OMB>bana</OMB>
 >  </OMBIND>
 > """);;
@@ -177,10 +177,12 @@ gap> v := MitM_XMLToOMRec("""
 >    <OMS cdbase="https://www.gap-system.org/mitm/"
 >         cd="prim"
 >         name="lambda" />
+>    <!-- Start OMBVAR here-->
 >    <OMBVAR>
 >      <OMV name="x" />
 >      <OMV name="y" /> 
 >    </OMBVAR>
+>    <!-- End OMBVAR? here-->
 >    <OMA>
 >      <OMS cdbase="https://www.gap-system.org/mitm/"
 >           cd="lib"

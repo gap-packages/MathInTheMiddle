@@ -17,7 +17,7 @@ end);
 
 InstallGlobalFunction(MitM_SimplifiedTree,
 function(tree)
-    local out, item, data;
+    local out, item, len, data;
     if tree.name = "PCDATA" then
         # content should be a string
         if IsEmpty(NormalizedWhitespace(tree.content)) then
@@ -34,11 +34,17 @@ function(tree)
     fi;
     if tree.content <> 0 then
         out.content := [];
+        len := 0;
         for item in tree.content do
             # item should be a record
             data := MitM_SimplifiedTree(item);
             if data <> fail then
-                Add(out.content, data);
+                if len>0 and IsString(data) and IsString(out.content[len]) then
+                    Append(out.content[len], data);
+                else
+                    len := len + 1;
+                    out.content[len] := data;
+                fi;
             fi;
         od;
     fi;

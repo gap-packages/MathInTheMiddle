@@ -50,3 +50,7 @@ gap> tree := rec(name := "OMTWOSTRINGS", content := ["hello", "world"]);
 rec( content := [ "hello", "world" ], name := "OMTWOSTRINGS" )
 gap> MitM_XMLToOMRec(MitM_OMRecToXML(tree));
 rec( content := [ "\nhello\nworld\n" ], name := "OMTWOSTRINGS" )
+
+# Comments
+gap> MitM_XMLToGAP("<OMI> 3 <!-- hello world -->2 </OMI>").result;
+32
