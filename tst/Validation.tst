@@ -215,7 +215,7 @@ gap> MitM_IsValidOMRec(MitM_XMLToOMRec("<OMOBJ><OMI>3.5</OMI></OMOBJ>"));
 gap> MitM_IsValidOMRec(MitM_XMLToOMRec("<OME />"));
 "OME contents: not implemented"
 gap> MitM_IsValidOMRec(MitM_XMLToOMRec("<OMATTR />"));
-"OMATTR contents: not implemented"
+"OMATTR contents: must contain precisely two objects"
 gap> MitM_IsValidOMRec(MitM_XMLToOMRec("<OMR />"));
 "OMR contents: not implemented"
 
@@ -236,3 +236,141 @@ gap> MitM_IsValidOMRec(rec(name := "OMV",
 "name attribute of OMV object: there is a '&' character without a closing ';'"
 gap> MitM_IsValidOMRec(rec(name := "OMSTR", content := ["Tom & Jerry"]));
 "OMSTR contents: there is a '&' character without a closing ';'"
+
+# OMATTR
+gap> xml := """
+> <OMOBJ>
+>   <OMATTR>
+>     <OMATP>
+>       <OMS cd="scscp1" name="call_id" />
+>       <OMSTR>symcomp.org:26133:18668:s2sYf1pg</OMSTR>
+>       <OMS cd="scscp1" name="option_runtime" />
+>       <OMI>300000</OMI>
+>       <OMS cd="scscp1" name="option_min_memory" />
+>       <OMI>40964</OMI>
+>       <OMS cd="scscp1" name="option_max_memory" />
+>       <OMI>134217728</OMI>
+>       <OMS cd="scscp1" name="option_debuglevel" />
+>       <OMI>2</OMI>
+>       <OMS cd="scscp1" name="option_return_object" />
+>       <OMSTR></OMSTR>
+>     </OMATP>
+>     <OMA>
+>       <OMS cd="scscp1" name="procedure_call" />
+>       <OMA>
+>         <OMS cd="scscp_transient_1"
+>              name="GroupIdentificationService" />
+>         <OMA>
+>           <OMS cd="group1" name="group"/>
+>           <OMA>
+>             <OMS cd="permut1" name="permutation"/>
+>             <OMI>2</OMI> <OMI>3</OMI>
+>             <OMI>1</OMI>
+>           </OMA>
+>           <OMA>
+>             <OMS cd="permut1" name="permutation"/>
+>             <OMI>1</OMI> <OMI>2</OMI>
+>             <OMI>4</OMI> <OMI>3</OMI>
+>           </OMA>
+>         </OMA>
+>       </OMA>
+>     </OMA>
+>   </OMATTR>
+> </OMOBJ>""";;
+gap> r := MitM_XMLToOMRec(xml);;
+gap> MitM_IsValidOMRec(r);
+true
+gap> xml := """
+> <OMATTR>
+>   <OMATP>
+>     <OMS cd="scscp1" name="call_id" />
+>     <OMSTR xyz="rubbish">symcomp.org:26133:18668:s2sYf1pg</OMSTR>
+>   </OMATP>
+>   <OMA>
+>     <OMS cd="scscp1" name="procedure_call" />
+>     <OMI>3</OMI>
+>   </OMA>
+> </OMATTR>""";;
+gap> r := MitM_XMLToOMRec(xml);;
+gap> MitM_IsValidOMRec(r);
+"OMATTR contents: OMATP contents: xyz is not a valid attribute of OMSTR object\
+s"
+gap> xml := """
+> <OMATTR>
+>   <OMI>123</OMI>
+>   <OMI>456</OMI>
+> </OMATTR>""";;
+gap> r := MitM_XMLToOMRec(xml);;
+gap> MitM_IsValidOMRec(r);
+"OMATTR contents: first object must be OMATP"
+gap> xml := """
+> <OMATTR>
+>   <OMATP>
+>     <OMS cd="scscp1" name="call_id" />
+>     <OMSTR>symcomp.org:26133:18668:s2sYf1pg</OMSTR>
+>   </OMATP>
+>   hello world
+> </OMATTR>""";;
+gap> r := MitM_XMLToOMRec(xml);;
+gap> MitM_IsValidOMRec(r);
+"OMATTR contents: second object must be an OM element"
+
+# OMATP
+gap> r := MitM_XMLToOMRec("""
+> <OMATP>
+>   <OMS cd="scscp1" name="call_id" />
+>   <OMSTR>symcomp.org:26133:18668:s2sYf1pg</OMSTR>
+>   <OMS cd="scscp1" name="option_runtime" />
+>   <OMI>300000</OMI>
+>   <OMS cd="scscp1" name="option_min_memory" />
+>   40964
+>   <OMS cd="scscp1" name="option_max_memory" />
+>   <OMI>134217728</OMI>
+> </OMATP>""");;
+gap> MitM_IsValidOMRec(r);
+"OMATP contents: item 6 must be an OM element"
+gap> r := MitM_XMLToOMRec("""
+> <OMATP>
+>   <OMS cd="scscp1" name="call_id" />
+>   <OMSTR>symcomp.org:26133:18668:s2sYf1pg</OMSTR>
+>   <OMS cd="scscp1" name="option_runtime" />
+>   <OMI>300000</OMI>
+>   <OMS cd="scscp1" name="option_min_memory" />
+>   <OMI>40964</OMI>
+>   <OMSTR>option_max_memory</OMSTR>
+>   <OMI>134217728</OMI>
+> </OMATP>""");;
+gap> MitM_IsValidOMRec(r);
+"OMATP contents: item 7 must be an OMS object"
+gap> r := MitM_XMLToOMRec("""
+> <OMATP id="hello world" comment="Can I leave a comment?">
+>   <OMS cd="scscp1" name="call_id" />
+>   <OMSTR>symcomp.org:26133:18668:s2sYf1pg</OMSTR>
+> </OMATP>""");;
+gap> MitM_IsValidOMRec(r);
+"comment is not a valid attribute of OMATP objects"
+gap> r := MitM_XMLToOMRec("""
+> <OMATP>
+>   <OMS cd="scscp1" name="call_id" />
+>   <OMSTR>symcomp.org:26133:18668:s2sYf1pg</OMSTR>
+>   <OMS cd="scscp1" name="option_runtime" />
+> </OMATP>""");;
+gap> MitM_IsValidOMRec(r);
+"OMATP contents: must contain an even number of objects"
+gap> r := MitM_XMLToOMRec("<OMATP />");;
+gap> MitM_IsValidOMRec(r);
+"OMATP contents: must not be empty"
+gap> r := MitM_XMLToOMRec("""
+> <OMATP>
+>   <OMS cd="scscp1" name="call_id" />
+>   <OMSTR font="serif">symcomp.org:26133:18668:s2sYf1pg</OMSTR>
+> </OMATP>""");;
+gap> MitM_IsValidOMRec(r);
+"OMATP contents: font is not a valid attribute of OMSTR objects"
+gap> r := MitM_XMLToOMRec("""
+> <OMATP>
+>   <OMS xyz="broken" cd="scscp1" name="call_id" />
+>   <OMSTR>symcomp.org:26133:18668:s2sYf1pg</OMSTR>
+> </OMATP>""");;
+gap> MitM_IsValidOMRec(r);
+"OMATP contents: xyz is not a valid attribute of OMS objects"

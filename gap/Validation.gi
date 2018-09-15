@@ -131,6 +131,7 @@ rec(
      OMATTR := rec(cdbase := MitM_ValidXSD.AnyURI),
      OMR := rec(),
      OMBVAR := rec(),
+     OMATP := rec(cdbase := MitM_ValidXSD.AnyURI),
      common := rec(id := MitM_ValidXSD.ID)
 ));
 
@@ -151,7 +152,8 @@ rec(
      OME := [],
      OMATTR := [],
      OMR := [],
-     OMBVAR := []
+     OMBVAR := [],
+     OMATP := []
 ));
 
 #
@@ -254,7 +256,23 @@ rec(
 
      OME := function(content) return "not implemented"; end,
 
-     OMATTR := function(content) return "not implemented"; end,
+     OMATTR := function(content)
+         local i, result;
+         if Length(content) <> 2 then
+             return "must contain precisely two objects";
+         elif not (IsRecord(content[1]) and content[1].name = "OMATP") then
+             return "first object must be OMATP";
+         elif not (IsRecord(content[2]) and content[2].name in MitM_OMel) then
+             return "second object must be an OM element";
+         fi;
+         for i in [1 .. Length(content)] do
+             result := MitM_IsValidOMRec(content[i]);
+             if result <> true then
+                 return result;
+             fi;
+         od;
+         return true;
+     end,
 
      OMR := function(content) return "not implemented"; end,
 
@@ -269,6 +287,33 @@ rec(
                  # ... or attvar objects in the full spec
              fi;
              result := MitM_IsValidOMRec(item);
+             if result <> true then
+                 return result;
+             fi;
+         od;
+         return true;
+     end,
+     
+     OMATP := function(content)
+         local i, result;
+         if Length(content) = 0 then
+             return "must not be empty";
+         elif Length(content) mod 2 <> 0 then
+             return "must contain an even number of objects";
+         fi;
+         for i in [1, 3 .. Length(content) - 1] do
+             if not (IsRecord(content[i]) and content[i].name = "OMS") then
+                 return StringFormatted("item {} must be an OMS object", i);
+             elif not (IsRecord(content[i + 1]) 
+                       and content[i + 1].name in MitM_OMel) then
+                 # TODO: allow OMFOREIGN
+                 return StringFormatted("item {} must be an OM element", i + 1);
+             fi;
+             result := MitM_IsValidOMRec(content[i]);
+             if result <> true then
+                 return result;
+             fi;
+             result := MitM_IsValidOMRec(content[i + 1]);
              if result <> true then
                  return result;
              fi;
