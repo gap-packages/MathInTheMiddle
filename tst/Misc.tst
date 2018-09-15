@@ -20,7 +20,7 @@ true
 
 # MitM_Print
 gap> MitM_Print(["hello", "world", 17]);
-<OMOBJ>
+<OMOBJ version="2.0">
 <OMA>
 <OMS cd="prim" cdbase="https://www.gap-system.org/mitm/" name="ListConstr" />
 <OMSTR>hello</OMSTR>

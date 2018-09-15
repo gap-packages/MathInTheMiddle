@@ -120,7 +120,7 @@ gap> MitM_OMRecToXML(r);
 
 # OMRecToOMOBJRec
 gap> MitM_OMRecToXML(MitM_OMRecToOMOBJRec(MitM_GAPToOMRec([29..31]))) =
-> """<OMOBJ>
+> """<OMOBJ version="2.0">
 > <OMA>
 > <OMS cd="prim" cdbase="https://www.gap-system.org/mitm/" name="ListConstr" />
 > <OMI>29</OMI>

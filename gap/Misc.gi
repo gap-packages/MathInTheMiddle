@@ -21,3 +21,6 @@ InstallGlobalFunction(MitM_Print,
 function(obj)
     Print(MitM_OMRecToXML(MitM_OMRecToOMOBJRec(MitM_GAPToOMRec(obj))), "\n");
 end);
+
+InstallGlobalFunction(MitM_OMRecToOMOBJRec,
+r -> rec(name := "OMOBJ", attributes := rec(version := "2.0"), content := [r]));
