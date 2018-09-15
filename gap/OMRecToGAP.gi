@@ -35,7 +35,12 @@ BindGlobal("MitM_GAP_Primitives", rec(
          return PermList(args);
      end,
      # TODO: PermBytesConstr
-     BoolConstr := function(args...) return EvalString(args[1]); end,
+     BoolConstr := function(args...)
+         return EvalString(args[1]);
+     end,
+     CharConstr := function(args...)
+         return args[1][1];
+     end,
      FFEConstr := function(args...)
          local char, deg, gen;
          char := args[1];
@@ -210,7 +215,7 @@ InstallValue(MitM_EvalToFunction, rec(
          return MitM_Result(sym);
      end,
 
-     OMV := node -> MitM_Result(StringFormatted("\"{}\"", 
+     OMV := node -> MitM_Result(StringFormatted("\"{}\"",
                                                 node.attributes.name)),
      OMI := function(node)
          local v;
@@ -274,7 +279,7 @@ InstallValue(MitM_EvalToFunction, rec(
          fi;
          return MitM_Result(Concatenation( "function(",
                                            JoinStringsWithSeparator(list, ","),
-                                           ") return ", 
+                                           ") return ",
                                            val.result,
                                            ";  end" ));
      end,

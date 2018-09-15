@@ -325,3 +325,11 @@ gap> MitM_OMRecToGAP(MitM_XMLToOMRec(xml)).result = Group((1,2,3));
 true
 gap> MitM_OMRecToGAPFunc(MitM_XMLToOMRec(xml)).result = Group((1,2,3));
 true
+
+# Characters
+gap> xml := """<OMA>
+> <OMS cd="prim" cdbase="https://www.gap-system.org/mitm/" name="CharConstr" />
+> <OMSTR>a</OMSTR>
+> </OMA>""";;
+gap> MitM_XMLToGAP(xml).result;
+'a'

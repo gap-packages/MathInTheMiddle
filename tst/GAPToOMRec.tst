@@ -178,3 +178,12 @@ gap> xml = """<OMA>
 true
 gap> MitM_OMRecToGAP(MitM_XMLToOMRec(xml)).result = z;
 true
+
+# Characters
+gap> MitM_RoundTripGAP('a');
+rec( result := 'a', success := true )
+gap> MitM_GAPToXML('a') = """<OMA>
+> <OMS cd="prim" cdbase="https://www.gap-system.org/mitm/" name="CharConstr" />
+> <OMSTR>a</OMSTR>
+> </OMA>""";
+true
