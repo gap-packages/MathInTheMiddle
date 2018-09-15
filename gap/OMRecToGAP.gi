@@ -138,15 +138,15 @@ InstallValue(MitM_Evaluators, rec(
          return MitM_Result(EvalString(x.result));
      end,
 
+     OMATTR := function(node)
+         return MitM_Result(MitM_OMRecToGAPNC(node.content[Length(node.content)]));
+     end,
+
      OME := function(node)
          # TODO: Error handling?
          Print("Error: ", List(node.content{[2..Length(node.content)]},
                                MitM_OMRecToGAPNC), "\n");
      end,
-# These are currently not used and not implemented
-#     OMATTR := function(node)
-#     end,
-#
 #     OMR := function(node)
 #     end,
     ) );
@@ -279,15 +279,15 @@ InstallValue(MitM_EvalToFunction, rec(
                                            ";  end" ));
      end,
 
+     OMATTR := function(node)
+         return MitM_Result(MitM_OMRecToGAPFuncNC(node.content[Length(node.content)]));
+     end,
+
      OME := function(node)
          # TODO: Error handling?
          Print("Error: ", List(node.content{[2..Length(node.content)]},
                                MitM_OMRecToGAPNC), "\n");
      end,
-
-# These are currently unused and not implemented
-#     OMATTR := function(node)
-#     end,
 
 #     OMR := function(node)
 #     end,
