@@ -103,7 +103,13 @@ InstallValue(MitM_Evaluators, rec(
      end,
 
      OMSTR := function(node)
-         return MitM_Result(node.content[1]);
+         local str;
+         if IsEmpty(node.content) then
+             str := "";
+         else
+             str := node.content[1];
+         fi;
+         return MitM_Result(str);
      end,
 
      OMF := function(node)
@@ -231,7 +237,15 @@ InstallValue(MitM_EvalToFunction, rec(
 
      OMB := node -> MitM_Result(StringFormatted("\"{}\"", node.content[1])),
 
-     OMSTR := node -> MitM_Result(Concatenation("\"", node.content[1], "\"")),
+     OMSTR := function(node)
+         local str;
+         if IsEmpty(node.content) then
+             str := "";
+         else 
+             str := node.content[1];
+         fi;
+         return MitM_Result(Concatenation("\"", str, "\""));
+     end,
 
      OMF := function(node)
          if IsBound(node.attributes.dec) then
