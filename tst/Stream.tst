@@ -21,7 +21,7 @@ gap> stream := InputTextString("""
 > <?scscp end ?>
 > lovely!  All done!
 > """);;
-gap> MitM_ReadSCSCP(stream);
+gap> MitM_OMRecToGAP(MitM_ReadSCSCP(stream).result);
 rec( result := 12, success := true )
 
 # A whole polynomial
@@ -57,7 +57,7 @@ gap> stream := InputTextString("""
 > </OMOBJ>
 > <?scscp end ?>
 > """);;
-gap> p := MitM_ReadSCSCP(stream);;
+gap> p := MitM_OMRecToGAP(MitM_ReadSCSCP(stream).result);;
 gap> ExtRepPolynomialRatFun(p.result);
 [ [ 2, 1 ], 1, [ 1, 1, 3, 1 ], 3 ]
 
@@ -108,7 +108,7 @@ gap> stream := InputTextString("""
 > </OMOBJ>
 > <?scscp end ?>
 > """);;
-gap> MitM_ReadSCSCP(stream).result;
+gap> MitM_OMRecToGAP(MitM_ReadSCSCP(stream).result).result;
 42
 
 # Unexpected end of stream

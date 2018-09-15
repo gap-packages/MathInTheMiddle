@@ -135,8 +135,7 @@ function(stream)
     if r.name <> "OMOBJ" then
         return MitM_Error("no OMOBJ object found");
     fi;
-    # Convert to a GAP object
-    return MitM_OMRecToGAP(r);
+    return MitM_Result(r);
 end);
 
 InstallGlobalFunction(MitM_ReadToPI,
