@@ -301,3 +301,27 @@ gap> MitM_OMRecToGAP(MitM_XMLToOMRec(xml)).result = Z(3,12) ^ 100;
 true
 gap> MitM_OMRecToGAPFunc(MitM_XMLToOMRec(xml)).result = Z(3,12) ^ 100;
 true
+
+# OMATTR
+gap> xml := """<OMATTR>
+> <OMATP>
+>   <OMS cd="lib" cdbase="https://www.gap-system.org/mitm/" name="Size" />
+>   <OMI>15</OMI>
+> </OMATP>
+> <OMA>
+>   <OMS cd="lib" cdbase="https://www.gap-system.org/mitm/" name="Group" />
+> <OMA>
+>   <OMS cd="prim" cdbase="https://www.gap-system.org/mitm/" name="ListConstr" />
+>   <OMA>
+>     <OMS cd="prim" cdbase="https://www.gap-system.org/mitm/" name="PermConstr" />
+>       <OMI>2</OMI>
+>       <OMI>3</OMI>
+>       <OMI>1</OMI>
+>     </OMA>
+>   </OMA>
+> </OMA>
+> </OMATTR>""";;
+gap> MitM_OMRecToGAP(MitM_XMLToOMRec(xml)).result = Group((1,2,3));
+true
+gap> MitM_OMRecToGAPFunc(MitM_XMLToOMRec(xml)).result = Group((1,2,3));
+true
