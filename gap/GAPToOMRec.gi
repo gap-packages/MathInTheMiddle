@@ -31,6 +31,17 @@ InstallMethod(MitM_GAPToOMRec,
 s -> rec(name := "OMSTR", content := [s]));
 
 InstallMethod(MitM_GAPToOMRec,
+"for a char",
+[IsChar],
+c -> rec(name := "OMA",
+         content := [rec(name := "OMS",
+                         attributes := rec(cdbase := MitM_cdbase,
+                                           cd := "prim",
+                                           name := "CharConstr")),
+                     rec(name := "OMSTR",
+                         content := [[c]])]));
+
+InstallMethod(MitM_GAPToOMRec,
 "for a boolean",
 [IsBool],
 function(b)

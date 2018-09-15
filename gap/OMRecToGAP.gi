@@ -29,26 +29,38 @@ end);
 
 BindGlobal("MitM_GAP_Primitives", rec(
      ListConstr := function(args...)
-         return args;
+         return MitM_Result(args);
      end,
      PermConstr := function(args...)
-         return PermList(args);
+         return MitM_Result(PermList(args));
      end,
      # TODO: PermBytesConstr
-     BoolConstr := function(args...) return EvalString(args[1]); end,
+     BoolConstr := function(args...) 
+         return MitM_Result(EvalString(args[1])); 
+     end,
+     CharConstr := function(args...)
+         if Length(args) <> 1 then
+             return MitM_Error("CharConstr takes one argument, but ",
+                               Length(args), " were given");
+         elif Length(args[1]) <> 1 then
+             return MitM_Error("CharConstr requires a string of length 1, not ",
+                               Length(args[1]));
+         fi;
+         return MitM_Result(args[1][1]);
+     end,
      FFEConstr := function(args...)
          local char, deg, gen;
          char := args[1];
          deg := args[2];
          gen := Z(char, deg);
-         return Sum([0..deg-1], i -> args[i+3] * gen ^ i);
+         return MitM_Result(Sum([0..deg-1], i -> args[i+3] * gen ^ i));
      end,
 ) );
 
 # Evaluators for OpenMath objects
 InstallValue(MitM_Evaluators, rec(
      OMS := function(node)
-        local name, sym;
+        local name, sym, nm;
         name := node.attributes.name;
 
         if (not IsBound(node.attributes.cdbase)) or
@@ -66,10 +78,15 @@ InstallValue(MitM_Evaluators, rec(
             if not IsBoundGlobal(name) then
                 return MitM_Error("symbol \"", name, "\" not known");
             fi;
-            sym := ValueGlobal(node.attributes.name);
+            #            sym := ValueGlobal(node.attributes.name);
+            nm := ValueGlobal(node.attributes.name);
+            sym := {xyz...} -> CallFuncList(nm, xyz);
+            sym := nm;
+            sym := function(a,b) return nm(a,b); end;
         else
             return MitM_Error("cd \"", node.attributes.cd, "\" not supported");
         fi;
+        Print("\n\nsym out: ", sym, "\n\n");
         return MitM_Result(sym);
      end,
 
@@ -110,23 +127,26 @@ InstallValue(MitM_Evaluators, rec(
      end,
 
      OMA := function(node)
-         local sym, args, item, r;
+         local sym, myargs, item, r;
 
          sym := MitM_OMRecToGAPNC(node.content[1]);
          if sym.success <> true then
              return MitM_Error("OMA contents: ", sym.error);
          fi;
-         args := [];
+         myargs := [];
          for item in node.content{[2..Length(node.content)]} do
              r := MitM_OMRecToGAPNC(item);
+             Print("\nr: ", r, "\n");
              if r.success <> true then
                  return MitM_Error("OMA contents: ", r.error);
              else
-                 Add(args, r.result);
+                 Add(myargs, r.result);
              fi;
          od;
 
-         return MitM_Result(CallFuncList(sym.result, args));
+         Print("\n\nsym.result: ", sym.result, "\n");
+         Print("myargs: ", myargs, "\n");
+         return CallFuncList(sym.result, myargs);
      end,
 
      OMBIND := function(node)

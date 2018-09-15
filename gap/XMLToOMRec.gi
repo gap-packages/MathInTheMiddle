@@ -24,6 +24,8 @@ function(tree)
             return fail;
         fi;
         return tree.content;
+    elif tree.name = "XMLCOMMENT" then
+        return fail;
     fi;
     out := rec();
     out.name := tree.name;
