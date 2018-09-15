@@ -88,13 +88,13 @@ InstallValue(MitM_Evaluators, rec(
 
      OMI := function(node)
          local v;
+         v := ShallowCopy(node.content[1]);
+         RemoveCharacters(v, WHITESPACE);
          if Position(node.content[1], 'x') <> fail then
-             v := ShallowCopy(node.content[1]);
-             RemoveCharacters(v, WHITESPACE);
              RemoveCharacters(v, "x");
              return MitM_Result(IntHexString(v));
          else
-             return MitM_Result(Int(node.content[1]));
+             return MitM_Result(Int(v));
          fi;
      end,
 

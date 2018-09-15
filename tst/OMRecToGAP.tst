@@ -84,6 +84,12 @@ gap> MitM_OMRecToGAP(v).result;
 gap> MitM_OMRecToGAPFunc(v).result;
 -3416491
 
+# Ints with spaces
+gap> MitM_XMLToGAP("<OMI>3  </OMI>").result;
+3
+gap> MitM_XMLToGAP("<OMI>   \n3 2 </OMI>").result;
+32
+
 # floats
 gap> v := MitM_XMLToOMRec("<OMF dec=\"32.02\" />");;
 gap> MitM_OMRecToGAP(v).result;
