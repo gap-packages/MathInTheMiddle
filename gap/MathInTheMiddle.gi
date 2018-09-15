@@ -1,6 +1,43 @@
+
+
+hdlrs := rec(
+              procedure_call := function(attr, oma)
+                 local t;
+
+                 Info(InfoMitMServer, 15, " Evaluating ...");
+
+                 t := NanosecondsSinceEpoch();
+                 result := MitM_OMRecToGAPFunc(oma);
+                 t := NanosecondsSinceEpoch() - t;
+
+                 if result.success then
+                     return MitM_OMRecToXML(MitM_OMRecToOMOBJRec(MitM_GAPToOMRec(result.result)));
+                 else
+                     Info(InfoMitMServer, 15, " Error during evaluation ...");
+                 fi;
+             end
+             );
+
+HandleSCSCP := function(node)
+    local attr, scscp_call, scscp_oma, result;
+
+    # TODO: validation, using attributes?
+    scscp_call := node.content[1].content[2].content[1];
+
+    if scscp_call.attributes.cd = "scscp1" then
+        # TODO: handlers
+        if scscp_call.attributes.name = "procedure_call" then
+            return hdlrs.procedure_call(attr, scscp_oma);
+        fi;
+    else
+        Info(InfoMitMServer, 15, " Unsupported CD ", scscp_call.attributes.cd);
+        return fail;
+    fi;
+end;
+
 InstallGlobalFunction(MitM_SCSCPHandler,
 function(addr, stream)
-    local done, version, r, obj;
+    local done, version, r, reply, obj;
     done := false;
 
     Info(InfoMitMServer, 5, "Accepted MitM Connection on ", TCP_AddrToString(addr));
@@ -14,9 +51,9 @@ function(addr, stream)
             Info(InfoMitMServer, 15, "  error: ", r.error);
             WriteLine(stream, Concatenation("error: ", r.error));
         else
-            obj := r.result;
-            Info(InfoMitMServer, 15, " Evaluated to ", obj);
-            WriteLine(stream, MitM_OMRecToXML(MitM_OMRecToOMOBJRec(MitM_GAPToOMRec(obj))));
+            reply := HandleSCSCP(r.result);
+            Info(InfoMitMServer, 15, " Evaluated to ", reply);
+            WriteLine(stream, reply);
         fi;
         WriteLine(stream, "<?scscp end ?>");
     od;
