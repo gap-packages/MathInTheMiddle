@@ -286,11 +286,11 @@ gap> xml := """<OMA>
 > <OMI>12</OMI>
 > <OMI>1</OMI>
 > <OMI>0</OMI>
-> <OMI>0</OMI>
+> <OMI>0</OMI> <!-- comment here -->
 > <OMI>0</OMI>
 > <OMI>0</OMI>
 > <OMI>1</OMI>
-> <OMI>1</OMI>
+> <OMI>1<!-- and here --></OMI>
 > <OMI>0</OMI>
 > <OMI>2</OMI>
 > <OMI>0</OMI>
