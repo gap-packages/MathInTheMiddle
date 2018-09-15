@@ -139,7 +139,7 @@ InstallValue(MitM_Evaluators, rec(
      end,
 
      OMATTR := function(node)
-         return MitM_Result(MitM_OMRecToGAPNC(node.content[2]));
+         return MitM_OMRecToGAPNC(node.content[2]);
      end,
 
      OME := function(node)
@@ -280,7 +280,7 @@ InstallValue(MitM_EvalToFunction, rec(
      end,
 
      OMATTR := function(node)
-         return MitM_Result(MitM_OMRecToGAPFuncNC(node.content[2]));
+         return MitM_OMRecToGAPFuncNC(node.content[2]);
      end,
 
      OME := function(node)
