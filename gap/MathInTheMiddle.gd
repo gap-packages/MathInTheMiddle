@@ -7,6 +7,11 @@
 BindGlobal("MitM_cdbase",
            "https://www.gap-system.org/mitm/");
 
+
+DeclareGlobalVariable("MitM_SCSCPHandlers");
+
+DeclareGlobalFunction("MitM_HandleSCSCP");
+
 #! @Description
 #! Start the MitM SCSCP Server
 DeclareGlobalFunction("StartMitMServer");

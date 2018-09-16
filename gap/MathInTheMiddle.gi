@@ -1,39 +1,51 @@
-
-
-hdlrs := rec(
+InstallValue(MitM_SCSCPHandlers, rec(
               procedure_call := function(attr, oma)
-                 local t;
+                 local t, rattr, eval;
 
-                 Info(InfoMitMServer, 15, " Evaluating ...");
+                 Info(InfoMitMServer, 15, " Evaluating ...", oma);
 
                  t := NanosecondsSinceEpoch();
-                 result := MitM_OMRecToGAPFunc(oma);
+                 eval := MitM_OMRecToGAPFunc(oma);
                  t := NanosecondsSinceEpoch() - t;
 
-                 if result.success then
-                     return MitM_OMRecToXML(MitM_OMRecToOMOBJRec(MitM_GAPToOMRec(result.result)));
+                 if eval.success then
+                     rattr := rec( call_id := attr.call_id
+                                 , info_runtime := t / 1000000. );
+                     return MitM_OMRecToXML(MitM_OMRecToOMOBJRec(
+                                OMATTR( rattr
+                                      , OMA( OMS( "scscp1"
+                                                , "procedure_completed" )
+                                           , [ MitM_GAPToOMRec(eval.result) ] ) ) ) );
                  else
-                     Info(InfoMitMServer, 15, " Error during evaluation ...");
+                     Info(InfoMitMServer, 15, " Error during evaluation: ", eval.error);
+                     return MitM_OMRecToXML(MitM_OMRecToOMOBJRec(
+                            OME(OMS( "scscp1"
+                                   , "error_system_specific" )
+                               , [ OMSTR(eval.error) ] ) ) );
                  fi;
              end
-             );
+             ) );
 
-HandleSCSCP := function(node)
+
+InstallGlobalFunction(MitM_HandleSCSCP,
+function(node)
     local attr, scscp_call, scscp_oma, result;
 
     # TODO: validation, using attributes?
+    attr := MitM_ATPToRec(node.content[1].content[1].content);
     scscp_call := node.content[1].content[2].content[1];
+    scscp_oma := node.content[1].content[2].content[2];
 
     if scscp_call.attributes.cd = "scscp1" then
         # TODO: handlers
         if scscp_call.attributes.name = "procedure_call" then
-            return hdlrs.procedure_call(attr, scscp_oma);
+            return MitM_SCSCPHandlers.procedure_call(attr, scscp_oma);
         fi;
     else
         Info(InfoMitMServer, 15, " Unsupported CD ", scscp_call.attributes.cd);
         return fail;
     fi;
-end;
+end);
 
 InstallGlobalFunction(MitM_SCSCPHandler,
 function(addr, stream)
@@ -45,17 +57,20 @@ function(addr, stream)
     Info(InfoMitMServer, 5, " SCSCP Protocol Version ", version);
     while not done do
         r := MitM_ReadSCSCP(stream);
-        WriteLine(stream, "<?scscp start ?>");
         if r.success <> true then
-            Info(InfoMitMServer, 15, " Bad object received\n");
+            Info(InfoMitMServer, 15, " Bad object received");
             Info(InfoMitMServer, 15, "  error: ", r.error);
-            WriteLine(stream, Concatenation("error: ", r.error));
+            Info(InfoMitMServer, 15, " closing connection.");
+            CloseStream(stream);
+            done := true;
+            # WriteLine(stream, Concatenation("error: ", r.error));
         else
-            reply := HandleSCSCP(r.result);
+            reply := MitM_HandleSCSCP(r.result);
             Info(InfoMitMServer, 15, " Evaluated to ", reply);
+            WriteLine(stream, "<?scscp start ?>");
             WriteLine(stream, reply);
+            WriteLine(stream, "<?scscp end ?>");
         fi;
-        WriteLine(stream, "<?scscp end ?>");
     od;
     Info(InfoMitMServer, 5, "Leaving handler for ", TCP_AddrToString(addr));
 end);

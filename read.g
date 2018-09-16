@@ -4,7 +4,7 @@
 # Reading the implementation part of the package.
 #
 
-ReadPackage("MathInTheMiddle", "gap/MathInTheMiddle.gi");
+ReadPackage("MathInTheMiddle", "gap/OMRec.gi");
 ReadPackage("MathInTheMiddle", "gap/Export.gi");
 
 ReadPackage("MathInTheMiddle", "gap/GAPToOMRec.gi");
@@ -17,3 +17,5 @@ ReadPackage("MathInTheMiddle", "gap/Validation.gi");
 ReadPackage("MathInTheMiddle", "gap/TCPStream.gi");
 
 ReadPackage("MathInTheMiddle", "gap/Misc.gi");
+
+ReadPackage("MathInTheMiddle", "gap/MathInTheMiddle.gi");
