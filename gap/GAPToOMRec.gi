@@ -1,8 +1,3 @@
-InstallGlobalFunction(MitM_SimpleOMS,
-obj_name -> rec(name := "OMS", attributes := rec(cdbase := MitM_cdbase,
-                                                 cd := "lib",
-                                                 name := obj_name)));
-
 InstallMethod(MitM_GAPToOMRec,
 "for a dihedral perm group",
 [IsPermGroup and IsDihedralGroup],

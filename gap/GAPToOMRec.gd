@@ -1,9 +1,6 @@
 # Get a record from an object
 DeclareAttribute("MitM_GAPToOMRec", IsObject);
 
-# Shortcut to make a simple OMS from a GAP object
-DeclareGlobalFunction("MitM_SimpleOMS");
-
 # Override GAP's Objectify to store how an
 # object was constructed.
 DeclareGlobalFunction("MitM_FindConstructors");
