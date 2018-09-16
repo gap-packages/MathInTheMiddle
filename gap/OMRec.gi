@@ -12,7 +12,7 @@ end);
 
 InstallGlobalFunction(MitM_RecToATP,
 function(r)
-    return rec( name := "ATP"
+    return rec( name := "OMATP"
               , content := Concatenation(
                            List( NamesOfComponents(r)
                                , n -> [ rec( attributes := rec( cd := "scscp1"
@@ -24,7 +24,7 @@ end);
 InstallGlobalFunction(OMA,
 function(oms, args...)
     return rec( name := "OMA"
-              , content := args );
+              , content := Concatenation( [ oms ], args ) );
 end);
 
 InstallGlobalFunction(OMS,

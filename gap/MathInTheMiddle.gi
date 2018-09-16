@@ -15,13 +15,17 @@ InstallValue(MitM_SCSCPHandlers, rec(
                                 OMATTR( rattr
                                       , OMA( OMS( "scscp1"
                                                 , "procedure_completed" )
-                                           , [ MitM_GAPToOMRec(eval.result) ] ) ) ) );
+                                           , MitM_GAPToOMRec(eval.result) ) ) ) );
                  else
                      Info(InfoMitMServer, 15, " Error during evaluation: ", eval.error);
+                     rattr := rec( call_id := attr.call_id );
                      return MitM_OMRecToXML(MitM_OMRecToOMOBJRec(
-                            OME(OMS( "scscp1"
-                                   , "error_system_specific" )
-                               , [ OMSTR(eval.error) ] ) ) );
+                                OMATTR( rattr
+                                      , OMA( OMS( "scscp1"
+                                                , "procedure_terminated" )
+                                           , OME( OMS( "scscp1"
+                                                     , "error_system_specific" )
+                                                , [ OMSTR(eval.error) ] ) ) ) ) );
                  fi;
              end
              ) );
