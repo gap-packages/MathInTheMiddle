@@ -32,8 +32,7 @@ function(args...)
     local res;
 
     res :=  rec( name := "OMS"
-               , attributes := rec( )
-               , content := [] );
+               , attributes := rec( ) );
 
     if Length(args) = 2 then
         res.attributes.cd := args[1];
@@ -49,8 +48,7 @@ function(args...)
 end);
 
 InstallGlobalFunction(MitM_SimpleOMS,
-obj_name -> OMS(MitM_cdbase, "lib", obj_name)));
-
+obj_name -> OMS(MitM_cdbase, "lib", obj_name));
 
 InstallGlobalFunction(OMATTR,
 function(attr, content)
