@@ -1,11 +1,12 @@
 InstallGlobalFunction(MitM_ATPToRec,
-function(atps)
+function(atp)
     local i, res;
 
     res := rec();
 
-    for i in [1,3..Length(atps)-1] do
-        res.( atps[i].attributes.name ) := MitM_OMRecToGAPNC(atps[i+1]).result;
+    for i in [1,3..Length(atp.content)-1] do
+        res.( atp.content[i].attributes.name ) :=
+            MitM_OMRecToGAPNC(atp.content[i+1]).result;
     od;
     return res;
 end);

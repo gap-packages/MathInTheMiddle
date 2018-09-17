@@ -36,7 +36,7 @@ function(node)
     local attr, scscp_call, scscp_oma, result;
 
     # TODO: validation, using attributes?
-    attr := MitM_ATPToRec(node.content[1].content[1].content);
+    attr := MitM_ATPToRec(node.content[1].content[1]);
     scscp_call := node.content[1].content[2].content[1];
     scscp_oma := node.content[1].content[2].content[2];
 
