@@ -15,9 +15,7 @@ function(r)
     return rec( name := "OMATP"
               , content := Concatenation(
                            List( NamesOfComponents(r)
-                               , n -> [ rec( attributes := rec( cd := "scscp1"
-                                                              , name := n )
-                                           , name := "OMS" )
+                               , n -> [ OMS("scscp1", n)
                                       , MitM_GAPToOMRec(r.(n)) ] ) ) );
 end);
 
