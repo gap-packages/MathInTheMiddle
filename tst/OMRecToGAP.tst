@@ -341,3 +341,11 @@ gap> xml := """<OMA>
 > </OMA>""";;
 gap> MitM_XMLToGAP(xml).result;
 'a'
+
+# Strings
+gap> MitM_RoundTripGAP("hello world").result;
+"hello world"
+gap> MitM_XMLToGAP("<OMSTR></OMSTR>").result;
+""
+gap> MitM_OMRecToGAPFunc(MitM_XMLToOMRec("<OMSTR></OMSTR>")).result;
+""

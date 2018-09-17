@@ -20,7 +20,12 @@ i -> rec(name := "OMI", content := [String(i)]));
 InstallMethod(MitM_GAPToOMRec,
 "for a string in string representation",
 [IsString and IsStringRep],
-s -> rec(name := "OMSTR", content := [s]));
+function(s)
+  if IsEmptyString(s) then
+    return rec(name := "OMSTR", content := []);
+  fi;
+  return rec(name := "OMSTR", content := [s]);
+end);
 
 InstallMethod(MitM_GAPToOMRec,
 "for a char",
