@@ -25,3 +25,14 @@ gap> atprec = rec(
 true
 gap> MitM_RecToATP(atprec) = r;
 true
+
+# OMA function
+gap> oma := OMA(OMS(MitM_cdbase, "lib", "Concatenation"),
+>               OMSTR("hello"),
+>               OMSTR("world"));;
+gap> MitM_OMRecToXML(oma) = """<OMA>
+> <OMS cd="lib" cdbase="https://www.gap-system.org/mitm/" name="Concatenation" />
+> <OMSTR>hello</OMSTR>
+> <OMSTR>world</OMSTR>
+> </OMA>""";
+true
