@@ -18,6 +18,11 @@ InstallMethod(MitM_GAPToOMRec,
 i -> rec(name := "OMI", content := [String(i)]));
 
 InstallMethod(MitM_GAPToOMRec,
+"for a float",
+[IsFloat],
+i -> rec(name := "OMF", attributes := rec( dec := String(i) ) ) );
+
+InstallMethod(MitM_GAPToOMRec,
 "for a string in string representation",
 [IsString and IsStringRep],
 function(s)
@@ -166,6 +171,7 @@ MitM_C___Wrapper := function(n, callee)
         return obj;
     end;
 end;
+
 InstallGlobalFunction(MitM_FindConstructors,
 function()
     local n, v, j, fun, res, a, meths, mpos, mres;

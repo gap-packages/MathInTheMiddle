@@ -34,6 +34,8 @@ InstallValue(MitM_SCSCPHandlers, rec(
 InstallGlobalFunction(MitM_HandleSCSCP,
 function(node)
     local attr, scscp_call, scscp_oma, result;
+    
+    Print("bla : ", node, "\n");
 
     # TODO: validation, using attributes?
     attr := MitM_ATPToRec(node.content[1].content[1]);

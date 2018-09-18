@@ -119,7 +119,7 @@ InstallValue(MitM_EvalToFunction, rec(
          else
              str := node.content[1];
          fi;
-         return MitM_Result(Concatenation("\"", str, "\""));
+         return MitM_Result(str);
      end,
 
      OMF := function(node)
