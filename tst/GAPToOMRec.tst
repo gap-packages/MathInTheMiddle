@@ -147,7 +147,7 @@ gap> xml = """<OMA>
 > <OMI>2</OMI>
 > </OMA>""";
 true
-gap> MitM_OMRecToGAP(MitM_XMLToOMRec(xml)).result = z;
+gap> MitM_OMRecToGAPFunc(MitM_XMLToOMRec(xml)).result = z;
 true
 
 # Finite field elements: Conway rep
@@ -176,7 +176,7 @@ gap> xml = """<OMA>
 > <OMI>1</OMI>
 > </OMA>""";
 true
-gap> MitM_OMRecToGAP(MitM_XMLToOMRec(xml)).result = z;
+gap> MitM_OMRecToGAPFunc(MitM_XMLToOMRec(xml)).result = z;
 true
 
 # Characters

@@ -1,170 +1,18 @@
 #
-# Interprets GAP MathInTheMiddle OpenMath back into GAP objects
+# Interprets GAP MathInTheMiddle OpenMath into GAP functions
 #
-InstallMethod(MitM_OMRecToGAP, [IsRecord],
-function(r)
-    local val;
-    val := MitM_IsValidOMRec(r);
-    if val <> true then
-        return rec(success := false, error := val);
-    fi;
-    return MitM_OMRecToGAPNC(r);
-end);
-
-# Still handles errors, but doesn't run IsValidOMRec
-InstallGlobalFunction(MitM_OMRecToGAPNC,
-function(r)
-    return MitM_Evaluators.(r.name)(r);
-end);
 
 # Make records indicating success or failure
 InstallGlobalFunction(MitM_Error,
 function(str...)
     return rec(success := false, error := Concatenation(str));
 end);
+
 InstallGlobalFunction(MitM_Result,
 function(obj)
     return rec(success := true, result := obj);
 end);
 
-BindGlobal("MitM_GAP_Primitives", rec(
-     ListConstr := function(args...)
-         return args;
-     end,
-     PermConstr := function(args...)
-         return PermList(args);
-     end,
-     # TODO: PermBytesConstr
-     BoolConstr := function(args...)
-         return EvalString(args[1]);
-     end,
-     CharConstr := function(args...)
-         return args[1][1];
-     end,
-     FFEConstr := function(args...)
-         local char, deg, gen;
-         char := args[1];
-         deg := args[2];
-         gen := Z(char, deg);
-         return Sum([0..deg-1], i -> args[i+3] * gen ^ i);
-     end,
-) );
-
-# Evaluators for OpenMath objects
-InstallValue(MitM_Evaluators, rec(
-     OMS := function(node)
-        local name, sym;
-        name := node.attributes.name;
-
-        if (not IsBound(node.attributes.cdbase)) or
-           (node.attributes.cdbase <> MitM_cdbase) then
-            return MitM_Error("cdbase must be ", MitM_cdbase);
-        fi;
-
-        if node.attributes.cd = "prim" then
-            if not name in RecNames(MitM_GAP_Primitives) then
-                return MitM_Error("OMS name \"", name,
-                                  "\" not a GAP primitive function");
-            fi;
-            sym := MitM_GAP_Primitives.(name);
-        elif node.attributes.cd = "lib" then
-            if not IsBoundGlobal(name) then
-                return MitM_Error("symbol \"", name, "\" not known");
-            fi;
-            sym := ValueGlobal(node.attributes.name);
-        else
-            return MitM_Error("cd \"", node.attributes.cd, "\" not supported");
-        fi;
-        return MitM_Result(sym);
-     end,
-
-     OMOBJ := function(node)
-         return MitM_OMRecToGAPNC(node.content[1]);
-     end,
-
-     OMV := function(node)
-         return MitM_Result(node.attributes.name);
-     end,
-
-     OMI := function(node)
-         local v;
-         v := ShallowCopy(node.content[1]);
-         RemoveCharacters(v, WHITESPACE);
-         if Position(node.content[1], 'x') <> fail then
-             RemoveCharacters(v, "x");
-             return MitM_Result(IntHexString(v));
-         else
-             return MitM_Result(Int(v));
-         fi;
-     end,
-
-     OMB := function(node)
-         return MitM_Result(node.content[1]);
-     end,
-
-     OMSTR := function(node)
-         local str;
-         if IsEmpty(node.content) then
-             str := "";
-         else
-             str := node.content[1];
-         fi;
-         return MitM_Result(str);
-     end,
-
-     OMF := function(node)
-         if IsBound(node.attributes.dec) then
-             return MitM_Result(Float(node.attributes.dec));
-         else
-             return MitM_Error("OMF: hex encoding not supported");
-         fi;
-     end,
-
-     OMA := function(node)
-         local sym, args, item, r;
-
-         sym := MitM_OMRecToGAPNC(node.content[1]);
-         if sym.success <> true then
-             return MitM_Error("OMA contents: ", sym.error);
-         fi;
-         args := [];
-         for item in node.content{[2..Length(node.content)]} do
-             r := MitM_OMRecToGAPNC(item);
-             if r.success <> true then
-                 return MitM_Error("OMA contents: ", r.error);
-             else
-                 Add(args, r.result);
-             fi;
-         od;
-
-         return MitM_Result(CallFuncList(sym.result, args));
-     end,
-
-     OMBIND := function(node)
-         local x;
-         x := MitM_OMRecToGAPFuncNC(node);
-         if x.success <> true then
-             return x;
-         fi;
-         return MitM_Result(EvalString(x.result));
-     end,
-
-     OMATTR := function(node)
-         return MitM_OMRecToGAPNC(node.content[2]);
-     end,
-
-     OME := function(node)
-         # TODO: Error handling?
-         Print("Error: ", List(node.content{[2..Length(node.content)]},
-                               MitM_OMRecToGAPNC), "\n");
-     end,
-#     OMR := function(node)
-#     end,
-    ) );
-
-#
-# Interprets GAP MathInTheMiddle OpenMath into GAP functions
-#
 InstallMethod(MitM_OMRecToGAPFunc, [IsRecord],
 function(r)
     local val, res;
@@ -190,48 +38,75 @@ BindGlobal("MitM_GAP_PrimitivesFunc", rec(
      PermConstr := "({args...} -> PermList(args))",
      # TODO: PermBytesConstr
      BoolConstr := "({args...} -> EvalString(args[1]))",
+     CharConstr := "({args...} -> args[1][1])",
      FFEConstr := "({args...} -> Sum([0..args[2]-1], i -> args[i+3] * Z(args[1], args[2]) ^ i))",
 ) );
 
-# Evaluators for OpenMath objects
-InstallValue(MitM_EvalToFunction, rec(
-     OMS := function(node)
-         local name, sym;
+SCSCP_get_allowed_heads := function()
+    return [];
+end;
 
-         if (not IsBound(node.attributes.cdbase)) or
-             (node.attributes.cdbase <> MitM_cdbase) then
-             return MitM_Error("cdbase must be ", MitM_cdbase);
-         fi;
 
+BindGlobal("MitM_CDDirectory",
+rec( ( "default" ) := function(node)
+       if node.attributes.cd = "scscp2" then
+           if node.attributes.name = "get_allowed_heads" then
+               return MitM_Result("SCSCP_get_allowed_heads");
+           else
+               return MitM_Error("name \"", node.attributes.name, "\" not supported");
+           fi;
+       else
+           return MitM_Error("cd \"", node.attributes.cd, "\" not supported");
+       fi;
+     end,
+     ( MitM_cdbase ) := function(node)
+         local name;
          name := node.attributes.name;
          if node.attributes.cd = "prim" then
              if not name in RecNames(MitM_GAP_PrimitivesFunc) then
                  return MitM_Error("OMS name \"", name,
                                    "\" not a GAP primitive function");
              fi;
-             sym := MitM_GAP_PrimitivesFunc.(name);
+             return MitM_Result(MitM_GAP_PrimitivesFunc.(name));
          elif node.attributes.cd = "lib" then
-             if not IsBoundGlobal(name) then
-                 return MitM_Error("symbol \"", name, "\" not known");
-             fi;
-             sym := node.attributes.name;
+             return MitM_Result(node.attributes.name);
          else
-             return MitM_Error("cd \"", node.attributes.cd, "\" not supported");
+             return MitM_Error("cd \"", node.attributes.cd
+                               , "\" not supported");
          fi;
-         return MitM_Result(sym);
+     end,
+) );
+
+# Evaluators for OpenMath objects
+InstallValue(MitM_EvalToFunction, rec(
+     OMOBJ := function(node)
+         return MitM_OMRecToGAPFuncNC(node.content[1]);
+     end,
+
+     OMS := function(node)
+         local name, sym;
+
+         if (not IsBound(node.attributes.cdbase)) then
+             return MitM_CDDirectory.("default")(node);
+         elif IsBound(MitM_CDDirectory.(node.attributes.cdbase)) then
+             return MitM_CDDirectory.(node.attributes.cdbase)(node);
+         else
+             return MitM_Error("cdbase \"", node.attributes.cdbase
+                               , "\" is not supported");
+         fi;
      end,
 
      OMV := node -> MitM_Result(StringFormatted("\"{}\"",
                                                 node.attributes.name)),
      OMI := function(node)
          local v;
+         v := ShallowCopy(node.content[1]);
+         RemoveCharacters(v, WHITESPACE);
          if Position(node.content[1], 'x') <> fail then
-             v := ShallowCopy(node.content[1]);
-             RemoveCharacters(v, WHITESPACE);
              RemoveCharacters(v, "x");
              return MitM_Result(String(IntHexString(v)));
          else
-             return MitM_Result(node.content[1]);
+             return MitM_Result(v);
          fi;
      end,
 
@@ -241,7 +116,7 @@ InstallValue(MitM_EvalToFunction, rec(
          local str;
          if IsEmpty(node.content) then
              str := "";
-         else 
+         else
              str := node.content[1];
          fi;
          return MitM_Result(Concatenation("\"", str, "\""));
