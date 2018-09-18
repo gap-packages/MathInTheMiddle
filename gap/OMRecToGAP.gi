@@ -43,7 +43,7 @@ BindGlobal("MitM_GAP_PrimitivesFunc", rec(
 ) );
 
 SCSCP_get_allowed_heads := function()
-    return [];
+    return OMS(MitM_cdbase, "lib", "MitM_Evaluate");
 end;
 
 

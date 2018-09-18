@@ -140,6 +140,19 @@ function(elm)
     return rec(name := "OMA", content := content);
 end);
 
+# TODO: Is this a good idea?
+InstallMethod(MitM_GAPToOMRec,
+"for a record",
+[IsRecord],
+function(r)
+    if IsBound(r.name) and
+       r.name in ["OMA", "OMOBJ", "OMS", "OMSTR", "OMI", "OMF", "OMATTR", "OMATP"] then
+        return r;
+    else
+        TryNextMethod();
+    fi;
+end);
+
 # TODO: This is a hack. We look for functions that create objects using
 #       `Objectify` by essentially grepping through their source (so this
 #       only works for GAP-level functions) and designating any function
