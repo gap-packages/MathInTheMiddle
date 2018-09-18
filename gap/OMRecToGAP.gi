@@ -119,7 +119,7 @@ InstallValue(MitM_EvalToFunction, rec(
          else
              str := node.content[1];
          fi;
-         return MitM_Result(str);
+         return MitM_Result(StringFormatted("({} -> \"{}\")()", "{}", str));
      end,
 
      OMF := function(node)

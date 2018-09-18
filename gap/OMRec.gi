@@ -6,7 +6,7 @@ function(atp)
 
     for i in [1,3..Length(atp.content)-1] do
         res.( atp.content[i].attributes.name ) :=
-            MitM_OMRecToGAPFuncNC(atp.content[i+1]).result;
+            EvalString(MitM_OMRecToGAPFuncNC(atp.content[i+1]).result);
     od;
     return res;
 end);
