@@ -1,34 +1,50 @@
+MitM_CookieCount := 0;
+MitM_CookieJar := rec();
+
 InstallValue(MitM_SCSCPHandlers, rec(
-              procedure_call := function(attr, oma)
-                 local t, rattr, eval;
+    procedure_call := function(attr, oma)
+        local t, rattr, eval;
 
-                 Info(InfoMitMServer, 15, " Evaluating ...", oma);
+        Info(InfoMitMServer, 15, " Evaluating... ", oma);
+        Info(InfoMitMServer, 15, " Attributes... ", attr);
 
-                 t := NanosecondsSinceEpoch();
-                 eval := MitM_OMRecToGAPFunc(oma);
-                 t := NanosecondsSinceEpoch() - t;
+        t := NanosecondsSinceEpoch();
+        eval := MitM_OMRecToGAPFunc(oma);
+        t := NanosecondsSinceEpoch() - t;
 
-                 if eval.success then
-                     rattr := rec( call_id := attr.call_id
-                                 , info_runtime := t / 1000000. );
-                     return MitM_OMRecToXML(MitM_OMRecToOMOBJRec(
-                                OMATTR( rattr
-                                      , OMA( OMS( "scscp1"
-                                                , "procedure_completed" )
-                                           , MitM_GAPToOMRec(eval.result) ) ) ) );
-                 else
-                     Info(InfoMitMServer, 15, " Error during evaluation: ", eval.error);
-                     rattr := rec( call_id := attr.call_id );
-                     return MitM_OMRecToXML(MitM_OMRecToOMOBJRec(
-                                OMATTR( rattr
-                                      , OMA( OMS( "scscp1"
-                                                , "procedure_terminated" )
-                                           , OME( OMS( "scscp1"
-                                                     , "error_system_specific" )
-                                                , [ OMSTR(eval.error) ] ) ) ) ) );
-                 fi;
-             end
-             ) );
+        if eval.success then
+            rattr := rec( call_id := attr.call_id
+                        , info_runtime := t / 1000000. );
+           if IsBound(attr.option_return_cookie) then
+                MitM_CookieJar.(MitM_CookieCount) := eval.result;
+                MitM_CookieCount := MitM_CookieCount + 1;
+                return MitM_OMRecToXML(MitM_OMRecToOMOBJRec(OMATTR( rattr
+                                                                  , OMA( OMS( "scscp1"
+                                                                            , "procedure_completed" )
+                                                                       , MitM_GAPToOMRec(MitM_CookieCount-1) ) ) ) );
+            elif IsBound(attr.option_return_nothing) then
+                return MitM_OMRecToXML(MitM_OMRecToOMOBJRec(OMATTR( rattr
+                                                                  , OMA( OMS( "scscp1"
+                                                                            , "procedure_completed" ) ) ) ) );
+            else
+                return MitM_OMRecToXML(MitM_OMRecToOMOBJRec(OMATTR( rattr
+                                                                  , OMA( OMS( "scscp1"
+                                                                            , "procedure_completed" )
+                                                                       , MitM_GAPToOMRec(eval.result) ) ) ) );
+            fi;
+        else
+            Info(InfoMitMServer, 15, " Error during evaluation: ", eval.error);
+            rattr := rec( call_id := attr.call_id );
+            return MitM_OMRecToXML(MitM_OMRecToOMOBJRec(
+                      OMATTR( rattr
+                            , OMA( OMS( "scscp1"
+                                      , "procedure_terminated" )
+                                  , OME( OMS( "scscp1"
+                                            , "error_system_specific" )
+                                      , [ OMSTR(eval.error) ] ) ) ) ) );
+        fi;
+    end
+) );
 
 
 InstallGlobalFunction(MitM_HandleSCSCP,
