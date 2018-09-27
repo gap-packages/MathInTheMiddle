@@ -43,9 +43,14 @@ BindGlobal("MitM_GAP_PrimitivesFunc", rec(
 ) );
 
 SCSCP_get_allowed_heads := function()
-    return OMA(OMS(MitM_cdbase, "lib", "MitM_Evaluate"));
+    return OMA( OMS( "scscp1", "symbol_set" )
+              , OMS( "scscp_transient_1", "MitM_Evaluate" )
+              , OMS( MitM_cdbase, "lib", "MitM_Evaluate" ) );
 end;
 
+MitM_Evaluate := function(node)
+    return node;
+end;
 
 BindGlobal("MitM_CDDirectory",
 rec( ( "default" ) := function(node)
@@ -54,6 +59,10 @@ rec( ( "default" ) := function(node)
                return MitM_Result("SCSCP_get_allowed_heads");
            else
                return MitM_Error("name \"", node.attributes.name, "\" not supported");
+           fi;
+       elif node.attributes.cd = "scscp_transient_1" then
+           if node.attributes.name = "MitM_Evaluate" then
+               return MitM_Result("MitM_Evaluate");
            fi;
        else
            return MitM_Error("cd \"", node.attributes.cd, "\" not supported");
