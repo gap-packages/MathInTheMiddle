@@ -26,7 +26,7 @@ InstallValue(MitM_SCSCPHandlers, rec(
                 return MitM_OMRecToXML(MitM_OMRecToOMOBJRec(OMATTR( rattr
                                                                   , OMA( OMS( "scscp1"
                                                                             , "procedure_completed" ) ) ) ) );
-            else
+            elif IsBound(attr.option_return_object) then
                 return MitM_OMRecToXML(MitM_OMRecToOMOBJRec(OMATTR( rattr
                                                                   , OMA( OMS( "scscp1"
                                                                             , "procedure_completed" )
@@ -45,7 +45,6 @@ InstallValue(MitM_SCSCPHandlers, rec(
         fi;
     end
 ) );
-
 
 InstallGlobalFunction(MitM_HandleSCSCP,
 function(node)
