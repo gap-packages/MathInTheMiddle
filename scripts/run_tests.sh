@@ -22,3 +22,8 @@ if [[ -z $NO_COVERAGE ]]; then
 fi
 
 $GAP tst/testall.g
+
+$GAP -A tst/scscp/server.g &
+sleep 10
+python3 tst/scscp/client.py
+kill -9 %%

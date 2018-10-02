@@ -1,0 +1,2 @@
+LoadPackage("MathInTheMiddle");
+StartMitMServer();

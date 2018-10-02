@@ -8,6 +8,10 @@
 #
 set -ex
 
+sudo pip3 install --upgrade pip
+pip3 install --user openmath
+pip3 install --user scscp
+
 # ensure coverage is turned on
 export CFLAGS="$CFLAGS -fprofile-arcs -ftest-coverage"
 export LDFLAGS="$LDFLAGS -fprofile-arcs"
