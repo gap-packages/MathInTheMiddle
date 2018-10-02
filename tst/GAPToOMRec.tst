@@ -78,6 +78,28 @@ true
 gap> MitM_OMRecToXML(MitM_GAPToOMRec(27));
 "<OMI>27</OMI>"
 
+# A float
+gap> MitM_GAPToXML(3.141592654);
+"<OMF dec=\"3.1415926540000001\" />"
+
+# Records
+gap> r :=
+> rec(
+>   assembly := "Flins, France",
+>   range := 210,
+>   style := "5-door hatchback"
+> );;
+gap> Print(MitM_GAPToXML(r), "\n");
+<OMA>
+<OMS cd="prim" cdbase="https://www.gap-system.org/mitm/" name="RecConstr" />
+<OMSTR>assembly</OMSTR>
+<OMSTR>Flins, France</OMSTR>
+<OMSTR>range</OMSTR>
+<OMI>210</OMI>
+<OMSTR>style</OMSTR>
+<OMSTR>5-door hatchback</OMSTR>
+</OMA>
+
 # Polynomials
 gap> p := PolynomialByExtRep( RationalFunctionsFamily(FamilyObj(1)),
 >                             [[2,1], 1, [1,1,3,1], 3] );

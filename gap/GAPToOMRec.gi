@@ -58,6 +58,19 @@ function(b)
 end);
 
 InstallMethod(MitM_GAPToOMRec,
+"for a record",
+[IsRecord],
+function(r)
+    local content, rnam;
+    content := [OMS(MitM_cdbase, "prim", "RecConstr")];
+    for rnam in Set(RecNames(r)) do
+        Add(content, OMSTR(rnam));
+        Add(content, MitM_GAPToOMRec(r.(rnam)));
+    od;
+    return rec(name := "OMA", content := content);
+end);
+
+InstallMethod(MitM_GAPToOMRec,
 "for a permutation",
 [IsPerm],
 function(p)
@@ -138,19 +151,6 @@ function(elm)
         Add(content, MitM_GAPToOMRec(IntFFE(coef)));
     od;
     return rec(name := "OMA", content := content);
-end);
-
-# TODO: Is this a good idea?
-InstallMethod(MitM_GAPToOMRec,
-"for a record",
-[IsRecord],
-function(r)
-    if IsBound(r.name) and
-       r.name in ["OMA", "OMOBJ", "OMS", "OMSTR", "OMI", "OMF", "OMATTR", "OMATP"] then
-        return r;
-    else
-        TryNextMethod();
-    fi;
 end);
 
 # TODO: This is a hack. We look for functions that create objects using

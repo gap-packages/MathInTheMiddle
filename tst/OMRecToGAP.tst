@@ -73,6 +73,26 @@ false
 gap> MitM_OMRecToGAPFunc(v).error;
 "OMF: hex encoding not supported"
 
+# Records
+gap> specifications := MitM_XMLToGAP("""
+> <OMA>
+>   <OMS cd="prim" cdbase="https://www.gap-system.org/mitm/" name="RecConstr" />
+>   <OMSTR>style</OMSTR>
+>   <OMSTR>5-door hatchback</OMSTR>
+>   <OMSTR>range</OMSTR>
+>   <OMI>21 0</OMI>
+>   <OMSTR>assembly</OMSTR>
+>   <OMSTR>Flins, France</OMSTR>
+> </OMA>
+> """);;
+gap> specifications.result =
+> rec(
+>   assembly := "Flins, France",
+>   range := 210,
+>   style := "5-door hatchback"
+> );
+true
+
 # OMB
 gap> v := MitM_XMLToOMRec("<OMB>cheesyworldhello</OMB>");;
 gap> MitM_OMRecToGAPFunc(v).result;

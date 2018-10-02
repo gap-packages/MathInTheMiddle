@@ -35,6 +35,7 @@ end);
 # Primitives for GAP
 BindGlobal("MitM_GAP_PrimitivesFunc", rec(
      ListConstr := "({args...} -> args)",
+     RecConstr := "(function(args...) local r,i; r := rec(); for i in [1,3..Length(args)-1] do r.(args[i]) := args[i+1]; od; return r; end)",
      PermConstr := "({args...} -> PermList(args))",
      # TODO: PermBytesConstr
      BoolConstr := "({args...} -> EvalString(args[1]))",
