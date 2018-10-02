@@ -64,7 +64,7 @@ gap> CloseStream(stream);
 # Serve a local client
 gap> sock := IO_socket(IO.PF_INET, IO.SOCK_STREAM, "tcp");;
 gap> lookup := IO_gethostbyname("localhost");;
-gap> port := 26133;;
+gap> port := Random([20000..40000]);;
 gap> res := IO_bind( sock, IO_make_sockaddr_in(lookup.addr[1], port));
 true
 gap> IO_listen(sock, 5);
@@ -98,7 +98,7 @@ gap> CloseStream(serverstream);
 
 # Serve a local client with ListeningTCPSocket
 gap> host := "localhost";;
-gap> port := 26134;;
+gap> port := Random([20000..40000]);;
 gap> sock := ListeningTCPSocket(host, port);;
 gap> child := IO_fork();;
 gap> if child = 0 then
