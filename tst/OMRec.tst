@@ -23,7 +23,7 @@ gap> atprec = rec(
 > option_min_memory := 40964,
 > option_return_object := "", option_runtime := 300000);
 true
-gap> MitM_RecToATP(atprec) = r;
+gap> Set(MitM_RecToATP(atprec).content) = Set(r.content);
 true
 
 # OMA function
