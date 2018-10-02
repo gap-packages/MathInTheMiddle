@@ -136,7 +136,7 @@ function(file)
 
     fd := IO_File(file, "w");
     if fd = fail then
-        Error("Opening file ", file, "failed.");
+        Error("Opening file ", file, " failed");
     fi;
     typeinfo := MitM_TypesInfo();
     n := IO_Write(fd, GapToJsonString(typeinfo[1]));

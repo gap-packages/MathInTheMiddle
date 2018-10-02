@@ -6,3 +6,5 @@ collecting global variable references...   done
 gap> json := JsonStreamToGap(InputTextFile("types.json"));;
 
 #
+gap> MitM_TypesToJson("/");;
+Error, Opening file / failed
