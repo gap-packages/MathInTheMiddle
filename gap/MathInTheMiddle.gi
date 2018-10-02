@@ -34,23 +34,50 @@ InstallValue(MitM_SCSCPHandlers, rec(
             fi;
         else
             Info(InfoMitMServer, 15, " Error during evaluation: ", eval.error);
-            rattr := rec( call_id := attr.call_id );
-            return MitM_OMRecToXML(MitM_OMRecToOMOBJRec(
-                      OMATTR( rattr
-                            , OMA( OMS( "scscp1"
-                                      , "procedure_terminated" )
-                                  , OME( OMS( "scscp1"
-                                            , "error_system_specific" )
-                                      , [ OMSTR(eval.error) ] ) ) ) ) );
+            return MitM_TerminateProcedure(eval.error, rec(call_id := attr.call_id));
         fi;
     end
 ) );
 
+InstallGlobalFunction(MitM_TerminateProcedure,
+function(message, attr...)
+    if Length(attr) = 0 then
+        attr := rec();
+    elif Length(attr) = 1 then
+        attr := attr[1];
+    else
+        ErrorNoReturn("MitM_TerminateProcedure: takes 1 or 2 arguments (not ",
+                      Length(attr) + 1, ")");
+    fi;
+    return MitM_OMRecToXML(MitM_OMRecToOMOBJRec(
+                 OMATTR( attr
+                       , OMA( OMS( "scscp1"
+                                 , "procedure_terminated" )
+                            , OME( OMS( "scscp1"
+                                      , "error_system_specific" )
+                                 , [ OMSTR(message) ] ) ) ) ) );
+end);
+
 InstallGlobalFunction(MitM_HandleSCSCP,
 function(node)
-    local attr, scscp_call, scscp_oma, result;
+    local attr, scscp_call, scscp_oma;
 
-    # TODO: validation, using attributes?
+    # Validate wrt SCSCP v1.3 spec - procedure call (4.1.1)
+    if not (Length(node.content) = 1 and node.content[1].name = "OMATTR") then
+        Info(InfoMitMServer, 15, " Invalid procedure call: OMATTR expected");
+        return MitM_TerminateProcedure("procedure call: OMOBJ should contain one OMATTR and nothing else");
+    elif node.content[1].content[2].name <> "OMA" then
+        Info(InfoMitMServer, 15, " Invalid procedure call: OMA expected");
+        return MitM_TerminateProcedure("procedure call: OMOBJ: OMATTR's 2nd object should be an OMA");
+    elif not (Length(node.content[1].content[2].content) = 2 and
+              node.content[1].content[2].content[1].name = "OMS") then
+        Info(InfoMitMServer, 15, " Invalid procedure call: OMS expected");
+        return MitM_TerminateProcedure("procedure call: OMOBJ: OMATTR: OMA's 1st object should be an OMS");
+    elif node.content[1].content[2].content[2].name <> "OMA" then
+        Info(InfoMitMServer, 15, " Invalid procedure call: OMA expected");
+        return MitM_TerminateProcedure("procedure call: OMOBJ: OMATTR: OMA's 2nd object should be an OMA");
+    fi;
+
     attr := MitM_ATPToRec(node.content[1].content[1]);
     scscp_call := node.content[1].content[2].content[1];
     scscp_oma := node.content[1].content[2].content[2];

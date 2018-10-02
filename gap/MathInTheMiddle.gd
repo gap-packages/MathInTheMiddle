@@ -12,6 +12,8 @@ DeclareGlobalVariable("MitM_SCSCPHandlers");
 
 DeclareGlobalFunction("MitM_HandleSCSCP");
 
+DeclareGlobalFunction("MitM_TerminateProcedure");
+
 #! @Description
 #! Start the MitM SCSCP Server
 DeclareGlobalFunction("StartMitMServer");
