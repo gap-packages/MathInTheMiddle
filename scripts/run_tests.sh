@@ -26,6 +26,6 @@ $GAP tst/testall.g
 $GAP -A tst/scscp/server.g --nointeract &
 sleep 10
 $GAP -A tst/scscp/client.g --nointeract
-kill -9 %%
+kill %%
 
 exit 0
