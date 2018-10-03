@@ -23,9 +23,9 @@ fi
 
 $GAP tst/testall.g
 
-$GAP -A tst/scscp/server.g &
+$GAP -A tst/scscp/server.g --nointeract &
 sleep 10
-python3 tst/scscp/client.py
-kill %gap
+$GAP -A tst/scscp/client.g --nointeract
+kill -9 %%
 
 exit 0
