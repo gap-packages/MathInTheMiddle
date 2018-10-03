@@ -303,3 +303,15 @@ gap> MitM_XMLToGAP("<OMSTR></OMSTR>").result;
 ""
 gap> MitM_OMRecToGAPFunc(MitM_XMLToOMRec("<OMSTR></OMSTR>")).result;
 ""
+
+# SCSCP_get_allowed_heads
+gap> Set(SCSCP_get_allowed_heads().content,
+>        r-> [r.attributes.cd, r.attributes.name]) = [
+> [ "lib", "MitM_Evaluate" ],
+> [ "scscp1", "symbol_set" ],
+> [ "scscp_transient_1", "MitM_Evaluate" ] ];
+true
+
+# MitM_Evaluate
+gap> MitM_Evaluate(OMSTR("hello"));
+rec( content := [ "hello" ], name := "OMSTR" )
