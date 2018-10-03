@@ -36,3 +36,30 @@ gap> MitM_OMRecToXML(oma) = """<OMA>
 > <OMSTR>world</OMSTR>
 > </OMA>""";
 true
+
+# OMS failures
+gap> OMS(1, 2, 3, 4);
+fail
+gap> OMS(1);
+fail
+gap> OMS();
+fail
+
+# OMATTR
+gap> Print(MitM_OMRecToXML(OMATTR(rec(call_id := "abcde"), OMSTR("hello"))),
+>          "\n");
+<OMATTR>
+<OMATP>
+<OMS cd="scscp1" name="call_id" />
+<OMSTR>abcde</OMSTR>
+</OMATP>
+<OMSTR>hello</OMSTR>
+</OMATTR>
+
+# OME
+gap> Print(MitM_OMRecToXML(OME(OMS("scscp1", "error_system_specific"),
+>                              [OMSTR("you did something wrong!")])), "\n");
+<OME>
+<OMS cd="scscp1" name="error_system_specific" />
+<OMSTR>you did something wrong!</OMSTR>
+</OME>
