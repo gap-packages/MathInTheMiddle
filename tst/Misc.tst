@@ -17,6 +17,8 @@ gap> xml := """<OMA>
 > </OMA>""";;
 gap> MitM_RoundTripXML(xml) = xml;
 true
+gap> MitM_RoundTripXML("<OMI>xyz</OMI>");
+rec( error := "OMI contents: xyz is not an integer", success := false )
 
 # MitM_Print
 gap> MitM_Print(["hello", "world", 17]);
