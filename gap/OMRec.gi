@@ -146,6 +146,17 @@ function(r)
     fi;
 end);
 
+InstallMethod(MitM_Name, "for an omrec",
+              [MitM_OMRecRep],
+function(r)
+    if IsBound(r!.attributes) and IsBound(r!.attributes.name) then
+        return r!.attributes.name;
+    else
+        return fail;
+    fi;
+end);
+
+
 InstallMethod(MitM_CD, "for an omrec",
               [MitM_OMRecRep],
 function(r)
