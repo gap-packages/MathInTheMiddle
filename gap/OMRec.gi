@@ -217,4 +217,8 @@ function(r)
     fi;
 end);
 
-
+InstallMethod(\=, "for omrec and omrec",
+              [MitM_OMRecRep, MitM_OMRecRep],
+{x, y} -> (x!.name = y!.name and
+           IsBound(x!.content) = IsBound(y!.content) and
+           ((not IsBound(x!.content)) or x!.content = y!.content)));

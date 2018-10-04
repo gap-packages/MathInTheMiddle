@@ -40,5 +40,11 @@ true
 # MitM_RecToATP function
 gap> r := MitM_RecToATP(rec(x := 3, y := 6));
 OMATP( rec( x := OMI(3), y := OMI(6) ) )
-gap> OMATP( rec( x := OMI(3), y := OMI(6) ) );
+gap> s := OMATP( rec( x := OMI(3), y := OMI(6) ) );
 OMATP( rec( x := OMI(3), y := OMI(6) ) )
+gap> r = s;
+true
+gap> s := OMATP( rec( z := OMI(3), y := OMI(6) ) );
+OMATP( rec( y := OMI(6), z := OMI(3) ) )
+gap> r = s;
+false
