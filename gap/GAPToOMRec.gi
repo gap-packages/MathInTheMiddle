@@ -82,7 +82,7 @@ InstallMethod(MitM_GAPToOMRec,
 [IsList],
 function(L)
     local content, item;
-    content := [ OMS(MitM_cdbase,
+    content := [ OMS(MitM_cdbase
                      , "prim"
                      , "ListConstr") ];
     for item in L do
@@ -97,7 +97,7 @@ InstallMethod(MitM_GAPToOMRec,
 function(elm)
     local content, char, deg, log, coef;
     content := [];
-    Add(content, OMS( MitM_cdbase,
+    Add(content, OMS( MitM_cdbase
                     , "prim"
                     , "FFEConstr"));
     char := Characteristic(elm);
@@ -136,7 +136,7 @@ MitM_C___Wrapper := function(n, callee)
             fi;
         od;
         # This will of course only work with attribute storing objects
-        SetMitM_GAPToOMRec(obj, CallFuncList(OMA, omacont) ) 
+        SetMitM_GAPToOMRec(obj, CallFuncList(OMA, omacont) );
         return obj;
     end;
 end;
