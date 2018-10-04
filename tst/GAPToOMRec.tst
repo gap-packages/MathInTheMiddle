@@ -136,9 +136,9 @@ true
 # Two strings together in a list
 # Note: I'm not sure this will ever come up in GAP or OpenMath, and perhaps it
 #       should be prohibited.  FromStream.gi will treat it as one string.
-gap> r := rec(name := "OMTWOSTRINGS", content := ["hello", "world"]);;
-gap> MitM_OMRecToXML(r);
-"<OMTWOSTRINGS>\nhello\nworld\n</OMTWOSTRINGS>"
+# gap> r := rec(name := "OMTWOSTRINGS", content := ["hello", "world"]);;
+# gap> MitM_OMRecToXML(r);
+# "<OMTWOSTRINGS>\nhello\nworld\n</OMTWOSTRINGS>"
 
 # OMRecToOMOBJRec
 gap> MitM_OMRecToXML(MitM_OMRecToOMOBJRec(MitM_GAPToOMRec([29..31]))) =

@@ -46,10 +46,10 @@ true
 # Two strings together in a list
 # Note: I'm not sure this will ever come up in GAP or OpenMath, and perhaps it
 #       should be prohibited.  XMLToOMRec interprets it as a single string.
-gap> tree := rec(name := "OMTWOSTRINGS", content := ["hello", "world"]);
-rec( content := [ "hello", "world" ], name := "OMTWOSTRINGS" )
-gap> MitM_XMLToOMRec(MitM_OMRecToXML(tree));
-rec( content := [ "\nhello\nworld\n" ], name := "OMTWOSTRINGS" )
+# gap> tree := rec(name := "OMTWOSTRINGS", content := ["hello", "world"]);
+# rec( content := [ "hello", "world" ], name := "OMTWOSTRINGS" )
+# gap> MitM_XMLToOMRec(MitM_OMRecToXML(tree));
+# rec( content := [ "\nhello\nworld\n" ], name := "OMTWOSTRINGS" )
 
 # Comments
 gap> MitM_XMLToGAP("<OMI> 3 <!-- hello world -->2 </OMI>").result;
