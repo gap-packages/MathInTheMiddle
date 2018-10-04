@@ -14,6 +14,8 @@ DeclareAttribute("MitM_CD", MitM_OMRec);
 DeclareGlobalFunction("MitM_ATPToRec");
 DeclareGlobalFunction("MitM_RecToATP");
 DeclareGlobalFunction("MitM_SimpleOMS");
+
+DeclareGlobalFunction("OMOBJ");
 DeclareGlobalFunction("OMA");
 DeclareGlobalFunction("OMS");
 DeclareGlobalFunction("OMATTR");

@@ -20,6 +20,14 @@ function(r)
                                       , MitM_GAPToOMRec(r.(n)) ] ) ) );
 end);
 
+InstallGlobalFunction(OMOBJ,
+function(content)
+    return Objectify( MitM_OMRecType
+                    , rec( name := "OMOBJ"
+                         , attributes := rec( version := "2.0" )
+                         , content := content ) );
+end);
+
 InstallGlobalFunction(OMA,
 function(oms, args...)
     return Objectify( MitM_OMRecType
@@ -131,7 +139,7 @@ r -> r!.name);
 InstallMethod(MitM_Attributes, "for an omrec",
               [MitM_OMRecRep],
 function(r)
-    if r!.name = "OMS" then
+    if IsBound(r!.attributes) then
         return r!.attributes;
     else
         return rec();

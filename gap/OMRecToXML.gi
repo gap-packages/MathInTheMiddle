@@ -12,12 +12,12 @@ function(r)
     if MitM_Content(r) <> fail then
         Append(str, ">");
         content := MitM_Content(r);
-        if Length(content) = 1 and not IsRecord(content[1]) then
+        if Length(content) = 1 and not MitM_OMRec(content[1]) then
             Append(str, String(content[1]));
         elif Length(content) > 0 then
             Append(str, "\n");
             for item in content do
-                if IsRecord(item) then
+                if MitM_OMRec(item) then
                     Append(str, MitM_OMRecToXML(item));
                 else
                     # This might not be possible with a proper OMRec, since a

@@ -23,4 +23,4 @@ function(obj)
 end);
 
 InstallGlobalFunction(MitM_OMRecToOMOBJRec,
-r -> rec(name := "OMOBJ", attributes := rec(version := "2.0"), content := [r]));
+r -> OMOBJ([r]));
