@@ -55,8 +55,14 @@ end);
 InstallMethod(MitM_GAPToOMRec,
               "for a permutation",
               [IsPerm],
-p -> OMA( OMS(MitM_cdbase, "prim", "PermConstr")
-        , List(ListPerm(p), MitM_GAPToOMRec) ) );
+function(p)
+    local content;
+
+    content := [ OMS(MitM_cdbase, "prim", "PermConstr") ];
+    Append( content
+          , List(ListPerm(p), MitM_GAPToOMRec) );
+    return CallFuncList(OMA, content);
+end);
 
 InstallMethod(MitM_GAPToOMRec,
 "for a polynomial ring",
