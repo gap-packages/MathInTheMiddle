@@ -2,16 +2,16 @@ InstallGlobalFunction(MitM_XMLToOMRec,
 function(str)
     local tree;
     tree := ParseTreeXMLString(str);
-    
+
     # Strip out unnecessary contents recursively
     tree := MitM_SimplifiedTree(tree);
-    
+
     # Get a single object
-    if Length(tree.content) > 1 then
+    if Length(MitM_Content(tree)) > 1 then
         Error("There are several top-level objects");
     fi;
-    tree := tree.content[1];
-    
+    tree := MitM_Content(tree)[1];
+
     return tree;
 end);
 
@@ -48,5 +48,5 @@ function(tree)
             fi;
         od;
     fi;
-    return out;
+    return Objectify(MitM_OMRecType, out);
 end);
