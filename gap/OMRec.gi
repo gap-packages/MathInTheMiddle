@@ -4,9 +4,9 @@ function(atp)
 
     res := rec();
 
-    for i in [1,3..Length(atp.content)-1] do
-        res.( atp.content[i].attributes.name ) :=
-            EvalString(MitM_OMRecToGAPFuncNC(atp.content[i+1]).result);
+    for i in [1,3..Length(MitM_Content(atp))-1] do
+        res.( MitM_Name(MitM_Content(atp)[i]) ) :=
+            EvalString(MitM_OMRecToGAPFuncNC(MitM_Content(atp)[i+1]).result);
     od;
     return res;
 end);
