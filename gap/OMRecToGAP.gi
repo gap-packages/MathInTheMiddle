@@ -13,7 +13,7 @@ function(obj)
     return rec(success := true, result := obj);
 end);
 
-InstallMethod(MitM_OMRecToGAPFunc, [IsRecord],
+InstallMethod(MitM_OMRecToGAPFunc, [MitM_OMRecRep],
 function(r)
     local val, res;
     val := MitM_IsValidOMRec(r);
