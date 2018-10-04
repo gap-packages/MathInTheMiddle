@@ -329,69 +329,69 @@ InstallGlobalFunction(MitM_IsValidOMRec,
 function(tree)
     local rnam, attr, result;
     # Check that this is a proper object
-    if not IsRecord(tree) then
+    if not MitM_OMRec(tree) then
         return "<tree> must be an OM record";
-    elif not IsBound(tree.name) then
+    elif MitM_Tag(tree) = fail then
         return "invalid XML: an object must have a name";
-    elif not tree.name in RecNames(MitM_ValidAttr) then
-        return Concatenation(tree.name, " is not a valid OM object name");
+    elif not MitM_Tag(tree) in RecNames(MitM_ValidAttr) then
+        return Concatenation(MitM_Tag(tree), " is not a valid OM object name");
     fi;
-    for rnam in RecNames(tree) do
+    for rnam in NamesOfComponents(tree) do
         if not rnam in MitM_rnams then
             return Concatenation("invalid XML: ", rnam, " should not exist");
         fi;
     od;
 
     # Validate the attributes
-    if IsBound(tree.attributes) then
-        for attr in RecNames(tree.attributes) do
-            if attr in RecNames(MitM_ValidAttr.(tree.name)) then
-                result := MitM_ValidAttr.(tree.name).(attr)(tree.attributes.(attr));
+    if MitM_Attributes(tree) <> fail then
+        for attr in RecNames(MitM_Attributes(tree)) do
+            if attr in RecNames(MitM_ValidAttr.(MitM_Tag(tree))) then
+                result := MitM_ValidAttr.(MitM_Tag(tree)).(attr)(MitM_Attributes(tree).(attr));
             elif attr in RecNames(MitM_ValidAttr.common) then
-                result := MitM_ValidAttr.common.(attr)(tree.attributes.(attr));
+                result := MitM_ValidAttr.common.(attr)(MitM_Attributes(tree).(attr));
             else
                 return Concatenation(attr, " is not a valid attribute of ",
-                                     tree.name, " objects");
+                                     MitM_Tag(tree), " objects");
             fi;
             if result <> true then
                 return StringFormatted("{} attribute of {} object: {}",
-                                       attr, tree.name, result);
+                                       attr, MitM_Tag(tree), result);
             fi;
         od;
     else
-        if not IsEmpty(MitM_RequiredAttr.(tree.name)) then
+        if not IsEmpty(MitM_RequiredAttr.(MitM_Tag(tree))) then
             return StringFormatted("{} objects must have the {} attribute",
-                                   tree.name, MitM_RequiredAttr.(tree.name)[1]);
+                                   MitM_Tag(tree), MitM_RequiredAttr.(tree.name)[1]);
         fi;
     fi;
 
     # Check required attributes
-    for attr in MitM_RequiredAttr.(tree.name) do
-        if not attr in RecNames(tree.attributes) then
-            return Concatenation(tree.name, " objects must have the ",
+    for attr in MitM_RequiredAttr.(MitM_Tag(tree)) do
+        if not attr in RecNames(MitM_Attributes(tree)) then
+            return Concatenation(MitM_Tag(tree), " objects must have the ",
                                  attr, " attribute");
         fi;
     od;
 
     # Check antirequisite attributes - just one of these
-    if tree.name = "OMF" then
-        if not IsBound(tree.attributes)
-               or not (IsBound(tree.attributes.dec)
-                       or IsBound(tree.attributes.hex)) then
+    if MitM_Tag(tree) = "OMF" then
+        if MitM_Attributes(tree) = fail
+               or not (IsBound(MitM_Attributes(tree).dec)
+                       or IsBound(MitM_Attributes(tree).hex)) then
             return "OMF objects must have either the dec or the hex attribute";
-        elif IsBound(tree.attributes.dec) and IsBound(tree.attributes.hex) then
+        elif IsBound(MitM_Attributes(tree).dec) and IsBound(MitM_Attributes(tree).hex) then
             return "OMF objects cannot have both the dec and the hex attribute";
         fi;
     fi;
 
     # Validate the content
-    if IsBound(tree.content) then
-        result := MitM_ValidCont.(tree.name)(tree.content);
+    if MitM_Content(tree) <> fail then
+        result := MitM_ValidCont.(MitM_Tag(tree))(MitM_Content(tree));
     else
-        result := MitM_ValidCont.(tree.name)([]);
+        result := MitM_ValidCont.(MitM_Tag(tree))([]);
     fi;
     if result <> true then
-        return Concatenation(tree.name, " contents: ", result);
+        return Concatenation(MitM_Tag(tree), " contents: ", result);
     fi;
     return true;
 end);
