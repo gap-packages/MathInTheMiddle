@@ -1,16 +1,17 @@
 InstallGlobalFunction(MitM_OMRecToXML,
 function(r)
-    local str, rnam, content, item;
-    str := StringFormatted("<{}", r.name);
-    if IsBound(r.attributes) then
-        for rnam in Set(RecNames(r.attributes)) do
-            Append(str, StringFormatted(" {}=\"{}\"", 
-                                        rnam, r.attributes.(rnam)));
+    local str, rnam, attributes, content, item;
+    str := StringFormatted("<{}", MitM_Tag(r));
+    attributes := MitM_Attributes(r);
+    if attributes <> fail then
+        for rnam in Set(RecNames(attributes)) do
+            Append(str, StringFormatted(" {}=\"{}\"",
+                                        rnam, attributes.(rnam)));
         od;
     fi;
-    if IsBound(r.content) then
+    if MitM_Content(r) <> fail then
         Append(str, ">");
-        content := r.content;
+        content := MitM_Content(r);
         if Length(content) = 1 and not IsRecord(content[1]) then
             Append(str, String(content[1]));
         elif Length(content) > 0 then
@@ -26,7 +27,7 @@ function(r)
                 Append(str, "\n");
             od;
         fi;
-        Append(str, StringFormatted("</{}>", r.name));
+        Append(str, StringFormatted("</{}>", MitM_Tag(r)));
     else
         Append(str, " />");
     fi;
