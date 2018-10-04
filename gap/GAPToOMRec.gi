@@ -49,7 +49,7 @@ function(r)
         Add(content, OMSTR(rnam));
         Add(content, MitM_GAPToOMRec(r.(rnam)));
     od;
-    return rec(name := "OMA", content := content);
+    return CallFuncList(OMA, content);
 end);
 
 InstallMethod(MitM_GAPToOMRec,
@@ -68,9 +68,14 @@ R -> OMA( MitM_SimpleOMS("PolynomialRing")
 InstallMethod(MitM_GAPToOMRec,
 "for a polynomial",
 [IsPolynomial],
-p -> OMA( MitM_SimpleOMS("PolynomialByExtRep")
-        , OMA( MitM_SimpleOMS("RationalFunctionsFamily")
-             , OMA( MitM_SimpleOMS("FamilyObj"), MitM_GAPToOMRec(1) ) ) ) );
+function(p)
+    local content;
+    return OMA( MitM_SimpleOMS("PolynomialByExtRep"),
+                OMA(MitM_SimpleOMS("RationalFunctionsFamily"),
+                    OMA(MitM_SimpleOMS("FamilyObj"),
+                        MitM_GAPToOMRec(1))),
+                MitM_GAPToOMRec(ExtRepPolynomialRatFun(p)));
+end);
 
 InstallMethod(MitM_GAPToOMRec,
 "for the ring of integers",
