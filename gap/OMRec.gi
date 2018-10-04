@@ -127,7 +127,11 @@ function(r)
         return StringFormatted( "OMA({})"
                               , JoinStringsWithSeparator(List(r!.content, ViewString), ",") );
     elif r!.name = "OMSTR" then
-        return StringFormatted( "OMSTR(\"{}\")", r!.content[1] );
+        if IsEmpty(MitM_Content(r)) then
+            return StringFormatted( "OMSTR()" );
+        else
+            return StringFormatted( "OMSTR(\"{}\")", MitM_Content(r)[1] );
+        fi;
     elif r!.name = "OMI" then
         return StringFormatted( "OMI({})", r!.content[1] );
     elif r!.name = "OMF" then
