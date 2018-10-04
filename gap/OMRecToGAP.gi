@@ -43,27 +43,30 @@ BindGlobal("MitM_GAP_PrimitivesFunc", rec(
      FFEConstr := "({args...} -> Sum([0..args[2]-1], i -> args[i+3] * Z(args[1], args[2]) ^ i))",
 ) );
 
-SCSCP_get_allowed_heads := function()
-    return OMA( OMS( "scscp1", "symbol_set" )
-              , OMS( "scscp_transient_1", "MitM_Evaluate" )
-              , OMS( MitM_cdbase, "lib", "MitM_Evaluate" ) );
-end;
-
 MitM_Evaluate := function(node)
     return node;
+end;
+
+MitM_get_allowed_heads := function()
+    return OMA( OMS( "scscp1", "symbol_set" )
+              , OMS( "scscp_transient_1", "MitM_Evaluate" )
+              , OMS( "scscp_transient_1", "MitM_Quit" )
+              , OMS( MitM_cdbase, "lib", "MitM_Evaluate" ) );
 end;
 
 BindGlobal("MitM_CDDirectory",
 rec( ( "default" ) := function(node)
        if node.attributes.cd = "scscp2" then
            if node.attributes.name = "get_allowed_heads" then
-               return MitM_Result("SCSCP_get_allowed_heads");
+               return MitM_Result( "MitM_get_allowed_heads" );
            else
                return MitM_Error("name \"", node.attributes.name, "\" not supported");
            fi;
        elif node.attributes.cd = "scscp_transient_1" then
            if node.attributes.name = "MitM_Evaluate" then
                return MitM_Result("MitM_Evaluate");
+           elif node.attributes.name = "MitM_Quit" then
+               QUIT_GAP(0);
            fi;
        else
            return MitM_Error("cd \"", node.attributes.cd, "\" not supported");

@@ -1,43 +1,22 @@
 MitM_CookieCount := 0;
 MitM_CookieJar := rec();
 
-InstallValue(MitM_SCSCPHandlers, rec(
-    procedure_call := function(attr, oma)
-        local t, rattr, eval;
-
-        Info(InfoMitMServer, 15, " Evaluating... ", oma);
-        Info(InfoMitMServer, 15, " Attributes... ", attr);
-
-        t := NanosecondsSinceEpoch();
-        eval := MitM_OMRecToGAPFunc(oma);
-        t := NanosecondsSinceEpoch() - t;
-
-        if eval.success then
-            rattr := rec( call_id := attr.call_id
-                        , info_runtime := t / 1000000. );
-           if IsBound(attr.option_return_cookie) then
-                MitM_CookieJar.(MitM_CookieCount) := eval.result;
-                MitM_CookieCount := MitM_CookieCount + 1;
-                return MitM_OMRecToXML(MitM_OMRecToOMOBJRec(OMATTR( rattr
-                                                                  , OMA( OMS( "scscp1"
-                                                                            , "procedure_completed" )
-                                                                       , MitM_GAPToOMRec(MitM_CookieCount-1) ) ) ) );
-            elif IsBound(attr.option_return_nothing) then
-                return MitM_OMRecToXML(MitM_OMRecToOMOBJRec(OMATTR( rattr
-                                                                  , OMA( OMS( "scscp1"
-                                                                            , "procedure_completed" ) ) ) ) );
-            elif IsBound(attr.option_return_object) then
-                return MitM_OMRecToXML(MitM_OMRecToOMOBJRec(OMATTR( rattr
-                                                                  , OMA( OMS( "scscp1"
-                                                                            , "procedure_completed" )
-                                                                       , MitM_GAPToOMRec(eval.result) ) ) ) );
-            fi;
-        else
-            Info(InfoMitMServer, 15, " Error during evaluation: ", eval.error);
-            return MitM_TerminateProcedure(eval.error, rec(call_id := attr.call_id));
-        fi;
-    end
-) );
+InstallGlobalFunction(MitM_CompleteProcedure,
+function(result, attr...)
+    if Length(attr) = 0 then
+        attr := rec();
+    elif Length(attr) = 1 then
+        attr := attr[1];
+    else
+        ErrorNoReturn("MitM_CompleteProcedure: takes 1 or 2 arguments (not ",
+                      Length(attr) + 1, ")");
+    fi;
+    return MitM_OMRecToXML(MitM_OMRecToOMOBJRec(
+                 OMATTR( attr
+                       , OMA( OMS( "scscp1"
+                                 , "procedure_completed" )
+                            , result ) ) ) );
+end);
 
 InstallGlobalFunction(MitM_TerminateProcedure,
 function(message, attr...)
@@ -57,6 +36,38 @@ function(message, attr...)
                                       , "error_system_specific" )
                                  , [ OMSTR(message) ] ) ) ) ) );
 end);
+
+InstallValue(MitM_SCSCPHandlers, rec(
+    procedure_call := function(attr, oma)
+        local t, eval, rattr, res;
+
+        Info(InfoMitMServer, 15, " Evaluating... ", oma);
+        Info(InfoMitMServer, 15, " Attributes... ", attr);
+
+        t := NanosecondsSinceEpoch();
+        eval := MitM_OMRecToGAPFunc(oma);
+        t := NanosecondsSinceEpoch() - t;
+
+        if eval.success then
+            rattr := rec( call_id := attr.call_id
+                        , info_runtime := t / 1000000. );
+            if IsBound(attr.option_return_cookie) then
+                MitM_CookieJar.(MitM_CookieCount) := eval.result;
+                res := MitM_GAPToOMRec(MitM_CookieCount);
+                MitM_CookieCount := MitM_CookieCount + 1;
+            elif IsBound(attr.option_return_object) then
+                res := MitM_GAPToOMRec(eval.result);
+            elif IsBound(attr.option_return_nothing) then
+                res := rec();
+            fi;
+
+            return MitM_CompleteProcedure(res, rattr);
+        else
+            Info(InfoMitMServer, 15, " Error during evaluation: ", eval.error);
+            return MitM_TerminateProcedure(eval.error, rec(call_id := attr.call_id));
+        fi;
+    end
+) );
 
 InstallGlobalFunction(MitM_HandleSCSCP,
 function(node)
@@ -83,9 +94,10 @@ function(node)
     scscp_oma := node.content[1].content[2].content[2];
 
     if scscp_call.attributes.cd = "scscp1" then
-        # TODO: handlers
         if scscp_call.attributes.name = "procedure_call" then
             return MitM_SCSCPHandlers.procedure_call(attr, scscp_oma);
+        elif scscp_call.attributes.name = "terminate_procedure" then
+            # TODO:
         fi;
     else
         Info(InfoMitMServer, 15, " Unsupported CD ", scscp_call.attributes.cd);
@@ -103,6 +115,7 @@ function(addr, stream)
     Info(InfoMitMServer, 5, " SCSCP Protocol Version ", version);
     while not done do
         r := MitM_ReadSCSCP(stream);
+        Info(InfoMitMServer, 15, " Received: ", r);
         if r.success <> true then
             Info(InfoMitMServer, 15, " Bad object received");
             Info(InfoMitMServer, 15, "  error: ", r.error);

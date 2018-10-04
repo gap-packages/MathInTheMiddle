@@ -1,61 +1,43 @@
 InstallMethod(MitM_GAPToOMRec,
 "for a dihedral perm group",
 [IsPermGroup and IsDihedralGroup],
-D -> rec(name := "OMA", content := [MitM_SimpleOMS("DihedralGroup"),
-                                    MitM_SimpleOMS("IsPermGroup"),
-                                    MitM_GAPToOMRec(Size(D))]));
+D -> OMA( MitM_SimpleOMS("DihedralGroup")
+        , MitM_SimpleOMS("IsPermGroup")
+        , MitM_GAPToOMRec(Size(D)) ) );
 
 InstallMethod(MitM_GAPToOMRec,
 "for a quaternion perm group",
 [IsPermGroup and IsQuaternionGroup],
-Q -> rec(name := "OMA", content := [MitM_SimpleOMS("QuaternionGroup"),
-                                    MitM_SimpleOMS("IsPermGroup"),
-                                    MitM_GAPToOMRec(Size(Q))]));
+Q -> OMA( MitM_SimpleOMS("QuaternionGroup"),
+          MitM_SimpleOMS("IsPermGroup"),
+          MitM_GAPToOMRec(Size(Q))));
 
 InstallMethod(MitM_GAPToOMRec,
 "for an integer",
 [IsInt],
-i -> rec(name := "OMI", content := [String(i)]));
+i -> OMI(i));
 
 InstallMethod(MitM_GAPToOMRec,
 "for a float",
 [IsFloat],
-i -> rec(name := "OMF", attributes := rec( dec := String(i) ) ) );
+v -> OMF(v));
 
 InstallMethod(MitM_GAPToOMRec,
 "for a string in string representation",
 [IsString and IsStringRep],
-function(s)
-  if IsEmptyString(s) then
-    return rec(name := "OMSTR", content := []);
-  fi;
-  return rec(name := "OMSTR", content := [s]);
-end);
+s -> OMSTR(s));
 
 InstallMethod(MitM_GAPToOMRec,
 "for a char",
 [IsChar],
-c -> rec(name := "OMA",
-         content := [rec(name := "OMS",
-                         attributes := rec(cdbase := MitM_cdbase,
-                                           cd := "prim",
-                                           name := "CharConstr")),
-                     rec(name := "OMSTR",
-                         content := [[c]])]));
+c -> OMA( OMS(MitM_cdbase, "prim", "CharConstr")
+        , OMSTR( [c] ) ) );
 
 InstallMethod(MitM_GAPToOMRec,
 "for a boolean",
 [IsBool],
-function(b)
-    local content;
-    content := [rec(name := "OMS",
-                    attributes := rec(cdbase := MitM_cdbase,
-                                      cd := "prim",
-                                      name := "BoolConstr")),
-                rec(name := "OMSTR",
-                    content := [ String(b) ])];
-    return rec(name := "OMA", content := content);
-end);
+b -> OMA( OMS( MitM_cdbase, "prim", "BoolConstr" )
+        , OMSTR( String(b) ) ) );
 
 InstallMethod(MitM_GAPToOMRec,
 "for a record",
@@ -71,43 +53,24 @@ function(r)
 end);
 
 InstallMethod(MitM_GAPToOMRec,
-"for a permutation",
-[IsPerm],
-function(p)
-    local content;
-    content := [rec(name := "OMS",
-                    attributes := rec(cdbase := MitM_cdbase,
-                                      cd := "prim",
-                                      name := "PermConstr"))];
-    Append(content, List(ListPerm(p), MitM_GAPToOMRec));
-    return rec(name := "OMA", content := content);
-end);
+              "for a permutation",
+              [IsPerm],
+p -> OMA( OMS(MitM_cdbase, "prim", "PermConstr")
+        , List(ListPerm(p), MitM_GAPToOMRec) ) );
 
 InstallMethod(MitM_GAPToOMRec,
 "for a polynomial ring",
 [IsPolynomialRing],
-function(R)
-    local content;
-    content := [MitM_SimpleOMS("PolynomialRing"),
-                MitM_GAPToOMRec(LeftActingDomain(R)),
-                MitM_GAPToOMRec(List(IndeterminatesOfPolynomialRing(R), String))];
-    return rec(name := "OMA", content := content);
-end);
+R -> OMA( MitM_SimpleOMS("PolynomialRing")
+        , MitM_GAPToOMRec(LeftActingDomain(R))
+        , MitM_GAPToOMRec(List(IndeterminatesOfPolynomialRing(R), String)) ) );
 
 InstallMethod(MitM_GAPToOMRec,
 "for a polynomial",
 [IsPolynomial],
-function(p)
-    local content;
-    content := [MitM_SimpleOMS("PolynomialByExtRep"),
-                rec(name := "OMA",
-                    content := [MitM_SimpleOMS("RationalFunctionsFamily"),
-                                rec(name := "OMA",
-                                    content := [MitM_SimpleOMS("FamilyObj"),
-                                                MitM_GAPToOMRec(1)])]),
-                MitM_GAPToOMRec(ExtRepPolynomialRatFun(p))];
-    return rec(name := "OMA", content := content);
-end);
+p -> OMA( MitM_SimpleOMS("PolynomialByExtRep")
+        , OMA( MitM_SimpleOMS("RationalFunctionsFamily")
+             , OMA( MitM_SimpleOMS("FamilyObj"), MitM_GAPToOMRec(1) ) ) ) );
 
 InstallMethod(MitM_GAPToOMRec,
 "for the ring of integers",
@@ -119,14 +82,13 @@ InstallMethod(MitM_GAPToOMRec,
 [IsList],
 function(L)
     local content, item;
-    content := [rec(name := "OMS",
-                    attributes := rec(cdbase := MitM_cdbase,
-                                      cd := "prim",
-                                      name := "ListConstr"))];
+    content := [ OMS(MitM_cdbase,
+                     , "prim"
+                     , "ListConstr") ];
     for item in L do
         Add(content, MitM_GAPToOMRec(item));
     od;
-    return rec(name := "OMA", content := content);
+    return CallFuncList(OMA, content);
 end);
 
 InstallMethod(MitM_GAPToOMRec,
@@ -135,10 +97,9 @@ InstallMethod(MitM_GAPToOMRec,
 function(elm)
     local content, char, deg, log, coef;
     content := [];
-    Add(content, rec(name := "OMS",
-                     attributes := rec(cdbase := MitM_cdbase,
-                                       cd := "prim",
-                                       name := "FFEConstr")));
+    Add(content, OMS( MitM_cdbase,
+                    , "prim"
+                    , "FFEConstr"));
     char := Characteristic(elm);
     deg := DegreeFFE(elm);
     Add(content, MitM_GAPToOMRec(char));
@@ -150,7 +111,7 @@ function(elm)
     for coef in elm![1] do
         Add(content, MitM_GAPToOMRec(IntFFE(coef)));
     od;
-    return rec(name := "OMA", content := content);
+    return CallFuncList(OMA, content);
 end);
 
 # TODO: This is a hack. We look for functions that create objects using
@@ -164,11 +125,7 @@ MitM_C___Wrapper := function(n, callee)
         local obj, omacont, a, m;
         obj := CallFuncList(callee, args);
 
-        omacont := [ rec( name := "OMS"
-                        , attributes := rec( cd := "lib"
-                                           , cdbase := MitM_cdbase
-                                           , name := n ) ) ];
-
+        omacont := [ OMS(MitM_cdbase, "lib", n) ];
         for a in args do
             m := ApplicableMethod(MitM_GAPToOMRec, [ a ]);
             if m <> fail then
@@ -179,8 +136,7 @@ MitM_C___Wrapper := function(n, callee)
             fi;
         od;
         # This will of course only work with attribute storing objects
-        SetMitM_GAPToOMRec(obj, rec( name := "OMA"
-                                   , content := omacont ) );
+        SetMitM_GAPToOMRec(obj, CallFuncList(OMA, omacont) ) 
         return obj;
     end;
 end;
