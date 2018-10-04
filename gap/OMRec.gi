@@ -13,11 +13,22 @@ end);
 
 InstallGlobalFunction(MitM_RecToATP,
 function(r)
-    return rec( name := "OMATP"
-              , content := Concatenation(
-                           List( NamesOfComponents(r)
-                               , n -> [ OMS("scscp1", n)
-                                      , MitM_GAPToOMRec(r.(n)) ] ) ) );
+    return Objectify(MitM_OMRecType,
+                     rec( name := "OMATP"
+                        , content := Concatenation(
+                                List( NamesOfComponents(r)
+                                    , n -> [ OMS("scscp1", n)
+                                           , MitM_GAPToOMRec(r.(n)) ] ) ) ));
+end);
+
+InstallGlobalFunction(OMATP,
+function(r)
+    return Objectify(MitM_OMRecType,
+                     rec( name := "OMATP"
+                        , content := Concatenation(
+                                List( NamesOfComponents(r)
+                                    , n -> [ OMS("scscp1", n)
+                                           , r.(n) ] ) ) ));
 end);
 
 InstallGlobalFunction(OMOBJ,
@@ -103,6 +114,7 @@ end);
 InstallMethod(ViewString, "for an omrec",
               [MitM_OMRecRep],
 function(r)
+    local attr, i;
     if r!.name = "OMS" then
         if IsBound(r!.attributes.cdbase) then
             return StringFormatted( "OMS(cd=\"{}\", cdbase=\"{}\", name=\"{}\")"
@@ -121,6 +133,14 @@ function(r)
     elif r!.name = "OMF" then
         # TODO: this is not really right yet
         return StringFormatted( "OMF({})", r!.attributes.dec );
+    elif r!.name = "OMATP" then
+        attr := [];
+        for i in [1, 3 .. Length(r!.content) - 1] do
+            Add(attr, Concatenation(r!.content[i]!.attributes.name,
+                                    " := ", ViewString(r!.content[i+1])));
+        od;
+        return StringFormatted( "OMATP( rec( {} ) )", 
+                                JoinStringsWithSeparator(attr, ", ") );
     else
         return StringFormatted( "ViewString for {} not implemented", r!.name );
     fi;

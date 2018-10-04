@@ -36,3 +36,9 @@ gap> MitM_OMRecToXML(oma) = """<OMA>
 > <OMSTR>world</OMSTR>
 > </OMA>""";
 true
+
+# MitM_RecToATP function
+gap> r := MitM_RecToATP(rec(x := 3, y := 6));
+OMATP( rec( x := OMI(3), y := OMI(6) ) )
+gap> OMATP( rec( x := OMI(3), y := OMI(6) ) );
+OMATP( rec( x := OMI(3), y := OMI(6) ) )
