@@ -133,10 +133,10 @@ function(r)
         fi;
     elif r!.name = "OMA" then
         return StringFormatted( "OMA({})"
-                              , JoinStringsWithSeparator(List(r!.content, ViewString), ",") );
+                              , JoinStringsWithSeparator(List(r!.content, ViewString), ", ") );
     elif r!.name = "OMSTR" then
         if IsEmpty(MitM_Content(r)) then
-            return StringFormatted( "OMSTR()" );
+            return "OMSTR(\"\")";
         else
             return StringFormatted( "OMSTR(\"{}\")", MitM_Content(r)[1] );
         fi;
@@ -182,17 +182,6 @@ InstallMethod(MitM_Name, "for an omrec",
               [MitM_OMRecRep],
 function(r)
     if IsBound(r!.attributes) and IsBound(r!.attributes.name) then
-        return r!.attributes.name;
-    else
-        return fail;
-    fi;
-end);
-
-
-InstallMethod(MitM_CD, "for an omrec",
-              [MitM_OMRecRep],
-function(r)
-    if r!.name = "OMS" then
         return r!.attributes.name;
     else
         return fail;

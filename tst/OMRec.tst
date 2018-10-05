@@ -64,6 +64,11 @@ gap> Print(MitM_OMRecToXML(OME(OMS("scscp1", "error_system_specific"),
 <OMSTR>you did something wrong!</OMSTR>
 </OME>
 
+# OMV
+gap> omv := OMV("x");;
+gap> MitM_Name(omv);
+"x"
+
 # MitM_RecToATP function
 gap> r := MitM_RecToATP(rec(x := 3, y := 6));
 OMATP( rec( x := OMI(3), y := OMI(6) ) )
@@ -81,3 +86,32 @@ gap> OMI(3) < OMI(4);
 true
 gap> OMI(3) > OMI(4);
 false
+
+# Displays
+gap> OMS(MitM_cdbase, "lib", "Concatenation");
+OMS(cd="lib", cdbase="https://www.gap-system.org/mitm/", name="Concatenation")
+gap> OMS("lib", "Concatenation");
+OMS(cd="lib", name="Concatenation")
+gap> oma := OMA(OMS("lib", "Concatenation"),
+>               OMSTR("hello"),
+>               OMSTR("world"));
+OMA(OMS(cd="lib", name="Concatenation"), OMSTR("hello"), OMSTR("world"))
+gap> OMSTR("hello");
+OMSTR("hello")
+gap> OMSTR("");
+OMSTR("")
+gap> OMF(3.125);
+OMF(3.125)
+
+# Displaying an evil broken object
+gap> Objectify(MitM_OMRecType, rec(name := "OMMADEUP"));
+ViewString for OMMADEUP not implemented
+
+# Comparing two (evil broken) objects with/without content
+gap> Objectify(MitM_OMRecType, rec(name := "OMMADEUP")) <
+>    Objectify(MitM_OMRecType, rec(name := "OMMADEUP", content := "something"));
+true
+
+# MitM_CD failure
+gap> MitM_CD(OMI(32));
+fail
