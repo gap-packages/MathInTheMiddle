@@ -18,9 +18,9 @@ GAP="$GAPROOT/bin/gap.sh -l $PWD/gaproot; --quitonbreak"
 # we collect coverage data
 if [[ -z $NO_COVERAGE ]]; then
     mkdir $COVDIR
-    GAP="$GAP --cover $COVDIR/test.coverage"
+    $GAP --cover $COVDIR/test-server.coverage -A tst/scscp/server.g --nointeract &
+    sleep 10
+    $GAP --cover $COVDIR/test-client.coverage -A tst/scscp/client.g --nointeract
+    kill %%
 fi
-
-$GAP tst/testall.g
-
 exit 0
