@@ -29,13 +29,13 @@ needed-pkgs:
       version: ">= 4.5.0"
       url: "https://gap-packages.github.io/io"
 
-www: https://markuspf.github.io/MathInTheMiddle/
+www: https://gap-packages.github.io/MathInTheMiddle/
 readme: README.md
-packageinfo: https://markuspf.github.io/MathInTheMiddle/PackageInfo.g
+packageinfo: https://gap-packages.github.io/MathInTheMiddle/PackageInfo.g
 
 downloads:
     - name: .tar.gz
-      url: https://github.com/markuspf/MathInTheMiddle/releases/download/v0.1/MathInTheMiddle-0.1.tar.gz
+      url: https://github.com/gap-packages/MathInTheMiddle/releases/download/v0.1/MathInTheMiddle-0.1.tar.gz
 
 abstract: |
 
@@ -49,18 +49,21 @@ citeas: |
              Version 0.1</i>
      (<span class='BibYear'>2017</span>)<br />
     (<span class='BibNote'>GAP package</span>),
-    <span class='BibHowpublished'><a href="https://markuspf.github.io/MathInTheMiddle/">https://markuspf.github.io/MathInTheMiddle/</a></span>.
+    <span class='BibHowpublished'><a href="https://gap-packages.github.io/MathInTheMiddle/">https://gap-packages.github.io/MathInTheMiddle/</a></span>.
     </p>
     
 
 bibtex: |
     @misc{ MathInTheMiddle0.1,
       author =           {Pfeiffer, M. and Torpey, M.},
-      title =            {{MathInTheMiddle}, Math-in-the-Middle functionality for GAP, {V}ersion 0.1},
+      title =            {{MathInTheMiddle},   Math-in-the-Middle  functionality
+                          for GAP, {V}ersion 0.1},
       month =            {Nov},
       year =             {2017},
       note =             {GAP package},
-      howpublished =     {\href                {https://markuspf.github.io/MathInTheMiddle/}                {\texttt{https://markuspf.github.io/}\discretionary
+      howpublished =     {\href
+                          {https://gap-packages.github.io/MathInTheMiddle/}
+                          {\texttt{https://gap-packages.github.io/}\discretionary
                           {}{}{}\texttt{MathInTheMiddle/}}},
       printedkey =       {PT17}
     }
