@@ -71,32 +71,33 @@ InstallValue(MitM_SCSCPHandlers, rec(
 
 InstallGlobalFunction(MitM_HandleSCSCP,
 function(node)
-    local attr, scscp_call, scscp_oma;
+    local attr, scscp_call, scscp_oma, content;
 
+    content := MitM_Content(node);
     # Validate wrt SCSCP v1.3 spec - procedure call (4.1.1)
-    if not (Length(node.content) = 1 and node.content[1].name = "OMATTR") then
+    if not (Length(content) = 1 and MitM_Tag(content[1]) = "OMATTR") then
         Info(InfoMitMServer, 15, " Invalid procedure call: OMATTR expected");
         return MitM_TerminateProcedure("procedure call: OMOBJ should contain one OMATTR and nothing else");
-    elif node.content[1].content[2].name <> "OMA" then
+    elif MitM_Tag(MitM_Content(content[1])[2]) <> "OMA" then
         Info(InfoMitMServer, 15, " Invalid procedure call: OMA expected");
         return MitM_TerminateProcedure("procedure call: OMOBJ: OMATTR's 2nd object should be an OMA");
-    elif not (Length(node.content[1].content[2].content) = 2 and
-              node.content[1].content[2].content[1].name = "OMS") then
+    elif not (Length(MitM_Content(MitM_Content(content[1])[2].content)) = 2 and
+              MitM_Tag(MitM_Content(MitM_Content(content[1])[2])[1]) = "OMS") then
         Info(InfoMitMServer, 15, " Invalid procedure call: OMS expected");
         return MitM_TerminateProcedure("procedure call: OMOBJ: OMATTR: OMA's 1st object should be an OMS");
-    elif node.content[1].content[2].content[2].name <> "OMA" then
+    elif MitM_Tag(MitM_Content(MitM_Content(content[1])[2])[2]) <> "OMA" then
         Info(InfoMitMServer, 15, " Invalid procedure call: OMA expected");
         return MitM_TerminateProcedure("procedure call: OMOBJ: OMATTR: OMA's 2nd object should be an OMA");
     fi;
 
-    attr := MitM_ATPToRec(node.content[1].content[1]);
-    scscp_call := node.content[1].content[2].content[1];
-    scscp_oma := node.content[1].content[2].content[2];
+    attr := MitM_ATPToRec(MitM_Content(content[1])[1]);
+    scscp_call := MitM_Content(MitM_Content(content[1])[2])[1];
+    scscp_oma := MitM_Content(MitM_Content(content[1])[2])[2];
 
-    if scscp_call.attributes.cd = "scscp1" then
-        if scscp_call.attributes.name = "procedure_call" then
+    if MitM_CD(scscp_call) = "scscp1" then
+        if MitM_Name(scscp_call) = "procedure_call" then
             return MitM_SCSCPHandlers.procedure_call(attr, scscp_oma);
-        elif scscp_call.attributes.name = "terminate_procedure" then
+        elif MitM_Name(scscp_call) = "terminate_procedure" then
             # TODO:
         fi;
     else
