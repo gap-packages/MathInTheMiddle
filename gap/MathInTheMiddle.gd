@@ -13,6 +13,7 @@ DeclareGlobalVariable("MitM_SCSCPHandlers");
 DeclareGlobalFunction("MitM_HandleSCSCP");
 
 DeclareGlobalFunction("MitM_TerminateProcedure");
+DeclareGlobalFunction("MitM_CompleteProcedure");
 
 #! @Description
 #! Start the MitM SCSCP Server
@@ -38,7 +39,10 @@ BindGlobal("MitM_DefaultServerOptions", rec(
 
 DeclareInfoClass("InfoMitMObjectify");
 DeclareInfoClass("InfoMitMServer");
+DeclareInfoClass("InfoMitMConstructors");
+
 # TODO: During Development we want this to be verbose
 SetInfoLevel(InfoMitMObjectify, 15);
 SetInfoLevel(InfoMitMServer, 15);
+SetInfoLevel(InfoMitMConstructors, 15);
 

@@ -132,7 +132,7 @@ function(stream)
     fi;
     # The in-between stuff should be an OMOBJ
     r := MitM_XMLToOMRec(get.pre);
-    if r.name <> "OMOBJ" then
+    if MitM_Tag(r) <> "OMOBJ" then
         return MitM_Error("no OMOBJ object found");
     fi;
     return MitM_Result(r);

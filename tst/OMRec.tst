@@ -23,7 +23,7 @@ gap> atprec = rec(
 > option_min_memory := 40964,
 > option_return_object := "", option_runtime := 300000);
 true
-gap> Set(MitM_RecToATP(atprec).content) = Set(r.content);
+gap> Set(MitM_Content(MitM_RecToATP(atprec))) = Set(MitM_Content(r));
 true
 
 # OMA function
@@ -63,3 +63,21 @@ gap> Print(MitM_OMRecToXML(OME(OMS("scscp1", "error_system_specific"),
 <OMS cd="scscp1" name="error_system_specific" />
 <OMSTR>you did something wrong!</OMSTR>
 </OME>
+
+# MitM_RecToATP function
+gap> r := MitM_RecToATP(rec(x := 3, y := 6));
+OMATP( rec( x := OMI(3), y := OMI(6) ) )
+gap> s := OMATP( rec( x := OMI(3), y := OMI(6) ) );
+OMATP( rec( x := OMI(3), y := OMI(6) ) )
+gap> r = s;
+true
+gap> s := OMATP( rec( z := OMI(3), y := OMI(6) ) );
+OMATP( rec( y := OMI(6), z := OMI(3) ) )
+gap> r = s;
+false
+
+# OMRec \< function
+gap> OMI(3) < OMI(4);
+true
+gap> OMI(3) > OMI(4);
+false

@@ -223,18 +223,18 @@ gap> MitM_IsValidOMRec(MitM_XMLToOMRec("<OMR />"));
 gap> MitM_IsValidOMRec("hello");
 "<tree> must be an OM record"
 gap> MitM_IsValidOMRec(rec());
-"invalid XML: an object must have a name"
-gap> MitM_IsValidOMRec(rec(name := "Peter Rabbit"));
+"<tree> must be an OM record"
+gap> MitM_IsValidOMRec(Objectify(MitM_OMRecType, rec(name := "Peter Rabbit")));
 "Peter Rabbit is not a valid OM object name"
-gap> MitM_IsValidOMRec(rec(name := "OMOBJ", os := "Linux"));
+gap> MitM_IsValidOMRec(Objectify(MitM_OMRecType, rec(name := "OMOBJ", os := "Linux")));
 "invalid XML: os should not exist"
-gap> MitM_IsValidOMRec(rec(name := "OMOBJ",
->                          attributes := rec(version := "Linux<Ubuntu>")));
+gap> MitM_IsValidOMRec(Objectify(MitM_OMRecType, rec(name := "OMOBJ",
+>                          attributes := rec(version := "Linux<Ubuntu>"))));
 "version attribute of OMOBJ object: XML strings cannot contain '<'"
-gap> MitM_IsValidOMRec(rec(name := "OMV",
->                          attributes := rec(name := "Tom & Jerry")));
+gap> MitM_IsValidOMRec(Objectify(MitM_OMRecType, rec(name := "OMV",
+>                          attributes := rec(name := "Tom & Jerry"))));
 "name attribute of OMV object: there is a '&' character without a closing ';'"
-gap> MitM_IsValidOMRec(rec(name := "OMSTR", content := ["Tom & Jerry"]));
+gap> MitM_IsValidOMRec(Objectify(MitM_OMRecType, rec(name := "OMSTR", content := ["Tom & Jerry"])));
 "OMSTR contents: there is a '&' character without a closing ';'"
 
 # OMATTR
