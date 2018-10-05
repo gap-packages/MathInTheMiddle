@@ -48,3 +48,9 @@ gap> s := OMATP( rec( z := OMI(3), y := OMI(6) ) );
 OMATP( rec( y := OMI(6), z := OMI(3) ) )
 gap> r = s;
 false
+
+# OMRec \< function
+gap> OMI(3) < OMI(4);
+true
+gap> OMI(3) > OMI(4);
+false

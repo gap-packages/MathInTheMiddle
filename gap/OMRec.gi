@@ -234,3 +234,20 @@ InstallMethod(\=, "for omrec and omrec",
 {x, y} -> (x!.name = y!.name and
            IsBound(x!.content) = IsBound(y!.content) and
            ((not IsBound(x!.content)) or x!.content = y!.content)));
+
+InstallMethod(\<, "for omrec and omrec",
+              [MitM_OMRecRep, MitM_OMRecRep],
+function(x, y)
+    if x!.name < y!.name then
+        return true;
+    elif x!.name = y!.name then
+        if (not IsBound(x!.content)) and IsBound(y!.content) then
+            return true;
+        elif IsBound(x!.content) and IsBound(y!.content) then
+            if x!.content < y!.content then
+                return true;
+            fi;
+        fi;
+    fi;
+    return false;
+end);
