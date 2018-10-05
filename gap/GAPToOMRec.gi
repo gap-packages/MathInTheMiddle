@@ -157,6 +157,9 @@ MitM_C___Wrapper := function(n, callee)
     end;
 end;
 
+# Under no circumstances should we touch these. It's where madness lies.
+MitM_ConstructorBlacklist := [ OMOBJ, OMA, OMS, OMATTR, OMSTR, OMF,
+                               OMI, OME, OMV ];
 InstallGlobalFunction(MitM_FindConstructors,
 function()
     local n, v, j, fun, res, a, meths, mpos, mres;
@@ -182,10 +185,15 @@ function()
             fi;
             if IsFunction(v) then
                 if PositionSublist(String(v), "Objectify") <> fail then
-                    MakeReadWriteGlobal(n);
-                    UnbindGlobal(n);
-                    BindGlobal(n, MitM_C___Wrapper(n, v));
-                    Add(res, rec( type := "gvar", name := n, value := v ));
+                    if not (v in MitM_ConstructorBlacklist) then
+                        Info(InfoMitMConstructors, 15, "Overloading ", n, "." );
+                        MakeReadWriteGlobal(n);
+                        UnbindGlobal(n);
+                        BindGlobal(n, MitM_C___Wrapper(n, v));
+                        Add(res, rec( type := "gvar", name := n, value := v ));
+                    else
+                        Info(InfoMitMConstructors, 15, "Skipping ", n, "." );
+                    fi;
                 fi;
             fi;
         fi;

@@ -1,5 +1,5 @@
 #
-gap> SetInfoLevel(InfoWarning, 0);; SetInfoLevel(InfoGlobal, 0);;
+gap> SetInfoLevel(InfoWarning, 0);; SetInfoLevel(InfoGlobal, 0);; SetInfoLevel(InfoMitMConstructors, 0);;
 gap> MitM_FindConstructors();;
 gap> G := Group((1,2,3),(4,5));;
 gap> MitM_OMRecToGAPFunc(MitM_GAPToOMRec(G)).result = G;

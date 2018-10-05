@@ -39,7 +39,10 @@ BindGlobal("MitM_DefaultServerOptions", rec(
 
 DeclareInfoClass("InfoMitMObjectify");
 DeclareInfoClass("InfoMitMServer");
+DeclareInfoClass("InfoMitMConstructors");
+
 # TODO: During Development we want this to be verbose
 SetInfoLevel(InfoMitMObjectify, 15);
 SetInfoLevel(InfoMitMServer, 15);
+SetInfoLevel(InfoMitMConstructors, 15);
 
