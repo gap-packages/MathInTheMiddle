@@ -53,6 +53,11 @@ function(r)
 end);
 
 InstallMethod(MitM_GAPToOMRec,
+              "for an omrec",
+              [MitM_OMRec],
+              IdFunc);
+
+InstallMethod(MitM_GAPToOMRec,
               "for a permutation",
               [IsPerm],
 function(p)

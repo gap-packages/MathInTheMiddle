@@ -81,7 +81,7 @@ function(node)
     elif MitM_Tag(MitM_Content(content[1])[2]) <> "OMA" then
         Info(InfoMitMServer, 15, " Invalid procedure call: OMA expected");
         return MitM_TerminateProcedure("procedure call: OMOBJ: OMATTR's 2nd object should be an OMA");
-    elif not (Length(MitM_Content(MitM_Content(content[1])[2].content)) = 2 and
+    elif not (Length(MitM_Content(MitM_Content(content[1])[2])) = 2 and
               MitM_Tag(MitM_Content(MitM_Content(content[1])[2])[1]) = "OMS") then
         Info(InfoMitMServer, 15, " Invalid procedure call: OMS expected");
         return MitM_TerminateProcedure("procedure call: OMOBJ: OMATTR: OMA's 1st object should be an OMS");
