@@ -1,0 +1,137 @@
+  
+  [1X1 [33X[0;0YMathInTheMiddle automatic generated documentation[133X[101X
+  
+  
+  [1X1.1 [33X[0;0YMathInTheMiddle automatic generated documentation of global functions[133X[101X
+  
+  [1X1.1-1 StartMitMServer[101X
+  
+  [33X[1;0Y[29X[2XStartMitMServer[102X( [3Xarg[103X ) [32X function[133X
+  
+  [33X[0;0YStart the MitM SCSCP Server[133X
+  
+  [1X1.1-2 MitM_SCSCPHandler[101X
+  
+  [33X[1;0Y[29X[2XMitM_SCSCPHandler[102X( [3Xarg[103X ) [32X function[133X
+  
+  [33X[0;0YHandle an SCSCP connection[133X
+  
+  [1X1.1-3 StreamToMitMServer[101X
+  
+  [33X[1;0Y[29X[2XStreamToMitMServer[102X( [3Xarg[103X ) [32X function[133X
+  
+  [33X[0;0YConnect to an MitM server, and return a stream[133X
+  
+  [1X1.1-4 SendObjToMitMServer[101X
+  
+  [33X[1;0Y[29X[2XSendObjToMitMServer[102X( [3Xarg[103X ) [32X function[133X
+  
+  [33X[0;0YSend a GAP object to an MitM server, via a stream[133X
+  
+  [1X1.1-5 MitM_ReadSCSCP[101X
+  
+  [33X[1;0Y[29X[2XMitM_ReadSCSCP[102X( [3Xstream[103X ) [32X function[133X
+  [6XReturns:[106X  [33X[0;10Ya record[133X
+  
+  [33X[0;0YAttempts  to  read a single OpenMath object from an input stream. The object
+  should  be  enclosed  in and tags. As output, this function returns a record
+  containing  some  of the following components, which describe the outcome of
+  the conversion attempt:[133X
+  
+  [30X    [33X[0;6Y[10Xsuccess[110X:  a  boolean  describing  whether the request was successfully
+        received by the server;[133X
+  
+  [30X    [33X[0;6Y[10Xresult[110X:  body of the information sent by the server (only if [10Xsuccess =
+        true[110X);[133X
+  
+  [30X    [33X[0;6Y[10Xerror[110X: human-readable string saying what went wrong (only if [10Xsuccess =
+        false[110X).[133X
+  
+  [1X1.1-6 MitM_ReadToPI[101X
+  
+  [33X[1;0Y[29X[2XMitM_ReadToPI[102X( [3Xstream[103X ) [32X function[133X
+  [6XReturns:[106X  [33X[0;10Ya record[133X
+  
+  [33X[0;0YReads  a  stream  up  to  and  including an XML processing instruction (PI).
+  Returns a record with the following components:[133X
+  
+  [30X    [33X[0;6Y[9Xsuccess[109X. a bool indicating whether an instruction was found;[133X
+  
+  [30X    [33X[0;6Y[9Xpre[109X, a string containing the content read before the PI;[133X
+  
+  [30X    [33X[0;6Y[9Xpi[109X, the contents of the PI, excluding "";[133X
+  
+  [30X    [33X[0;6Y[9Xerror[109X, a string saying what went wrong, if anything.[133X
+  
+  [1X1.1-7 MitM_SCSCPServerHandshake[101X
+  
+  [33X[1;0Y[29X[2XMitM_SCSCPServerHandshake[102X( [3Xin_stream[103X, [3Xout_stream[103X ) [32X function[133X
+  [6XReturns:[106X  [33X[0;10Ya string or [9Xfail[109X[133X
+  
+  [33X[0;0YAccepts  an  SCSCP  connection from a client, by receiving messages from the
+  client  using  [3Xin_stream[103X  and sending messages to the client via [3Xout_stream[103X.
+  Returns  a  string  containing  the  version  number  if  the connection was
+  initiated  successfully,  and  [9Xfail[109X  otherwise. This handshaking protocol is
+  described in Section 5.1 of the SCSCP specification version 1.3[133X
+  
+  [1X1.1-8 MitM_SCSCPClientHandshake[101X
+  
+  [33X[1;0Y[29X[2XMitM_SCSCPClientHandshake[102X( [3Xin_stream[103X, [3Xout_stream[103X ) [32X function[133X
+  [6XReturns:[106X  [33X[0;10Ya boolean[133X
+  
+  [33X[0;0YInitiates  an SCSCP connection with a server, by receiving messages from the
+  server  using  [3Xin_stream[103X  and sending messages to the server via [3Xout_stream[103X.
+  Returns  [9Xtrue[109X  if  the  connection  was  initiated  successfully,  and [9Xfalse[109X
+  otherwise.  This  handshaking  protocol  is  described in Section 5.1 of the
+  SCSCP specification version 1.3[133X
+  
+  [1X1.1-9 ListeningTCPSocket[101X
+  
+  [33X[1;0Y[29X[2XListeningTCPSocket[102X( [3Xarg[103X ) [32X function[133X
+  
+  [33X[0;0YCreates a listening TCP socket[133X
+  
+  [1X1.1-10 StartTCPServer[101X
+  
+  [33X[1;0Y[29X[2XStartTCPServer[102X( [3Xarg[103X ) [32X function[133X
+  
+  [33X[0;0YStart a TCP server[133X
+  
+  [1X1.1-11 ConnectInputOutputTCPStream[101X
+  
+  [33X[1;0Y[29X[2XConnectInputOutputTCPStream[102X( [3Xarg[103X ) [32X function[133X
+  
+  [33X[0;0YConnects to a remote TCP server and returns an InputOutputTCPStream or fail[133X
+  
+  [1X1.1-12 AcceptInputOutputTCPStream[101X
+  
+  [33X[1;0Y[29X[2XAcceptInputOutputTCPStream[102X( [3Xarg[103X ) [32X function[133X
+  
+  [33X[0;0YAccepts   a   connection   on   a   listening  TCP  socket  and  returns  an
+  InputOutputTCPStream or fail[133X
+  
+  
+  [1X1.2 [33X[0;0YMathInTheMiddle automatic generated documentation of categories[133X[101X
+  
+  [1X1.2-1 IsInputOutputTCPStream[101X
+  
+  [33X[1;0Y[29X[2XIsInputOutputTCPStream[102X( [3Xarg[103X ) [32X filter[133X
+  [6XReturns:[106X  [33X[0;10Y[10Xtrue[110X or [10Xfalse[110X[133X
+  
+  [33X[0;0YPrintable     version    of    an    IP    address    [2XIsInputOutputTCPStream[102X
+  ([14X???IsInputOutputTCPStream???[114X)   is  a  subcategory  of  [2XIsInputOutputStream[102X
+  ([14XReference:     IsInputOutputStream[114X).     Streams     in     the    category
+  [2XIsInputOutputTCPStream[102X  ([14X???IsInputOutputTCPStream???[114X)  are created with the
+  help  of  the  function  [2XInputOutputTCPStream[102X  ([14X???InputOutputTCPStream, for
+  client???[114X)  with  one  or  two arguments dependently on whether they will be
+  used in the client or server mode. Examples of their creation and usage will
+  be given in subsequent sections.[133X
+  
+  [1X1.2-2 IsInputOutputTCPStreamRep[101X
+  
+  [33X[1;0Y[29X[2XIsInputOutputTCPStreamRep[102X( [3Xarg[103X ) [32X filter[133X
+  [6XReturns:[106X  [33X[0;10Y[10Xtrue[110X or [10Xfalse[110X[133X
+  
+  [33X[0;0YThis   is   the   representation   used   for   streams   in   the  category
+  [2XIsInputOutputTCPStream[102X ([14X???IsInputOutputTCPStream???[114X).[133X
+  

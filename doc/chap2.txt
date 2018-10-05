@@ -1,0 +1,30 @@
+  
+  [1X2 [33X[0;0YOpenMath[133X[101X
+  
+  [33X[0;0YWe define an abstract syntax representation of openmath objects.[133X
+  
+  
+  [1X2.1 [33X[0;0YOMRec[133X[101X
+  
+  [1X2.1-1 MitM_OMRecToGAP[101X
+  
+  [33X[1;0Y[29X[2XMitM_OMRecToGAP[102X( [3Xr[103X ) [32X operation[133X
+  [6XReturns:[106X  [33X[0;10Ya record[133X
+  
+  [33X[0;0YAttempts  to  convert  an  OpenMath  Record  to a GAP Object. Currently only
+  supports  a limited number of Math in the Middle interface CDs. The argument
+  [3Xr[103X   can   be   obtained   from   an   XML   string   using   [2XMitM_XMLToOMRec[102X
+  ([14X???MitM_XMLToOMRec???[114X)[133X
+  
+  [33X[0;0YAs  output,  this function returns a record containing some of the following
+  components, which describe the outcome of the conversion attempt:[133X
+  
+  [30X    [33X[0;6Y[10Xsuccess[110X:  a  boolean  describing  whether the request was successfully
+        received by the server;[133X
+  
+  [30X    [33X[0;6Y[10Xresult[110X:  body of the information sent by the server (only if [10Xsuccess =
+        true[110X);[133X
+  
+  [30X    [33X[0;6Y[10Xerror[110X: human-readable string saying what went wrong (only if [10Xsuccess =
+        false[110X).[133X
+  

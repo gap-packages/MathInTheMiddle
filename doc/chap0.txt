@@ -1,1 +1,69 @@
-Placeholder
+  
+  
+                               [1X MathInTheMiddle [101X
+  
+  
+                   [1X Math-in-the-Middle functionality for [5XGAP[105X [101X
+  
+  
+                                      0.1
+  
+  
+                                16 November 2017
+  
+  
+                                Markus Pfeiffer
+  
+                                 Michael Torpey
+  
+  
+  
+  Markus Pfeiffer
+      Email:    [7Xmailto:markus.pfeiffer@st-andrews.ac.uk[107X
+      Homepage: [7Xhttps://markusp.morphism.de/[107X
+      Address:  [33X[0;14YSchool of Computer Science[133X
+                [33X[0;14YUniversity of St Andrews[133X
+                [33X[0;14YJack Cole Building, North Haugh[133X
+                [33X[0;14YSt Andrews, Fife, KY16 9SX[133X
+                [33X[0;14YUnited Kingdom[133X
+  
+  
+  Michael Torpey
+      Email:    [7Xmailto:mct25@st-andrews.ac.uk[107X
+      Homepage: [7Xhttp://www-groups.mcs.st-andrews.ac.uk/~mct25/[107X
+      Address:  [33X[0;14YSchool of Computer Science[133X
+                [33X[0;14YUniversity of St Andrews[133X
+                [33X[0;14YJack Cole Building, North Haugh[133X
+                [33X[0;14YSt Andrews, Fife, KY16 9SX[133X
+                [33X[0;14YUnited Kingdom[133X
+  
+  
+  
+  -------------------------------------------------------
+  
+  
+  [1XContents (MathInTheMiddle)[101X
+  
+  1 [33X[0;0YMathInTheMiddle automatic generated documentation[133X
+    1.1 [33X[0;0YMathInTheMiddle automatic generated documentation of global functions[133X
+      1.1-1 StartMitMServer
+      1.1-2 MitM_SCSCPHandler
+      1.1-3 StreamToMitMServer
+      1.1-4 SendObjToMitMServer
+      1.1-5 MitM_ReadSCSCP
+      1.1-6 MitM_ReadToPI
+      1.1-7 MitM_SCSCPServerHandshake
+      1.1-8 MitM_SCSCPClientHandshake
+      1.1-9 ListeningTCPSocket
+      1.1-10 StartTCPServer
+      1.1-11 ConnectInputOutputTCPStream
+      1.1-12 AcceptInputOutputTCPStream
+    1.2 [33X[0;0YMathInTheMiddle automatic generated documentation of categories[133X
+      1.2-1 IsInputOutputTCPStream
+      1.2-2 IsInputOutputTCPStreamRep
+  2 [33X[0;0YOpenMath[133X
+    2.1 [33X[0;0YOMRec[133X
+      2.1-1 MitM_OMRecToGAP
+  
+  
+  [32X
