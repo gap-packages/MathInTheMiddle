@@ -14,13 +14,19 @@ set -ex
 # start GAP with custom GAP root, to ensure correct package version is loaded
 GAP="$GAPROOT/bin/gap.sh -l $PWD/gaproot; --quitonbreak"
 
-# Unless explicitly turned off by setting the NO_COVERAGE environment variable,
-# we collect coverage data
-if [[ -z $NO_COVERAGE ]]; then
-    mkdir $COVDIR
-    GAP="$GAP --cover $COVDIR/test.coverage"
+if [[ -z $TESTCLIENTSERVER ]]; then 
+    # Unless explicitly turned off by setting the NO_COVERAGE environment variable,
+    # we collect coverage data
+    if [[ -z $NO_COVERAGE ]]; then
+        mkdir $COVDIR
+        GAP="$GAP --cover $COVDIR/test.coverage"
+    fi
+    $GAP tst/testall.g
+else
+    mkdir -p $COVDIR
+    $GAP --cover $COVDIR/test-server.coverage -A tst/scscp/server.g --nointeract &
+    sleep 10
+    $GAP --cover $COVDIR/test-client.coverage -A tst/scscp/client.g --nointeract
+    kill %%
 fi
-
-$GAP tst/testall.g
-
 exit 0
