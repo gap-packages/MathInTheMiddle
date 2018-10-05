@@ -6,10 +6,10 @@
                    [1X Math-in-the-Middle functionality for [5XGAP[105X [101X
   
   
-                                      0.1
+                                      0.2
   
   
-                                16 November 2017
+                                 5 October 2018
   
   
                                 Markus Pfeiffer
