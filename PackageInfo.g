@@ -10,8 +10,8 @@ SetPackageInfo( rec(
 
 PackageName := "MathInTheMiddle",
 Subtitle := "Math-in-the-Middle functionality for GAP",
-Version := "0.1",
-Date := "16/11/2017", # dd/mm/yyyy format
+Version := "0.2",
+Date := "05/10/2018", # dd/mm/yyyy format
 
 Persons := [
   rec(
@@ -85,7 +85,7 @@ PackageDoc := rec(
 ),
 
 Dependencies := rec(
-  GAP := ">= 4.9",
+  GAP := ">= 4.10",
   NeededOtherPackages := [ [ "GAPDoc", ">= 1.5" ]
                          , [ "json", ">= 1.1.0"]
                          , [ "io", ">= 4.5.0" ] ],
