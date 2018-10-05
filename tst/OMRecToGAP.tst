@@ -44,13 +44,14 @@ true
 
 # An invalid record
 gap> MitM_OMRecToGAPFunc(rec());
-rec( error := "invalid XML: an object must have a name", success := false )
+Error, no method found! For debugging hints type ?Recovery from NoMethodFound
+Error, no 1st choice method found for `MitM_OMRecToGAPFunc' on 1 arguments
 
 # An OMV variable
 gap> banana := 12;;
 gap> v := MitM_XMLToOMRec("<OMV name=\"banana\" />");;
-gap> MitM_OMRecToGAPFunc(v);
-rec( result := "banana", success := true )
+gap> MitM_OMRecToGAPFunc(v).result = banana;
+true
 
 # Negative hex integer
 gap> v := MitM_XMLToOMRec("<OMI>-x3421AB</OMI>");;

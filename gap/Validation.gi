@@ -260,9 +260,9 @@ rec(
          local i, result;
          if Length(content) <> 2 then
              return "must contain precisely two objects";
-         elif not (MitM_OMRec(content[1]) and MitM_OMRec(content[1]) = "OMATP") then
+         elif not (MitM_OMRec(content[1]) and MitM_Tag(content[1]) = "OMATP") then
              return "first object must be OMATP";
-         elif not (MitM_OMRec(content[2]) and MitM_OMRec(content[2]) in MitM_OMel) then
+         elif not (MitM_OMRec(content[2]) and MitM_Tag(content[2]) in MitM_OMel) then
              return "second object must be an OM element";
          fi;
          for i in [1 .. Length(content)] do

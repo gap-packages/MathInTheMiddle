@@ -2,46 +2,19 @@
 gap> R := PolynomialRing(Integers, [ "x1", "x2", "x3", "x4"]);
 Integers[x1,x2,x3,x4]
 gap> MitM_GAPToOMRec(R) =
-> rec(
->   content :=
->     [
->       rec(
->           attributes :=
->             rec( cd := "lib", cdbase := "https://www.gap-system.org/mitm/"
->                 , name := "PolynomialRing" ), name := "OMS" ),
->       rec(
->           attributes :=
->             rec( cd := "lib", cdbase := "https://www.gap-system.org/mitm/"
->                 , name := "Integers" ), name := "OMS" ),
->       rec(
->           content :=
->             [
->               rec(
->                   attributes :=
->                     rec( cd := "prim",
->                       cdbase := "https://www.gap-system.org/mitm/",
->                       name := "ListConstr" ), name := "OMS" ),
->               rec( content := [ "x1" ], name := "OMSTR" ),
->               rec( content := [ "x2" ], name := "OMSTR" ),
->               rec( content := [ "x3" ], name := "OMSTR" ),
->               rec( content := [ "x4" ], name := "OMSTR" ) ], name := "OMA" )
->      ], name := "OMA" );
+> OMA(OMS(MitM_cdbase, "lib", "PolynomialRing"),
+>     OMS(MitM_cdbase, "lib", "Integers"),
+>     OMA(OMS(MitM_cdbase, "prim", "ListConstr"),
+>         OMSTR("x1"),
+>         OMSTR("x2"),
+>         OMSTR("x3"),
+>         OMSTR("x4")));
 true
 
 # Permutations
 gap> MitM_GAPToOMRec( (1,5,4) ) =
-> rec(
->   content :=
->     [
->       rec(
->           attributes :=
->             rec( cd := "prim", cdbase := "https://www.gap-system.org/mitm/"
->                 , name := "PermConstr" ), name := "OMS" ),
->       rec( content := [ "5" ], name := "OMI" ),
->       rec( content := [ "2" ], name := "OMI" ),
->       rec( content := [ "3" ], name := "OMI" ),
->       rec( content := [ "1" ], name := "OMI" ),
->       rec( content := [ "4" ], name := "OMI" ) ], name := "OMA" );
+> OMA(OMS(MitM_cdbase, "prim", "PermConstr"),
+>     OMI(5), OMI(2), OMI(3), OMI(1), OMI(4));
 true
 
 # Dihedral groups
@@ -49,18 +22,9 @@ gap> D := DihedralGroup(IsPermGroup, 10);;
 gap> IsDihedralGroup(D);
 true
 gap> MitM_GAPToOMRec(D) =
-> rec(
->   content :=
->     [
->       rec(
->           attributes :=
->             rec( cd := "lib", cdbase := "https://www.gap-system.org/mitm/",
->               name := "DihedralGroup" ), name := "OMS" ),
->       rec(
->           attributes :=
->             rec( cd := "lib", cdbase := "https://www.gap-system.org/mitm/",
->               name := "IsPermGroup" ), name := "OMS" ),
->       rec( content := [ "10" ], name := "OMI" ) ], name := "OMA" );
+>   OMA(OMS(MitM_cdbase, "lib", "DihedralGroup"),
+>       OMS(MitM_cdbase, "lib", "IsPermGroup"),
+>       OMI(10));
 true
 
 # Quaternion groups

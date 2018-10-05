@@ -111,6 +111,14 @@ function(oms, content)
                          , content := Concatenation( [oms], content ) ) );
 end);
 
+InstallGlobalFunction(OMV,
+function(name)
+    return Objectify( MitM_OMRecType
+                    , rec( name := "OMV"
+                         , attributes := rec( name := name )
+                         , content := []  ) );
+end);
+
 InstallMethod(ViewString, "for an omrec",
               [MitM_OMRecRep],
 function(r)

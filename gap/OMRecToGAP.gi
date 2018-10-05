@@ -109,8 +109,8 @@ InstallValue(MitM_EvalToFunction, rec(
          fi;
      end,
 
-     OMV := node -> MitM_Result(StringFormatted("\"{}\"",
-                                                MitM_Tag(node))),
+     OMV := node -> MitM_Result(StringFormatted("{}",
+                                                MitM_Name(node))),
      OMI := function(node)
          local v;
          v := ShallowCopy(MitM_Content(node)[1]);

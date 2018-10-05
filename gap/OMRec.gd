@@ -24,3 +24,4 @@ DeclareGlobalFunction("OMSTR");
 DeclareGlobalFunction("OMF");
 DeclareGlobalFunction("OMI");
 DeclareGlobalFunction("OME");
+DeclareGlobalFunction("OMV");
