@@ -7,6 +7,7 @@
 DeclareGlobalVariable("MitM_Evaluators");
 DeclareGlobalFunction("MitM_OMRecToGAPNC");
 
+#! @Section OMRec
 #!
 #! @Description
 #!   Attempts to convert an OpenMath Record to a GAP Object. Currently only

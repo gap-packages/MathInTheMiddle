@@ -8,7 +8,7 @@ DeclareInfoClass("InfoTCPSockets");
 # TODO: Move to IO package
 DeclareGlobalFunction("TCP_AddrToString");
 
-#! @Decription
+#! @Description
 #!  <Ref Filt="IsInputOutputTCPStream"/> is a subcategory of
 #!  <Ref BookName="ref" Filt="IsInputOutputStream"/>.
 #!  Streams in the category <Ref Filt="IsInputOutputTCPStream"/>
