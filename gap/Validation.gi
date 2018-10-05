@@ -331,8 +331,6 @@ function(tree)
     # Check that this is a proper object
     if not MitM_OMRec(tree) then
         return "<tree> must be an OM record";
-    elif MitM_Tag(tree) = fail then
-        return "invalid XML: an object must have a name";
     elif not MitM_Tag(tree) in RecNames(MitM_ValidAttr) then
         return Concatenation(MitM_Tag(tree), " is not a valid OM object name");
     fi;
@@ -343,27 +341,20 @@ function(tree)
     od;
 
     # Validate the attributes
-    if MitM_Attributes(tree) <> fail then
-        for attr in RecNames(MitM_Attributes(tree)) do
-            if attr in RecNames(MitM_ValidAttr.(MitM_Tag(tree))) then
-                result := MitM_ValidAttr.(MitM_Tag(tree)).(attr)(MitM_Attributes(tree).(attr));
-            elif attr in RecNames(MitM_ValidAttr.common) then
-                result := MitM_ValidAttr.common.(attr)(MitM_Attributes(tree).(attr));
-            else
-                return Concatenation(attr, " is not a valid attribute of ",
-                                     MitM_Tag(tree), " objects");
-            fi;
-            if result <> true then
-                return StringFormatted("{} attribute of {} object: {}",
-                                       attr, MitM_Tag(tree), result);
-            fi;
-        od;
-    else
-        if not IsEmpty(MitM_RequiredAttr.(MitM_Tag(tree))) then
-            return StringFormatted("{} objects must have the {} attribute",
-                                   MitM_Tag(tree), MitM_RequiredAttr.(MitM_Tag(tree))[1]);
+    for attr in RecNames(MitM_Attributes(tree)) do
+        if attr in RecNames(MitM_ValidAttr.(MitM_Tag(tree))) then
+            result := MitM_ValidAttr.(MitM_Tag(tree)).(attr)(MitM_Attributes(tree).(attr));
+        elif attr in RecNames(MitM_ValidAttr.common) then
+            result := MitM_ValidAttr.common.(attr)(MitM_Attributes(tree).(attr));
+        else
+            return Concatenation(attr, " is not a valid attribute of ",
+                                 MitM_Tag(tree), " objects");
         fi;
-    fi;
+        if result <> true then
+            return StringFormatted("{} attribute of {} object: {}",
+                                   attr, MitM_Tag(tree), result);
+        fi;
+    od;
 
     # Check required attributes
     for attr in MitM_RequiredAttr.(MitM_Tag(tree)) do
