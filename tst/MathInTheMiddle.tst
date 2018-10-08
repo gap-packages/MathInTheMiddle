@@ -2,14 +2,12 @@
 gap> xml := """<OMA>
 >   <!-- Orbit( -->
 >   <OMS cd="lib" cdbase="https://www.gap-system.org/mitm/" name="Orbit" />
->
 >   <!-- DihedralGroup(IsPermGroup, 8), -->
 >   <OMA>
 >     <OMS cd="lib" cdbase="https://www.gap-system.org/mitm/" name="DihedralGroup" />
 >     <OMS cd="lib" cdbase="https://www.gap-system.org/mitm/" name="IsPermGroup" />
 >     <OMI>8</OMI>
 >   </OMA>
->
 >   <!-- PolynomialByExtRep(RationalFunctionsFamily(FamilyObj(1)), [[2,1],1,[1,1,3,1],3]), -->
 >   <OMA>
 >     <OMS cd="lib" cdbase="https://www.gap-system.org/mitm/" name="PolynomialByExtRep" />
@@ -38,7 +36,6 @@ gap> xml := """<OMA>
 >       <OMI>3</OMI>
 >     </OMA>
 >   </OMA>
->
 >   <!-- OnIndeterminates ); -->
 >   <OMS cd="lib" cdbase="https://www.gap-system.org/mitm/" name="OnIndeterminates" />
 > </OMA>""";;
