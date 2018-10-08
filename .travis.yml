@@ -13,6 +13,8 @@ addons:
     - libreadline-dev:i386
     - gcc-multilib
     - g++-multilib
+    - python
+    - python-pip
 
 matrix:
   include:
