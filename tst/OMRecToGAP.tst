@@ -314,6 +314,21 @@ gap> MitM_OMRecToGAPFunc(MitM_XMLToOMRec("<OMSTR></OMSTR>")).result;
 # > [ "scscp_transient_1", "MitM_Evaluate" ] ];
 # true
 
+# Bad names in known CDs
+gap> xml := """<OMS cd="scscp2" name="madeup" />""";;
+gap> MitM_XMLToGAP(xml).error;
+"name \"madeup\" not supported"
+gap> xml := StringFormatted("""<OMS cdbase="{}" cd="prim" name="madeup" />""",
+>                           MitM_cdbase);;
+gap> MitM_XMLToGAP(xml).error;
+"OMS name \"madeup\" not a GAP primitive function"
+
 # MitM_Evaluate
 gap> MitM_Evaluate(OMSTR("hello")) = OMSTR("hello");
+true
+
+# Using a variable
+gap> xyz := 2;;
+gap> r := OMA(OMS(MitM_cdbase, "lib", "Float"), OMV("xyz"));;
+gap> MitM_OMRecToGAPFunc(r).result = 2.0;
 true
