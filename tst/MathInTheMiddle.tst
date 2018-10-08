@@ -115,3 +115,7 @@ gap> xml := """
 > </OMOBJ>""";;
 gap> MitM_HandleSCSCP(MitM_XMLToOMRec(xml));;
 #I   Invalid procedure call: OMA expected
+
+# Client code
+gap> StreamToMitMServer("localhost", 2, 3, 4);
+Error, MitM_ConnectionToServer: 1 or 2 arguments expected, but 4 found
