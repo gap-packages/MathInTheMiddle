@@ -23,16 +23,21 @@ if [[ -z $TESTCLIENTSERVER ]]; then
     fi
     $GAP tst/testall.g
 else
+    # TODO: As soon as coverage for forking stuff works, we should be forking
+    #       inside a tst file.
     sudo pip install --upgrade pip
     pip install --user openmath
     pip install --user scscp
 
     mkdir -p $COVDIR
 
-    echo "Testing GAP Client"
+    echo "Starting GAP Server"
     $GAP --cover $COVDIR/test-server.coverage -q -A tst/scscp/server.g --nointeract &
     sleep 5
+    echo "Testing GAP SCSCP Client"
     $GAP --cover $COVDIR/test-client.coverage -q -A tst/scscp/client.g --nointeract
+    echo "Testing GAP MitM Client"
+    $GAP --cover $COVDIR/test-mitm-client.coverage -q -A tst/scscp/mitm-client.g --nointeract
     echo "Testing Python Client"
     python tst/scscp/client.py
     echo "Quitting Server"
