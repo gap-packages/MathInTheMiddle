@@ -45,7 +45,7 @@ InstallValue(MitM_SCSCPHandlers, rec(
         Info(InfoMitMServer, 15, " Attributes... ", attr);
 
         t := NanosecondsSinceEpoch();
-        eval := MitM_OMRecToGAPFunc(oma);
+        eval := MitM_OMRecToGAP(oma);
         t := NanosecondsSinceEpoch() - t;
 
         if eval.success then

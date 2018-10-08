@@ -13,21 +13,21 @@ function(obj)
     return rec(success := true, result := obj);
 end);
 
-InstallMethod(MitM_OMRecToGAPFunc, [MitM_OMRecRep],
+InstallMethod(MitM_OMRecToGAP, [MitM_OMRecRep],
 function(r)
     local val, res;
     val := MitM_IsValidOMRec(r);
     if val <> true then
         return MitM_Error(val);
     fi;
-    res := MitM_OMRecToGAPFuncNC(r);
+    res := MitM_OMRecToGAPNC(r);
     if res.success <> true then
         return res;
     fi;
     return MitM_Result(EvalString(res.result));
 end);
 
-InstallGlobalFunction(MitM_OMRecToGAPFuncNC,
+InstallGlobalFunction(MitM_OMRecToGAPNC,
 function(r)
     return MitM_EvalToFunction.(MitM_Tag(r))(r);
 end);
@@ -93,7 +93,7 @@ rec( ( "default" ) := function(node)
 # Evaluators for OpenMath objects
 InstallValue(MitM_EvalToFunction, rec(
      OMOBJ := function(node)
-         return MitM_OMRecToGAPFuncNC(MitM_Content(node)[1]);
+         return MitM_OMRecToGAPNC(MitM_Content(node)[1]);
      end,
 
      OMS := function(node)
@@ -146,13 +146,13 @@ InstallValue(MitM_EvalToFunction, rec(
      OMA := function(node)
          local sym, args, item, r;
 
-         sym := MitM_OMRecToGAPFuncNC(MitM_Content(node)[1]);
+         sym := MitM_OMRecToGAPNC(MitM_Content(node)[1]);
          if sym.success <> true then
              return MitM_Error("OMA contents: ", sym.error);
          fi;
          args := [];
          for item in MitM_Content(node){[2..Length(MitM_Content(node))]} do
-             r := MitM_OMRecToGAPFuncNC(item);
+             r := MitM_OMRecToGAPNC(item);
              if r.success <> true then
                  return MitM_Error("OMA contents: ", r.error);
              elif MitM_Name(item) = "OMV" then
@@ -175,7 +175,7 @@ InstallValue(MitM_EvalToFunction, rec(
              return MitM_Error("only the lambda binding is implemented");
          fi;
          list := List(MitM_Content(MitM_Content(node)[2]), MitM_Name);
-         val := MitM_OMRecToGAPFuncNC(MitM_Content(node)[3]);
+         val := MitM_OMRecToGAPNC(MitM_Content(node)[3]);
          if val.success <> true then
              return MitM_Error("OMBIND contents: ", val.error);
          fi;
@@ -187,7 +187,7 @@ InstallValue(MitM_EvalToFunction, rec(
      end,
 
      OMATTR := function(node)
-         return MitM_OMRecToGAPFuncNC(MitM_Content(node)[2]);
+         return MitM_OMRecToGAPNC(MitM_Content(node)[2]);
      end,
 
      OME := function(node)

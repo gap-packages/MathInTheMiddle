@@ -2,7 +2,7 @@ InstallGlobalFunction(MitM_GAPToXML,
 obj -> MitM_OMRecToXML(MitM_GAPToOMRec(obj)));
 
 InstallGlobalFunction(MitM_XMLToGAP,
-str -> MitM_OMRecToGAPFunc(MitM_XMLToOMRec(str)));
+str -> MitM_OMRecToGAP(MitM_XMLToOMRec(str)));
 
 InstallGlobalFunction(MitM_RoundTripGAP,
 obj -> MitM_XMLToGAP(MitM_GAPToXML(obj)));

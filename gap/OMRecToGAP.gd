@@ -4,8 +4,6 @@
 #! We define an abstract syntax representation of openmath objects.
 #!
 
-DeclareGlobalVariable("MitM_Evaluators");
-DeclareGlobalFunction("MitM_OMRecToGAPNC");
 
 #! @Section OMRec
 #!
@@ -28,11 +26,10 @@ DeclareGlobalFunction("MitM_OMRecToGAPNC");
 #! @Returns
 #!   a record
 #!
-DeclareOperation("MitM_OMRecToGAP", [IsObject]);
-
+DeclareGlobalVariable("MitM_Evaluators");
 DeclareGlobalVariable("MitM_EvalToFunction");
-DeclareGlobalFunction("MitM_OMRecToGAPFuncNC");
-DeclareOperation("MitM_OMRecToGAPFunc", [IsObject]);
+DeclareGlobalFunction("MitM_OMRecToGAPNC");
+DeclareOperation("MitM_OMRecToGAP", [IsObject]);
 
 DeclareGlobalFunction("MitM_Error");
 DeclareGlobalFunction("MitM_Result");
