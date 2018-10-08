@@ -1,3 +1,54 @@
+# Test MMT use-case
+gap> xml := """<OMA>
+>   <!-- Orbit( -->
+>   <OMS cd="lib" cdbase="https://www.gap-system.org/mitm/" name="Orbit" />
+>
+>   <!-- DihedralGroup(IsPermGroup, 8), -->
+>   <OMA>
+>     <OMS cd="lib" cdbase="https://www.gap-system.org/mitm/" name="DihedralGroup" />
+>     <OMS cd="lib" cdbase="https://www.gap-system.org/mitm/" name="IsPermGroup" />
+>     <OMI>8</OMI>
+>   </OMA>
+>
+>   <!-- PolynomialByExtRep(RationalFunctionsFamily(FamilyObj(1)), [[2,1],1,[1,1,3,1],3]), -->
+>   <OMA>
+>     <OMS cd="lib" cdbase="https://www.gap-system.org/mitm/" name="PolynomialByExtRep" />
+>     <OMA>
+>       <OMS cd="lib" cdbase="https://www.gap-system.org/mitm/" name="RationalFunctionsFamily" />
+>       <OMA>
+>         <OMS cd="lib" cdbase="https://www.gap-system.org/mitm/" name="FamilyObj" />
+>         <OMI>1</OMI>
+>       </OMA>
+>     </OMA>
+>     <OMA>
+>       <OMS cd="prim" cdbase="https://www.gap-system.org/mitm/" name="ListConstr" />
+>       <OMA>
+>         <OMS cd="prim" cdbase="https://www.gap-system.org/mitm/" name="ListConstr" />
+>         <OMI>2</OMI>
+>         <OMI>1</OMI>
+>       </OMA>
+>       <OMI>1</OMI>
+>       <OMA>
+>         <OMS cd="prim" cdbase="https://www.gap-system.org/mitm/" name="ListConstr" />
+>         <OMI>1</OMI>
+>         <OMI>1</OMI>
+>         <OMI>3</OMI>
+>         <OMI>1</OMI>
+>       </OMA>
+>       <OMI>3</OMI>
+>     </OMA>
+>   </OMA>
+>
+>   <!-- OnIndeterminates ); -->
+>   <OMS cd="lib" cdbase="https://www.gap-system.org/mitm/" name="OnIndeterminates" />
+> </OMA>""";;
+gap> p := MitM_XMLToGAP(xml).result;
+[ 3*x1*x3+x2, 3*x2*x4+x3, 3*x1*x3+x4, 3*x2*x4+x1 ]
+gap> MitM_RoundTripGAP(p).result;
+[ 3*x1*x3+x2, 3*x2*x4+x3, 3*x1*x3+x4, 3*x2*x4+x1 ]
+gap> MitM_RoundTripGAP(p).result = p;
+true
+
 #
 gap> MitM_CompleteProcedure(OMSTR(""));
 "<OMOBJ version=\"2.0\">\n<OMATTR>\n<OMATP></OMATP>\n<OMA>\n<OMS cd=\"scscp1\"\
