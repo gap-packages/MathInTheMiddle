@@ -7,6 +7,28 @@ This package provides functionality to run GAP in a Math-in-the-Middle Virtual
 Research Environment for Discrete Mathematics (otherwise known as OpenDreamKit
 https://www.opendreamkit.org)
 
+## Example
+
+A server can be created from inside GAP using the following code:
+
+```gap
+gap> LoadPackage("MathInTheMiddle");
+gap> StartMitMServer();
+```
+
+To interact with the server from Python, open an interactive Python session in
+another terminal by calling `python3` on the command line.  As a minimal
+example, you could enter:
+
+```python
+import openmath.openmath as om, scscp
+client = scscp.SCSCPCLI("localhost", 26133)
+i = om.OMInteger(42)
+client.heads.scscp_transient_1.MitM_Evaluate([i])
+```
+
+The output returned should be `42`.
+
 ## Documentation
 
 Full information and documentation can be found in the manual, available
