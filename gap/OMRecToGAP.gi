@@ -82,7 +82,11 @@ rec( ( "default" ) := function(node)
              fi;
              return MitM_Result(MitM_GAP_PrimitivesFunc.(name));
          elif MitM_CD(node) = "lib" then
-             return MitM_Result(MitM_Name(node));
+             if not IsBoundGlobal(name) then
+                 return MitM_Error("OMS name \"", name,
+                                   "\" not a GAP library function");
+             fi;
+             return MitM_Result(name);
          else
              return MitM_Error("cd \"", MitM_CD(node)
                                , "\" not supported");

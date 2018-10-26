@@ -47,6 +47,10 @@ gap> MitM_OMRecToGAP(rec());
 Error, no method found! For debugging hints type ?Recovery from NoMethodFound
 Error, no 1st choice method found for `MitM_OMRecToGAP' on 1 arguments
 
+# A misnamed OMS
+gap> MitM_OMRecToGAP(OMS(MitM_cdbase, "lib", "BadName")).error;
+"OMS name \"BadName\" not a GAP library function"
+
 # An OMV variable
 gap> banana := 12;;
 gap> v := MitM_XMLToOMRec("<OMV name=\"banana\" />");;
@@ -121,9 +125,7 @@ gap> MitM_OMRecToGAP(v).error;
 gap> v := MitM_XMLToOMRec("""<OMS cdbase="https://www.gap-system.org/mitm/"
 >                                 cd="lib" name="GroXYZup" />""");;
 gap> MitM_OMRecToGAP(v).error;
-Error, Variable: 'GroXYZup' must have a value
-Error, Could not evaluate string.
-
+"OMS name \"GroXYZup\" not a GAP library function"
 gap> v := MitM_XMLToOMRec("""<OMS cdbase="https://www.gap-system.org/mitm/"
 >                                 cd="abc" name="GroXYZup" />""");;
 gap> MitM_OMRecToGAP(v).error;
@@ -133,9 +135,7 @@ gap> MitM_OMRecToGAP(v).error;
 "cd \"lib2\" not supported"
 gap> v := MitM_XMLToOMRec("<OMS cdbase=\"https://www.gap-system.org/mitm/\" cd=\"lib\" name=\"LadIDaPerMuTAtIOnSuPeRfAiL\" />");;
 gap> MitM_OMRecToGAP(v).error;
-Error, Variable: 'LadIDaPerMuTAtIOnSuPeRfAiL' must have a value
-Error, Could not evaluate string.
-
+"OMS name \"LadIDaPerMuTAtIOnSuPeRfAiL\" not a GAP library function"
 
 # OMS for Group function
 gap> v := MitM_XMLToOMRec("<OMS cdbase=\"https://www.gap-system.org/mitm/\" cd=\"lib\" name=\"Group\" />");;
@@ -224,9 +224,7 @@ gap> a := MitM_XMLToOMRec("""<OMA>
 >   <OMI>77</OMI>
 > </OMA>""");;
 gap> MitM_OMRecToGAP(a).error;
-Error, Variable: 'xyz' must have a value
-Error, Could not evaluate string.
-
+"OMA contents: OMS name \"xyz\" not a GAP library function"
 gap> a := MitM_XMLToOMRec("""<OMA>
 >   <OMS cdbase="https://www.gap-system.org/mitm/" cd="lib" name="CharInt"/> 
 >   <OMF hex="0123456789ABCDEF" />
