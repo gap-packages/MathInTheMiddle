@@ -31,6 +31,15 @@ DeclareGlobalFunction("StreamToMitMServer");
 #! Send a GAP object to an MitM server, via a stream
 DeclareGlobalFunction("SendObjToMitMServer");
 
+#! @Args obj
+#! @Returns
+#!   an OMRec object
+#! @Description
+#!   If <A>obj</A> is an OMRec object (which may be an OMA describing a function
+#!   call), this function returns an OMRec which describes a procedure call
+#!   (4.1.1 in the SCSCP specification).
+DeclareGlobalFunction("MitM_ProcedureCall");
+
 BindGlobal("MitM_DefaultServerOptions", rec(
     hostname := "localhost",
     port := 26133,
