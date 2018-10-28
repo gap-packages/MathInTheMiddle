@@ -170,9 +170,21 @@ end);
 InstallGlobalFunction(SendObjToMitMServer,
 function(stream, obj)
     local xml;
-    xml := MitM_OMRecToXML(MitM_OMRecToOMOBJRec(MitM_GAPToOMRec(obj)));
+    xml := MitM_OMRecToXML(obj);
     WriteLine(stream, "<?scscp start ?>");
     WriteLine(stream, xml);
     WriteLine(stream, "<?scscp end ?>");
     return MitM_ReadSCSCP(stream);
+end);
+
+InstallGlobalFunction(MitM_ProcedureCall,
+function(obj)
+    local call_id, opts, call, attr;
+    # obj should be an OMA to be run
+    call_id := Random([1..10000]); # TODO: something sensible
+    # TODO: support option_return_cookie and option_return_nothing
+    opts := rec(call_id := OMI(call_id), option_return_object := OMSTR(""));
+    call := OMA(OMS("scscp1", "procedure_call"), obj);
+    attr := OMATTR(opts, call);
+    return OMOBJ([attr]);
 end);
