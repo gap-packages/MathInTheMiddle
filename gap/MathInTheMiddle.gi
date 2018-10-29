@@ -179,11 +179,15 @@ end);
 
 InstallGlobalFunction(MitM_ProcedureCall,
 function(obj)
-    local call_id, opts, call, attr;
+    local base64, call_id, opts, call, attr;
     # obj should be an OMA to be run
-    call_id := Random([1..10000]); # TODO: something sensible
+    base64 := Concatenation("ABCDEFGHIJKLMNOPQRSTUVWXYZ",
+                            "abcdefghijklmnopqrstuvwxyz",
+                            "0123456789+/");
+    call_id := Concatenation(MitM_cdbase, ":",
+                             List([1..16], i -> Random(base64)));
     # TODO: support option_return_cookie and option_return_nothing
-    opts := rec(call_id := OMI(call_id), option_return_object := OMSTR(""));
+    opts := rec(call_id := OMSTR(call_id), option_return_object := OMSTR(""));
     call := OMA(OMS("scscp1", "procedure_call"), obj);
     attr := OMATTR(opts, call);
     return OMOBJ([attr]);
