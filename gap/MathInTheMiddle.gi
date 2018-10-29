@@ -192,3 +192,20 @@ function(obj)
     attr := OMATTR(opts, call);
     return OMOBJ(attr);
 end);
+
+InstallGlobalFunction(GetAllowedHeads,
+function(stream)
+    local call, out, obj, attr, oma_outer, oma_inner, list;
+    call := MitM_ProcedureCall(OMA(OMS("scscp2", "get_allowed_heads")));
+    out := SendObjToMitMServer(stream, call);
+    if not out.success then
+        return fail;
+    fi;
+    obj := out.result;
+    # TODO: check that the server successfully sent a list of heads
+    attr := MitM_Content(obj)[1];
+    oma_outer := MitM_Content(attr)[2];
+    oma_inner := MitM_Content(oma_outer)[2];
+    list := MitM_Content(oma_inner);
+    return list{[2..Length(list)]};
+end);

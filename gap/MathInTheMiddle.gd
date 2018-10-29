@@ -40,6 +40,8 @@ DeclareGlobalFunction("SendObjToMitMServer");
 #!   (4.1.1 in the SCSCP specification).
 DeclareGlobalFunction("MitM_ProcedureCall");
 
+DeclareGlobalFunction("GetAllowedHeads");
+
 BindGlobal("MitM_DefaultServerOptions", rec(
     hostname := "localhost",
     port := 26133,
