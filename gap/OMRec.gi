@@ -160,6 +160,10 @@ function(r)
                                 ViewString(content[2]) );
     elif r!.name = "OMOBJ" then
         return StringFormatted( "OMOBJ({})", ViewString(MitM_Content(r)[1]) );
+    elif r!.name = "OME" then
+        return StringFormatted( "OME({}, {})",
+                                ViewString(MitM_Content(r)[1]),
+                                ViewString(MitM_Content(r)[2]) );
     else
         return StringFormatted( "ViewString for {} not implemented", r!.name );
     fi;

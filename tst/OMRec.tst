@@ -123,3 +123,11 @@ OMOBJ(OMI(3))
 # OMATTR
 gap> OMATTR( rec( x := 3, y := 4 ), OMI(3) );
 OMATTR( rec( x := 3, y := 4 ), OMI(3) )
+
+# OME
+gap> ome := OME(OMS("aritherror", "DivisionByZero"),
+>               [OMA(OMS("arith1", "divide"), OMI(3), OMI(0))]);;
+gap> ViewString(ome) = Concatenation(
+> """OME(OMS(cd="aritherror", name="DivisionByZero"), """,
+> """OMA(OMS(cd="arith1", name="divide"), OMI(3), OMI(0)))""");
+true
