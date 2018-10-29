@@ -23,4 +23,4 @@ function(obj)
 end);
 
 InstallGlobalFunction(MitM_OMRecToOMOBJRec,
-r -> OMOBJ([r]));
+r -> OMOBJ(r));

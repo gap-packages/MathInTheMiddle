@@ -190,5 +190,5 @@ function(obj)
     opts := rec(call_id := OMSTR(call_id), option_return_object := OMSTR(""));
     call := OMA(OMS("scscp1", "procedure_call"), obj);
     attr := OMATTR(opts, call);
-    return OMOBJ([attr]);
+    return OMOBJ(attr);
 end);

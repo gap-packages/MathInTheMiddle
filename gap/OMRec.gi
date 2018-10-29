@@ -32,11 +32,11 @@ function(r)
 end);
 
 InstallGlobalFunction(OMOBJ,
-function(content)
+function(obj)
     return Objectify( MitM_OMRecType
                     , rec( name := "OMOBJ"
                          , attributes := rec( version := "2.0" )
-                         , content := content ) );
+                         , content := [obj] ) );
 end);
 
 InstallGlobalFunction(OMA,
@@ -159,7 +159,7 @@ function(r)
                                 MitM_ATPToRec(content[1]),
                                 ViewString(content[2]) );
     elif r!.name = "OMOBJ" then
-        return StringFormatted( "OMOBJ({})", ViewString(MitM_Content(r)) );
+        return StringFormatted( "OMOBJ({})", ViewString(MitM_Content(r)[1]) );
     else
         return StringFormatted( "ViewString for {} not implemented", r!.name );
     fi;

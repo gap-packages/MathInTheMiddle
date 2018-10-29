@@ -115,3 +115,11 @@ true
 # MitM_CD failure
 gap> MitM_CD(OMI(32));
 fail
+
+# OMOBJ
+gap> OMOBJ(OMI(3));
+OMOBJ(OMI(3))
+
+# OMATTR
+gap> OMATTR( rec( x := 3, y := 4 ), OMI(3) );
+OMATTR( rec( x := 3, y := 4 ), OMI(3) )
