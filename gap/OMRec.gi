@@ -122,7 +122,7 @@ end);
 InstallMethod(ViewString, "for an omrec",
               [MitM_OMRecRep],
 function(r)
-    local attr, i;
+    local attr, i, content;
     if r!.name = "OMS" then
         if IsBound(r!.attributes.cdbase) then
             return StringFormatted( "OMS(cd=\"{}\", cdbase=\"{}\", name=\"{}\")"
@@ -153,6 +153,13 @@ function(r)
         od;
         return StringFormatted( "OMATP( rec( {} ) )", 
                                 JoinStringsWithSeparator(attr, ", ") );
+    elif r!.name = "OMATTR" then
+        content := MitM_Content(r);
+        return StringFormatted( "OMATTR( {}, {} )",
+                                MitM_ATPToRec(content[1]),
+                                ViewString(content[2]) );
+    elif r!.name = "OMOBJ" then
+        return StringFormatted( "OMOBJ({})", ViewString(MitM_Content(r)) );
     else
         return StringFormatted( "ViewString for {} not implemented", r!.name );
     fi;
