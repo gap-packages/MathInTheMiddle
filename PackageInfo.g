@@ -81,7 +81,7 @@ PackageDoc := rec(
   HTMLStart := "doc/chap0.html",
   PDFFile   := "doc/manual.pdf",
   SixFile   := "doc/manual.six",
-  LongTitle := "Maths-in-the-Middle functionality for GAP",
+  LongTitle := "Math-in-the-Middle functionality for GAP",
 ),
 
 Dependencies := rec(

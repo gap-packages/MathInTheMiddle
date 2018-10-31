@@ -1,5 +1,5 @@
 #
-# MathInTheMiddle: Maths-in-the-Middle functionality for GAP
+# MathInTheMiddle: Math-in-the-Middle functionality for GAP
 #
 # Type export to JSON for consumation by MMT import
 #

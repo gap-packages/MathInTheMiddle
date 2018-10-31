@@ -1,5 +1,5 @@
 #
-# MathsInTheMiddle: Maths-in-the-Middle functionality for GAP
+# MathInTheMiddle: Math-in-the-Middle functionality for GAP
 #
 # This file runs package tests. It is also referenced in the package
 # metadata in PackageInfo.g.
