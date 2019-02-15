@@ -12,6 +12,7 @@ PackageName := "MathInTheMiddle",
 Subtitle := "Math-in-the-Middle functionality for GAP",
 Version := "0.2",
 Date := "05/10/2018", # dd/mm/yyyy format
+License := "BSD-3-Clause",
 
 Persons := [
   rec(
