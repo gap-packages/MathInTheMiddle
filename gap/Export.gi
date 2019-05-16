@@ -119,6 +119,15 @@ InstallGlobalFunction(MitM_TypesInfo, function()
                     else
                 #        Print("strange: ", n, " ", v);
                     fi;
+                elif IsFunction(v) and not '_' in n and ForAny("abcdefghijklmnopqrstuvwxyz", c -> c in n) then
+                    # Defined using BindGlobal, not InstallGlobalFunction
+                    # If it contains '_' or is all-caps it is probably internal
+                    lres := rec();
+                    lres.type := "Function";
+                    lres.name := n;
+                    lres.location := rec();
+                    AddDictionary(objs, v, lres);
+                    Add(res, lres);
                 else
                     Add(notcovered, n);
                 fi;
