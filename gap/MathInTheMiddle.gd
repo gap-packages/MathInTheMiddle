@@ -31,7 +31,7 @@ DeclareGlobalFunction("StreamToMitMServer");
 #! Send a GAP object to an MitM server, via a stream
 DeclareGlobalFunction("SendObjToMitMServer");
 
-#! @Args obj
+#! @Arguments obj
 #! @Returns
 #!   an OMRec object
 #! @Description
