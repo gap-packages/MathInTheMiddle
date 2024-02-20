@@ -1,5 +1,5 @@
 name: MathInTheMiddle
-version: 0.2
+version: "0.2"
 date: 2018-10-05
 description: |
     Math-in-the-Middle functionality for GAP
