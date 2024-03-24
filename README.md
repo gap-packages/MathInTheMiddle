@@ -1,6 +1,6 @@
 # The GAP 4 package `MathInTheMiddle'
 
-[![Build Status](https://travis-ci.org/gap-packages/MathInTheMiddle.svg?branch=master)](https://travis-ci.org/gap-packages/MathInTheMiddle)
+[![Build Status](https://github.com/gap-packages/MathInTheMiddle/workflows/CI/badge.svg?branch=master)](https://github.com/gap-packages/MathInTheMiddle/actions?query=workflow%3ACI+branch%3Amaster)
 [![Code Coverage](https://codecov.io/github/gap-packages/MathInTheMiddle/coverage.svg?branch=master&token=)](https://codecov.io/gh/gap-packages/MathInTheMiddle)
 
 This package provides functionality to run GAP in a Math-in-the-Middle Virtual
